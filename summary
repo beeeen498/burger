@@ -1,0 +1,147 @@
+Project: Burger Joint Demo Website — Full Brief
+A fullstack Next.js demo website for a burger joint, built as a portfolio project. The goal is to be visually unique, technically impressive, and full of personality.
+Tech Stack
+
+Next.js (App Router, TypeScript, Tailwind)
+Supabase (Postgres DB + Realtime subscriptions + Storage)
+Stripe test mode for payments
+React Three Fiber + Drei for 3D
+Framer Motion for animations
+GSAP ScrollTrigger for scroll animations
+Zod + React Hook Form for validation
+Upstash Redis for rate limiting
+Vercel for deployment
+
+Aesthetic
+
+Neobrutalist / retro early 2000s / saturated cartoon
+Color palette: #f7e558 (yellow), #6bbbe8 (blue), #df2c8b (pink), #efefef (off-white), #1a1a1a (near-black)
+Thick black borders, offset box shadows (4px 4px 0px #1a1a1a)
+Chunky rounded font for headings (Fredoka One / Boogaloo / Righteous), clean sans-serif for body (DM Sans / Inter)
+Dot grid or noise texture on background
+Neobrutalist UI — raised/beveled panels, bold outlines on everything
+
+
+Loading Screen
+
+2D SVG flat burger that assembles itself ingredient by ingredient, bottom bun first, top bun last
+Each ingredient drops in with a bounce/squish on landing
+Text below says "Firing up the grill..." with animated ellipsis, in heading font
+Minimum display time of 1.5 seconds even on fast connections
+Exit animation — screen wipes upward with cinematic ease curve [0.76, 0, 0.24, 1]
+2D burger stays in place as the panel slides away, revealing the 3D hero burger underneath in roughly the same position — creating a visual continuity illusion between the 2D loading burger and the 3D hero burger
+
+
+Navbar
+
+Shrinks slightly + gains backdrop blur on scroll down
+Logo is a mini low poly burger icon + brand name
+Mobile hamburger menu icon replaced with an actual burger icon
+Pink (#df2c8b) CTA button for "Order Now"
+Mute/unmute toggle for sound design
+Nav item hover effect — slight tilt to the side, subtle scale up, and a background highlight that originates from the center and stretches outward to both sides (like a reveal/expand animation). Framer Motion or pure CSS with transform-origin: center
+
+
+Hero Section
+
+Low poly stylized burger built in Blender with each ingredient as a separate mesh
+Flat shading / toon shading — geometric faceted look
+Burger colors: bun #E8A020, patty #4A2810, cheese #F5C518, lettuce #4A7C3F, tomato #C0392B
+Floating animation using Drei's <Float> component
+Slow Y-axis rotation in useFrame loop
+Mouse parallax tilt — burger reacts to cursor position
+On scroll — burger animates to middle-left of screen and explodes into separated ingredients
+Each ingredient label appears in a chunky beveled neobrutalist panel, styled like a game UI tooltip, in heading font
+Hero headline is big, chunky, all caps with a slight text stroke
+
+
+Custom Cursor
+
+Hides default browser cursor (cursor: none on body)
+Custom div following mouse with lerp smoothing via requestAnimationFrame
+Burger or flame SVG icon styled to match the palette
+Scales up on hoverable elements (data-hoverable attribute)
+Scales down on mousedown, bounces back on mouseup
+Fades out when mouse leaves the window
+Only active on pointer/mouse devices — disabled on touch screens via matchMedia('(pointer: fine)')
+
+
+Menu Section
+
+Category filter buttons — Burgers, Sides, Drinks
+Smooth layout animation when filtering using Framer Motion layout prop
+"Chef's Pick" retro sticker badge on one featured item
+Card hover flips to show ingredients list on the back — CSS 3D flip
+3D perspective tilt on card hover following mouse position
+
+
+Cart
+
+When item is added, a mini version flies in an arc animation from the card to the cart icon in the navbar
+Cart icon wobbles/bounces on each addition or removal
+Cart persists to localStorage — survives page refresh
+Mobile — slide-in drawer
+Desktop — sidebar
+Toast notifications for cart actions (Sonner library)
+Debounced quantity updates
+
+
+Build Your Own Burger
+
+User picks each ingredient from a list
+3D burger model updates in real time to reflect current ingredient selection
+Adding/removing an ingredient triggers a pop sound effect
+Ties the 3D element directly into the actual product functionality
+
+
+Checkout Flow
+
+Guest checkout — name and email only, no real auth
+Optional: NextAuth with Google OAuth if wanting to show auth skills
+Stripe test mode — card form, Google Pay, Apple Pay, PayPal buttons
+Zod + React Hook Form validation on all fields
+Smooth multi-step flow — cart summary → guest info → payment → confirmation
+
+
+Order Confirmation Page
+
+Confetti explosion on confirm (canvas-confetti library)
+Receipt UI styled as old school paper receipt — monospace font, dashed borders, torn paper SVG wave edge at bottom
+Fake estimated time countdown displayed live
+
+
+Real-Time Order Tracking
+
+Supabase realtime subscriptions listening to order row changes
+Customer tracking page at /order/[id]
+Status stepper UI — Received → Preparing → Ready for Pickup → Delivered
+Animated transitions between steps
+Admin dashboard at /admin — protected route, shows incoming orders, buttons to advance order status
+Demo moment — two browser windows side by side showing live update
+
+
+Sound Design
+
+Thud sounds on loading screen as each ingredient lands
+Sizzle sound on "Order Now" button hover
+Cha-ching on order confirmation page
+Pop sound when adding/removing ingredients in the Build Your Burger page
+Mute/unmute toggle in navbar — no autoplay ever
+
+
+Easter Eggs
+
+Konami code (↑↑↓↓←→←→BA) triggers burger rain on screen or fake coupon code
+Clicking the logo 5 times rapidly triggers a hidden animation
+Secret menu item appears if user has been on the order page for more than 60 seconds
+
+
+Technical Details
+
+prefers-reduced-motion media query check — disables heavy animations for accessibility
+Lighthouse score 90+ — mention in README
+Lazy loading on all images, font-display: swap on custom fonts
+Rate limiting on API routes with Upstash Redis
+Skeleton loaders instead of spinners throughout
+Optimistic UI on cart updates
+README explaining technical decisions and stack choices — important for portfolio
