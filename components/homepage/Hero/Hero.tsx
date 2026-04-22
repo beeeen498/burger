@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./Hero.module.scss";
+import Header from "@/components/global/Header/Header";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
@@ -41,15 +42,24 @@ const Hero = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContainer}>
-        <Canvas camera={{ position: [0, 3, 12], fov: 40 }}>
+        {/* header */}
+        <Header />
 
-          {/* lighting */}
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[5, 5, 5]} intensity={1.2} />
+        {/* 3d burger model */}
+        <div className={styles.burger}>
+            <Canvas camera={{ position: [0, 3, 12], fov: 40 }}>
 
-          {/* burger model */}
-          <BurgerModel />
-        </Canvas>
+                {/* lighting */}
+                <ambientLight intensity={1.2} />
+                <directionalLight position={[5, 5, 5]} intensity={1.2} />
+
+                {/* burger model */}
+                <BurgerModel />
+            </Canvas>
+        </div>
+
+        {/* heading */}
+        <h1>texttext</h1>
       </div>
     </section>
   );

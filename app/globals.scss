@@ -10,13 +10,18 @@
   --black: #1a1a1a;
 }
 
+* {
+  cursor: url('/icons/spatula.png'), auto;
+}
+
 body {
   font-family: var(--body-font), sans-serif;
-  background-color: var(--white);
+  background-color: var(--blue);
   margin: 0;
   padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--header-font), sans-serif;
+  margin: 0;
 }
