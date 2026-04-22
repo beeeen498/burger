@@ -21,16 +21,47 @@
             z-index: 2;
         }
 
-        h1{
+        // endless marquee
+        .marqueeWrapper {
             position: absolute;
-            top: 50%;
-            left: auto;
-            right: auto;
-            text-transform: uppercase;
-            text-align: center;
-            width: 100%;
-            font-size: 130px;
-            
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden; 
+            z-index: 1;
+            pointer-events: none;
+
+            .carouselTrack {
+                display: flex;
+                flex-direction: column; 
+                animation: scrollUp 20s linear infinite;
+                will-change: transform;
+                position: absolute;
+                top: 0;
+                left: -20%;
+                right: 0;
+    
+                .text {
+                    flex-shrink: 0;
+                    padding: 8px 0;
+    
+                    h1 {
+                    font-size: 130px;
+                    line-height: 1;
+                    -webkit-text-stroke: 2px var(--black);
+                    opacity: 0.12;
+                    user-select: none;
+                    white-space: nowrap;
+                    margin: 0;
+                    }
+                }
+            }
         }
     }
+}
+
+@keyframes scrollUp {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); } 
 }
