@@ -5,7 +5,8 @@ import styles from "./BurgerBreakdown.module.scss";
 const BurgerBreakdown = forwardRef<HTMLElement>((_, ref) => {
   return (
     <section ref={ref} className={styles.section}>
-      {/* Styling and content will be added later */}
+      <div className={styles.container}>
+      </div>
     </section>
   );
 });

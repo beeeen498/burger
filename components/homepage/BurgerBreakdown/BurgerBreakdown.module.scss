@@ -1,5 +1,17 @@
 .section {
   position: relative;
-  // 300vh gives enough scroll room for the explosion animation
-  height: 300vh;
+  height: 200vh;
+  background-color: transparent;
+  padding: 60px 5%;
+  box-sizing: border-box;
+  z-index: 2;
+
+  .container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--yellow);
+    border: 2px solid var(--black);
+    box-shadow: 6px 6px 0px var(--black);
+    z-index: 1;
+  }
 }
