@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import styles from "./Hero.module.scss";
 import Header from "@/components/global/Header/Header";
 
+
 const base = ["PICKLES", "SAUCE", "BEEF", "CHEESE", "ONIONS", "TOMATO", "LETTUCE"];
 const marqueeText = base.map((_, i) =>
   [...base.slice(i), ...base.slice(0, i)].join(" • ")
@@ -13,6 +14,7 @@ const marqueeText = base.map((_, i) =>
 const Hero = forwardRef<HTMLElement>((_, ref) => {
   return (
     <section ref={ref} className={styles.hero}>
+
       <div className={styles.heroContainer}>
 
         <Header />

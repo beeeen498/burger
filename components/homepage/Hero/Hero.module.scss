@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     
     .heroContainer {
         width: 90%;
@@ -13,6 +14,7 @@
         display: flex;
         flex-direction: column;
         position: relative;
+        z-index: 2;
 
         // burger
         .burger {
@@ -73,7 +75,7 @@
                     padding: 8px 0;
     
                     h1 {
-                    font-size: 130px;
+                    font-size: 100px;
                     line-height: 1;
                     -webkit-text-stroke: 2px var(--black);
                     opacity: 0.12;
