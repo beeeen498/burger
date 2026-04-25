@@ -19,6 +19,23 @@ body {
   background-color: var(--blue);
   margin: 0;
   padding: 0;
+  position: relative;
+}
+
+/* grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(var(--black) 1px, transparent 1px),
+    linear-gradient(90deg, var(--black) 1px, transparent 1px);
+
+  background-size: 100px 100px;
+  opacity: 0.4;
+  z-index: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -26,6 +43,6 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
-ul, li{
+ul, li {
   list-style: none;
 }
