@@ -17,8 +17,34 @@
         // burger
         .burger {
             width: 100%;
-            flex: 1; 
-            z-index: 2;
+            flex: 1;
+            z-index: 4; 
+        }
+
+        // crt effect
+        .crtOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(0, 0, 0, 0.15) 3px,
+                rgba(0, 0, 0, 0.15) 4px
+            );
+            animation: flicker 0.15s infinite;
+        }
+
+        // flicker effect
+        @keyframes flicker {
+            0%   { opacity: 1; }
+            50%  { opacity: 0.6; }
+            100% { opacity: 1; }
         }
 
         // endless marquee

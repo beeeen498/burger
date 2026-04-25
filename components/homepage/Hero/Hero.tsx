@@ -20,6 +20,10 @@ const Hero = forwardRef<HTMLElement>((_, ref) => {
         {/* Empty placeholder — the burger is rendered by BurgerCanvas above */}
         <div className={styles.burger} aria-hidden="true" />
 
+        {/* crt overlay */}
+        <div className={styles.crtOverlay} />
+
+        {/* marquee */}
         <div className={styles.marqueeWrapper}>
           <div className={styles.carouselTrack}>
             {[...marqueeText, ...marqueeText].map((text, i) => (
