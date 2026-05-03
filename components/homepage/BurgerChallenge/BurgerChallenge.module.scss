@@ -1,0 +1,171 @@
+.challenge {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  background-color: #0d0d0d;
+  overflow: hidden;
+
+  // Subtle noise texture
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+// ─── Warning tape ─────────────────────────────────────────────────
+.warningTape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: repeating-linear-gradient(
+    -55deg,
+    #f7e558 0px,
+    #f7e558 20px,
+    #1a1a1a 20px,
+    #1a1a1a 40px
+  );
+  border-top: 2.5px solid #1a1a1a;
+  border-bottom: 2.5px solid #1a1a1a;
+  z-index: 10;
+
+  &:first-child {
+    top: 0;
+  }
+
+  &:last-child {
+    bottom: 0;
+  }
+}
+
+// ─── 3D viewport ──────────────────────────────────────────────────
+.viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+// Radial vignette to frame the burger
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+// ─── Overlay text ─────────────────────────────────────────────────
+.overlay {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  // Gradient fade up from bottom so text is always readable
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    height: 320px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.92) 60%);
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+.warningBadge {
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  font-family: var(--header-font);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: #1a1a1a;
+  background: #f7e558;
+  border: 2.5px solid #1a1a1a;
+  box-shadow: 3px 3px 0 #1a1a1a;
+  padding: 0.3rem 0.9rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.heading {
+  font-family: var(--header-font);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 1;
+  color: #efefef;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.15);
+}
+
+.headingAccent {
+  color: #df2c8b;
+  -webkit-text-stroke: 1.5px #df2c8b;
+  text-shadow:
+    0 0 40px rgba(223, 44, 139, 0.5),
+    0 0 80px rgba(223, 44, 139, 0.2);
+}
+
+.subtext {
+  font-family: var(--body-font);
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: rgba(239, 239, 239, 0.7);
+  margin: 0 0 1.75rem;
+  letter-spacing: 0.02em;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--header-font);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #1a1a1a;
+  background: #df2c8b;
+  border: 2.5px solid #1a1a1a;
+  box-shadow: 4px 4px 0 #1a1a1a;
+  padding: 0.75rem 1.75rem;
+  transition:
+    transform 80ms ease,
+    box-shadow 80ms ease;
+
+  &:hover {
+    transform: translate(1px, 1px);
+    background-color: var(--white);
+    color: var(--pink);
+    box-shadow: 2px 2px 0 #1a1a1a;
+  }
+
+  &:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0 #1a1a1a;
+  }
+}
