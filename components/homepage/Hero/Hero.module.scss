@@ -1,102 +1,99 @@
-// hero
-.hero{
-    height: 100vh;
-    width: 100%;
+// ------------- hero
+.hero {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column; // important — header stacks above heroContainer
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .heroContainer {
+    box-shadow: 6px 6px 0px var(--black);
+    width: 80%;
+    height: 80%;
+    border: 2px solid var(--black);
+    background-color: var(--yellow);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     position: relative;
-    
-    .heroContainer {
-        box-shadow: 6px 6px 0px var(--black);
-        width: 80%;
-        height: 80%;
-        border: 2px solid var(--black);
-        background-color: var(--yellow);
+    z-index: 2;
+
+    .burger {
+      width: 100%;
+      flex: 1;
+      z-index: 4;
+    }
+
+    .crtOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.15) 3px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      animation: flicker 0.15s infinite;
+    }
+
+    @keyframes flicker {
+      0%   { opacity: 1; }
+      50%  { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .marqueeWrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+
+      .carouselTrack {
         display: flex;
         flex-direction: column;
-        position: relative;
-        z-index: 2;
+        animation: scrollUp 20s linear infinite;
+        will-change: transform;
+        position: absolute;
+        top: 0;
+        left: -20%;
+        right: 0;
 
-        // burger
-        .burger {
-            width: 100%;
-            flex: 1;
-            z-index: 4; 
+        .text {
+          flex-shrink: 0;
+          padding: 8px 0;
+
+          h1 {
+            font-size: 100px;
+            line-height: 1;
+            -webkit-text-stroke: 2px var(--black);
+            opacity: 0.12;
+            user-select: none;
+            white-space: nowrap;
+            margin: 0;
+          }
         }
-
-        // crt effect
-        .crtOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 3;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent 0px,
-                transparent 3px,
-                rgba(0, 0, 0, 0.15) 3px,
-                rgba(0, 0, 0, 0.15) 4px
-            );
-            animation: flicker 0.15s infinite;
-        }
-
-        // flicker effect
-        @keyframes flicker {
-            0%   { opacity: 1; }
-            50%  { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
-        // endless marquee
-        .marqueeWrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden; 
-            z-index: 1;
-            pointer-events: none;
-
-            .carouselTrack {
-                display: flex;
-                flex-direction: column; 
-                animation: scrollUp 20s linear infinite;
-                will-change: transform;
-                position: absolute;
-                top: 0;
-                left: -20%;
-                right: 0;
-    
-                .text {
-                    flex-shrink: 0;
-                    padding: 8px 0;
-    
-                    h1 {
-                    font-size: 100px;
-                    line-height: 1;
-                    -webkit-text-stroke: 2px var(--black);
-                    opacity: 0.12;
-                    user-select: none;
-                    white-space: nowrap;
-                    margin: 0;
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 }
 
 @keyframes scrollUp {
   from { transform: translateY(0); }
-  to   { transform: translateY(-50%); } 
+  to   { transform: translateY(-50%); }
 }
 
-// arrow indicator
+// ------------- scroll indicator arrow
 .scrollIndicator {
   position: absolute;
   bottom: 24px;

@@ -1,0 +1,71 @@
+.stickyHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background-color: #df2c8b;
+  border-bottom: 2px solid #1a1a1a;
+  z-index: 100;
+  padding: 10px 0;
+  transform: translateY(-100%);
+  transition: transform 0.5s ease-out;
+
+  .headerContent{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 100%;
+
+    .logoLink {
+        text-decoration: none;
+        color: inherit;
+
+        .logo {
+            position: relative;
+            font-family: var(--header-font);
+            font-weight: 700;
+            font-size: 24px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            margin: 0;
+    
+            // glitch effect
+            &.glitch::before,
+            &.glitch::after {
+                content: attr(data-text);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+    
+            &.glitch::before {
+                color: #ff0000;
+                transform: translateX(-3px);
+                opacity: 0.8;
+            }
+    
+            &.glitch::after {
+                color: #0000ff;
+                transform: translateX(3px);
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .icons {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: #1a1a1a;
+        cursor: pointer;
+        }
+    }
+}
+
+.visible {
+  transform: translateY(0);
+}
