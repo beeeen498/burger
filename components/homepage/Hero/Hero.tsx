@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { FaChevronDown } from "react-icons/fa";
 import * as THREE from "three";
-import styles from "./Hero.module.scss";
 import Header from "@/components/global/Header/Header";
+import styles from "./Hero.module.scss";
 
 const base = ["PICKLES", "SAUCE", "BEEF", "CHEESE", "ONIONS", "TOMATO", "LETTUCE"];
 const marqueeText = base.map((_, i) =>
@@ -43,6 +44,23 @@ function BurgerModel() {
     </group>
   );
 }
+
+// scroll down arrow indicator
+const ScrollIndicator = () => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY < 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className={`${styles.scrollIndicator} ${!visible ? styles.hidden : ""}`}>
+      <FaChevronDown />
+    </div>
+  );
+};
 
 export default function Hero() {
   return (
@@ -82,6 +100,9 @@ export default function Hero() {
         </div>
 
       </div>
+
+      {/* arrow indicator */}
+      <ScrollIndicator />
     </section>
   );
 }
