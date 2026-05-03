@@ -14,10 +14,31 @@
         text-decoration: none;
         color: inherit;
 
-        .logo{
+        .logo {
+            position: relative;
             text-transform: uppercase;
-            font-size: 20px;
-            font-weight: 700;
+
+            &.glitch::before,
+            &.glitch::after {
+                content: attr(data-text);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            &.glitch::before {
+                color: #ff0000;
+                transform: translateX(-3px);
+                opacity: 0.8;
+            }
+
+            &.glitch::after {
+                color: #0000ff;
+                transform: translateX(3px);
+                opacity: 0.8;
+            }
         }
     }
 
