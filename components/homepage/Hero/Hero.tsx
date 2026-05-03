@@ -6,6 +6,7 @@ import { useGLTF } from "@react-three/drei";
 import { FaChevronDown } from "react-icons/fa";
 import * as THREE from "three";
 import Header from "@/components/global/Header/Header";
+import BurgerErrorBoundary from "./BurgerErrorBoundary";
 import styles from "./Hero.module.scss";
 
 const base = ["PICKLES", "SAUCE", "BEEF", "CHEESE", "ONIONS", "TOMATO", "LETTUCE"];
@@ -71,18 +72,20 @@ export default function Hero() {
 
         {/* Burger canvas */}
         <div className={styles.burger}>
-          <Canvas
-            camera={{ position: [0, 5.5, 250], fov: 35 }}
-            gl={{ antialias: true, alpha: true }}
-            onCreated={({ gl, scene }) => {
-              gl.setClearColor(0x000000, 0);
-              scene.background = null;
-            }}
-          >
-            <ambientLight intensity={1.2} />
-            <directionalLight position={[5, 5, 5]} intensity={1.2} />
-            <BurgerModel />
-          </Canvas>
+          <BurgerErrorBoundary>
+            <Canvas
+              camera={{ position: [0, 5.5, 250], fov: 35 }}
+              gl={{ antialias: true, alpha: true }}
+              onCreated={({ gl, scene }) => {
+                gl.setClearColor(0x000000, 0);
+                scene.background = null;
+              }}
+            >
+              <ambientLight intensity={1.2} />
+              <directionalLight position={[5, 5, 5]} intensity={1.2} />
+              <BurgerModel />
+            </Canvas>
+          </BurgerErrorBoundary>
         </div>
 
         {/* CRT overlay */}
