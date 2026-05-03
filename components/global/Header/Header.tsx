@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import Nav from "./Nav/Nav";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
-import { FaShoppingCart } from "react-icons/fa";
+import { HiOutlineShoppingBag } from "react-icons/hi2";
+
 import styles from "./Header.module.scss";
 
 const Header = () => {
@@ -47,7 +48,7 @@ const Header = () => {
 
         {/* login */}
         <div className={styles.headerIcons}>
-            <FaShoppingCart size={20}/>
+            <HiOutlineShoppingBag size={23}/>
             <FaUser size={20}/>
         </div>
     </header>
