@@ -20,6 +20,14 @@
       text-transform: uppercase;
       transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
 
+      &.active {
+        transform: rotate(-4deg) scale(1.05);
+
+        &::before {
+          transform: scaleX(1);
+        }
+      }
+
       a {
         text-decoration: none;
         color: inherit;

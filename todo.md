@@ -230,6 +230,13 @@
 - Estimated delivery time shown before payment — calculated from current active order volume in Supabase. Fewer than 5 orders: "20-25 minutes", 5-10 orders: "30-40 minutes", 10+ orders: "45-60 minutes — kitchen is busy 🔥"
 - If kitchen is force closed after a scheduled order is placed — a notification informs the user their scheduled order is still confirmed
 - Scheduled orders saved with `scheduled_for` timestamp and `is_preorder` flag
+- Weather-aware delivery estimates — the same weather API call that powers 
+the navbar banner feeds into the delivery time calculation. If harsh weather 
+is detected (heavy rain, snow, storm) an extra 10-15 minutes is added to the 
+estimate and a message appears — "🌧️ Rainy weather may cause slight delays — 
+estimated 35-45 minutes". Handled server-side in `/api/delivery-estimate` 
+alongside the order volume calculation. One API call powers both the navbar 
+banner and the delivery delay logic
 
 **Payment**
 - Guest checkout — name and email only, no real auth
@@ -446,6 +453,7 @@
 - `enableShakeToRandomize` — toggles DeviceMotion API
 - `enableOfflinePage` — toggles service worker
 - `enable3DBurgerBuilder` — toggles real time 3D updates, falls back to 2D ingredient list if WebGL unsupported
+- `enableWeatherDeliveryDelay` — toggles weather-aware delivery time adjustment
 
 ---
 
