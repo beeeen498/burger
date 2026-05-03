@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import * as THREE from "three";
 import { CiWarning } from "react-icons/ci";
+import * as THREE from "three";
 import styles from "./BurgerChallenge.module.scss";
 
 const PATTY_COUNT = 20; // driven by Supabase later
@@ -15,7 +15,7 @@ const LAYER_SEQUENCE = [
   "top_bun",
 ];
 
-const DESCEND_DURATION  = 7.5;
+const DESCEND_DURATION  = 4.5;
 const PAUSE_DURATION    = 1.2;
 const ASCEND_DURATION   = 0.6;
 const RESTART_PAUSE     = 1.0;
@@ -127,14 +127,20 @@ function StackedBurger({ play }: StackedBurgerProps) {
   }, [scene, camera]);
 
   useEffect(() => {
-    if (play && phase.current === "idle") {
+    if (play) {
       phase.current = "descend";
       clock.current = 0;
+    } else {
+      // Reset when section leaves view
+      phase.current = "idle";
+      clock.current = 0;
+      camera.position.set(0, camTopY.current, CAM_Z);
+      camera.lookAt(0, camTopY.current, 0);
     }
-  }, [play]);
+  }, [play, camera]);
 
   useFrame((_, delta) => {
-    if (phase.current === "idle") return;
+    if (!play || phase.current === "idle") return;
 
     clock.current += delta;
     const top    = camTopY.current;

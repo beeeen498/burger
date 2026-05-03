@@ -9,13 +9,19 @@ import styles from "./StickyHeader.module.scss";
 
 const StickyHeader = () => {
   const [visible, setVisible] = useState(false);
+  const scrolledIn = useRef(false);
+  const [ready, setReady] = useState(false);
   const logoRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > 130)
+      scrolledIn.current = true;
+      setVisible(window.scrollY > 130);
     };
 
+    // On mount: set visible with no animation
+    if (window.scrollY > 130) setVisible(true);
+    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -38,7 +44,11 @@ const StickyHeader = () => {
   }, []);
 
   return (
-    <header className={`${styles.stickyHeader} ${visible ? styles.visible : ''}`}>
+    <header className={`
+      ${styles.stickyHeader} 
+      ${visible ? styles.visible : ''} 
+      ${scrolledIn.current ? styles.animated : ''}
+    `}>
         <div className={styles.headerContent}>
             {/* logo */}
             <Link href="/" className={styles.logoLink}>
