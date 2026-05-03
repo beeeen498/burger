@@ -1,6 +1,7 @@
 // Nav.module.scss
 .nav {
   height: 100%;
+  z-index: 200;
 
   .navList {
     display: flex;
