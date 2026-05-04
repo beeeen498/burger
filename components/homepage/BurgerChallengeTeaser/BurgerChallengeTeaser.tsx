@@ -4,17 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { CiWarning } from "react-icons/ci";
+import { stackBurgerLayers, buildLayerSequence } from "@/lib/stackBurger";
 import * as THREE from "three";
-import styles from "./BurgerChallenge.module.scss";
+import styles from "./BurgerChallengeTeaser.module.scss";
 
-const PATTY_COUNT = 20; // driven by Supabase later
+// how many patties are displayed
+const PATTY_COUNT = 20; 
+const LAYER_SEQUENCE = buildLayerSequence(PATTY_COUNT);
 
-const LAYER_SEQUENCE = [
-  "bottom_bun",
-  ...Array.from({ length: PATTY_COUNT }, () => ["patty", "cheese"]).flat(),
-  "top_bun",
-];
-
+// control animation
 const DESCEND_DURATION  = 4.5;
 const PAUSE_DURATION    = 1.2;
 const ASCEND_DURATION   = 0.6;
@@ -57,89 +55,43 @@ function StackedBurger({ play }: StackedBurgerProps) {
   }, [scene]);
 
   useEffect(() => {
-    if (!groupRef.current) return;
+  if (!groupRef.current) return;
 
-    while (groupRef.current.children.length) {
-      groupRef.current.remove(groupRef.current.children[0]);
-    }
+  const { bottomBunClone, totalBox } = stackBurgerLayers(
+    groupRef.current,
+    meshes.current,
+    LAYER_SEQUENCE
+  );
 
-    const headroomCorrection: { [key: string]: number } = {
-      bottom_bun: 0,
-      patty:      15,
-      cheese:     14,
-      top_bun:    0,
-    };
+  const stackTop = totalBox.max.y;
+  camTopY.current = stackTop + 1;
 
-    const placementNudge: { [key: string]: number } = {
-      top_bun: 19.5,
-    };
+  if (bottomBunClone) {
+    const bunBox       = new THREE.Box3().setFromObject(bottomBunClone);
+    const halfVhWorld  = Math.tan((CAM_FOV / 2) * (Math.PI / 180)) * CAM_Z;
+    camBottomY.current = bunBox.max.y - halfVhWorld * 0.05;
+  } else {
+    camBottomY.current = totalBox.min.y - 1;
+  }
 
-    // Track the bottom bun clone so we can measure its world position
-    let bottomBunClone: THREE.Object3D | null = null;
+  camera.position.set(0, camTopY.current, CAM_Z);
+  camera.lookAt(0, camTopY.current, 0);
+}, [scene, camera]);
 
-    let cursorY = 0;
-
-    for (const name of LAYER_SEQUENCE) {
-      const sourceMesh = meshes.current[name];
-      if (!sourceMesh) continue;
-
-      const clone = sourceMesh.clone(true);
-      clone.castShadow = true;
-
-      const geo        = (sourceMesh as THREE.Mesh).geometry;
-      geo.computeBoundingBox();
-      const geoBox     = geo.boundingBox!;
-      const geoMinY    = geoBox.min.y;
-      const geoMaxY    = geoBox.max.y;
-      const correction = headroomCorrection[name] ?? 0;
-      const nudge      = placementNudge[name] ?? 0;
-
-      clone.position.set(0, cursorY - geoMinY + nudge, 0);
-      groupRef.current.add(clone);
-      cursorY += (geoMaxY - geoMinY) - correction;
-
-      if (name === "bottom_bun") bottomBunClone = clone;
-    }
-
-    // Center horizontally
-    const totalBox = new THREE.Box3().setFromObject(groupRef.current);
-    const center   = totalBox.getCenter(new THREE.Vector3());
-    groupRef.current.position.x = -center.x;
-    groupRef.current.position.z = -center.z;
-
-    const stackTop = totalBox.max.y;
-    camTopY.current = stackTop + 1;
-
-    // Get the world-space Y of the bottom bun's top surface after centering
-    if (bottomBunClone) {
-      const bunBox     = new THREE.Box3().setFromObject(bottomBunClone);
-      // Camera needs to be low enough that bunBox.max.y is at the bottom edge of the viewport
-      // Bottom edge of viewport = cameraY - halfVhWorld
-      // So: cameraY = bunBox.max.y + halfVhWorld
-      const halfVhWorld  = Math.tan((CAM_FOV / 2) * (Math.PI / 180)) * CAM_Z;
-      camBottomY.current = bunBox.max.y - halfVhWorld * 0.25;
-    } else {
-      camBottomY.current = totalBox.min.y - 1;
-    }
-
+useEffect(() => {
+  if (play) {
+    phase.current = "descend";
+    clock.current = 0;
+  } else {
+    // Reset when section leaves view
+    phase.current = "idle";
+    clock.current = 0;
     camera.position.set(0, camTopY.current, CAM_Z);
     camera.lookAt(0, camTopY.current, 0);
-  }, [scene, camera]);
+  }
+}, [play, camera]);
 
-  useEffect(() => {
-    if (play) {
-      phase.current = "descend";
-      clock.current = 0;
-    } else {
-      // Reset when section leaves view
-      phase.current = "idle";
-      clock.current = 0;
-      camera.position.set(0, camTopY.current, CAM_Z);
-      camera.lookAt(0, camTopY.current, 0);
-    }
-  }, [play, camera]);
-
-  useFrame((_, delta) => {
+useFrame((_, delta) => {
     if (!play || phase.current === "idle") return;
 
     clock.current += delta;

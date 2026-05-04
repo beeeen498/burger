@@ -160,6 +160,13 @@
 - Challenge details — record holder name, weight of the meal, number of patties, time to beat, number of attempts — all stored in a `challenge` table in Supabase
 - Updates instantly via Supabase realtime when admin changes data
 - A hall of fame — previous record holders in retro arcade leaderboard style, chunky pixel font, numbered rankings
+- A separate 3D model — comically tall burger with 6+ patties alongside giant 
+fries and a shake, built in Blender, loaded with React Three Fiber, with its 
+own slow rotation and floating animation
+- The top portion of the challenge burger has a subtle wobble animation — 
+a sine wave applied to the upper patties and top bun in `useFrame`, like the 
+burger is barely holding itself together due to its absurd height. Wobble 
+intensity increases slightly on hover, like you're threatening to knock it over
 
 ---
 

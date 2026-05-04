@@ -3,7 +3,7 @@
 import BackgroundCanvas from "@/components/homepage/BackgroundCanvas";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Hero from "@/components/homepage/Hero/Hero";
-import BurgerChallenge from "@/components/homepage/BurgerChallenge/BurgerChallenge";
+import BurgerChallengeTeaser from "@/components/homepage/BurgerChallengeTeaser/BurgerChallengeTeaser";
 
 export default function Page() {
   return (
@@ -11,7 +11,7 @@ export default function Page() {
       <BackgroundCanvas />
       <StickyHeader />
       <Hero />
-      <BurgerChallenge />
+      <BurgerChallengeTeaser />
     </>
   );
 }

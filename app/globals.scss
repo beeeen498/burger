@@ -16,6 +16,11 @@
   cursor: url('/icons/spatula.png'), auto;
 }
 
+html,
+body {
+  overscroll-behavior: none;
+}
+
 body {
   font-family: var(--body-font), sans-serif;
   background-color: var(--blue);
