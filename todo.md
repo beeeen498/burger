@@ -77,6 +77,62 @@
 
 ---
 
+## Featured Menu Items Section
+
+**Layout**
+- Asymmetric grid — 2 small cards stacked on the left, 1 tall card on the right (same height as both left cards combined)
+- Under the grid — a CTA button linking to the full menu page
+- Placement in page flow — directly after the hero, before testimonials, before challenge teaser
+
+**Animations**
+- Slide-in from bottom on scroll into view — using GSAP ScrollTrigger
+- Cards stagger — left top first, left bottom second, right card third, 150ms delay between each
+- Right card travels slightly further since it's taller
+
+**Card Hover Effects**
+- At rest — blurry shadow
+- On hover — shadow snaps to solid neobrutalist offset shadow simultaneously with tilt
+- Cursor-tracked tilt — mouse position normalized to -1/+1 range, max 8deg rotateX and rotateY
+- Shadow direction follows the tilt — card leans left, shadow shifts right
+- On mouse leave — springs back to flat smoothly
+- Slight scale up on hover — scale(1.03)
+
+**3D Items**
+- Each card has its own Canvas with its own camera and lighting
+- Items peek from the right side — right half visible, left half clipped by overflow: hidden
+- Placeholder: all three use assembled-burger.glb until fries/drink models sourced
+- Meal scene composition — triangle formation. Burger front and center, fries behind-left, drink behind-right at different Z depths. Depth creates parallax during card tilt
+- Two scene types — featured (dramatic, cinematic) and menu page (clean, informative)
+- Scene config is a position/scale object per item, admin-adjustable later
+
+**Card Contents**
+- Burger name — bottom left, large all-caps heading font, dark gradient behind for readability
+- Price tag — top right corner, yellow background, black border, sticker style
+- Tall right card name — vertical, rotated 90deg up the left edge (revisit during build)
+- No star ratings or descriptions — visual-first
+
+**The Three Items**
+- Right card (tall, hero) — 404 — Meal — 4x4 — "You weren't supposed to find this"
+- Top left — 303 — Meal — 3x3 — "Redirecting you to a food coma"
+- Bottom left — 202 — Single — 2x2 — "Request accepted. Regrets pending."
+
+**Naming System**
+- HTTP status codes map to burger stack size — 404 = 4x4, 303 = 3x3, 202 = 2x2, 101 = 1x1
+- Full menu carries this system throughout
+- Menu page kitchen status header styled as terminal — HTTP/1.1 200 OK — Kitchen is open
+- Descriptions use dry developer-humor tone
+
+**Admin (Future)**
+- featured_items table in Supabase — 3 rows with slot field and foreign key to menu_items
+- Admin UI — dropdown per slot to select which menu item sits there
+- Scene composition config editable per item eventually
+
+**Meals vs Singles**
+- Both exist on the menu — every burger available as single, make it a meal upsell on item detail or in cart
+- Featured section shows 2 meals + 1 single for variety
+
+---
+
 ## Home Page Sections
 **Why Us**
 - Three or four chunky cards with bold icons and short punchy copy — "Fresh daily", "No frozen patties", "Secret sauce since 1987"

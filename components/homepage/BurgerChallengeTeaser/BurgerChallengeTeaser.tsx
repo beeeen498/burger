@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { CiWarning } from "react-icons/ci";
 import { stackBurgerLayers, buildLayerSequence } from "@/lib/stackBurger";
+import Cta from "@/components/global/Cta/Cta";
 import * as THREE from "three";
 import styles from "./BurgerChallengeTeaser.module.scss";
 
@@ -167,9 +168,8 @@ export default function BurgerChallenge() {
         <p className={styles.subtext}>
           {PATTY_COUNT} patties. One hour. Your meal is free if you finish.
         </p>
-        <a href="/menu#challenge" className={styles.cta}>
-          See the challenge
-        </a>
+        
+        <Cta label="See the challenge" href="/menu#challenge"></Cta>
       </div>
 
       <div className={styles.warningTape} />

@@ -26,13 +26,13 @@
   height: 28px;
   background: repeating-linear-gradient(
     -55deg,
-    #f7e558 0px,
-    #f7e558 20px,
-    #1a1a1a 20px,
-    #1a1a1a 40px
+    var(--yellow) 0px,
+    var(--yellow) 20px,
+    var(--black) 20px,
+    var(--black) 40px
   );
-  border-top: 2.5px solid #1a1a1a;
-  border-bottom: 2.5px solid #1a1a1a;
+  border-top: 2.5px solid var(--black);
+  border-bottom: 2.5px solid var(--black);
   z-index: 10;
 
   &:first-child {
@@ -103,10 +103,10 @@
   font-family: var(--header-font);
   font-size: 0.75rem;
   letter-spacing: 0.18em;
-  color: #1a1a1a;
-  background: #f7e558;
-  border: 2.5px solid #1a1a1a;
-  box-shadow: 3px 3px 0 #1a1a1a;
+  color: var(--black);
+  background: var(--yellow);
+  border: 2.5px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
   padding: 0.3rem 0.9rem;
   margin-bottom: 1rem;
   text-transform: uppercase;
@@ -116,7 +116,7 @@
   font-family: var(--header-font);
   font-size: clamp(2.8rem, 7vw, 5.5rem);
   line-height: 1;
-  color: #efefef;
+  color: var(--white);
   text-transform: uppercase;
   letter-spacing: -0.01em;
   margin: 0 0 0.5rem;
@@ -124,8 +124,8 @@
 }
 
 .headingAccent {
-  color: #df2c8b;
-  -webkit-text-stroke: 1.5px #df2c8b;
+  color: var(--pink);
+  -webkit-text-stroke: 1.5px var(--pink);
   text-shadow:
     0 0 40px rgba(223, 44, 139, 0.5),
     0 0 80px rgba(223, 44, 139, 0.2);
@@ -139,33 +139,4 @@
   letter-spacing: 0.02em;
 }
 
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--header-font);
-  font-size: 1rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #1a1a1a;
-  background: #df2c8b;
-  border: 2.5px solid #1a1a1a;
-  box-shadow: 4px 4px 0 #1a1a1a;
-  padding: 0.75rem 1.75rem;
-  transition:
-    transform 80ms ease,
-    box-shadow 80ms ease;
 
-  &:hover {
-    transform: translate(1px, 1px);
-    background-color: var(--white);
-    color: var(--pink);
-    box-shadow: 2px 2px 0 #1a1a1a;
-  }
-
-  &:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0px 0px 0 #1a1a1a;
-  }
-}
