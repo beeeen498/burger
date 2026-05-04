@@ -1,5 +1,6 @@
 'use client'
 import Link from "next/link";
+import Cta from "@/components/global/Cta/Cta";
 import styles from "./FeaturedItems.module.scss";
 
 const FeaturedItems = () => {
@@ -19,9 +20,7 @@ const FeaturedItems = () => {
         </div>
 
         {/* cta */}
-        <div className={styles.cta}>
-            <Link href="/menu">go to menu</Link>
-        </div>
+        <Cta label="View the lineup" href="/menu"></Cta>
     </section>
   )
 }
