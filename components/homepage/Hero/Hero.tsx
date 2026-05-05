@@ -15,7 +15,7 @@ const marqueeText = base.map((_, i) =>
 );
 
 function BurgerModel() {
-  const { scene } = useGLTF("/3d-models/assembled-burger.glb") as any;
+  const { scene } = useGLTF("/3d-models/burger.glb") as any;
   const floatRef = useRef<THREE.Group>(null);
   const spinRef  = useRef<THREE.Group>(null);
   const clock    = useRef(0);

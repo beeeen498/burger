@@ -20,6 +20,7 @@ const FeaturedItems = () => {
                     cheeseCount: 3,
                     pickles: 1,
                     onions: 1,
+                    bacon: 3,
                 }} />
             </Link>
 
@@ -32,6 +33,7 @@ const FeaturedItems = () => {
                     pattyCount: 2,
                     cheeseCount: 2,
                     pickles: 1,
+                    bacon: 3,
                     onions: 1,
                 }} />
             </Link>
@@ -40,12 +42,13 @@ const FeaturedItems = () => {
             <Link href="/menu/404" className={styles.card}>
                 <BurgerCanvas ingredients={{
                     sauce: "regular",
-                    lettuce: 1,
-                    tomato: 1,
-                    pattyCount: 4,
-                    cheeseCount: 4,
-                    pickles: 1,
-                    onions: 1,
+                    lettuce: 0,
+                    tomato: 0,
+                    pattyCount: 1,
+                    cheeseCount: 1,
+                    pickles: 0,
+                    bacon: 1,
+                    onions: 0,
                 }} />
             </Link>
         </div>

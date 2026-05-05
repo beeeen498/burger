@@ -19,7 +19,7 @@
  * their desired order.
  *
  * headroomCorrection and placementNudge values were derived by logging
- * the actual geometry bounds of each mesh in assembled-burger.glb during
+ * the actual geometry bounds of each mesh in burger.glb during
  * development. Adjust if the model changes.
  */
 
@@ -33,30 +33,30 @@ export const MAX_LETTUCE = 2
 export const MAX_TOMATO = 2
 export const MAX_PICKLES = 2
 export const MAX_ONIONS = 2
-// export const MAX_BACON = 3
+export const MAX_BACON = 2
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
-// Derived from geometry bounding box analysis of the assembled-burger.glb meshes.
-// the order is - bottom_bun → sauce → lettuce → tomato → patty → cheese → pickles → onions → top_bun
+// Derived from geometry bounding box analysis of the burger.glb meshes.
+// the order is - bottom_bun → sauce → lettuce → tomato → patty → cheese → pickles → onions → bacon → top_bun
 const HEADROOM_CORRECTION: { [key: string]: number } = {
-  bottom_bun: -3,
+  bottom_bun: 0,
   sauce:      0,
-  lettuce:    7.5,
-  tomato:     2.5,
-  patty:      13.3,
-  cheese:     14.3,
-  pickles:    1,
-  onions:     4,
+  lettuce:    0,
+  tomato:     0,
+  patty:      0,
+  cheese:     0,
+  pickles:    0,
+  onions:     0,
+  bacon:      1.5,
   top_bun:    0,
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  sauce: -2,
-  lettuce: 13,
-  tomato: 14,
-  pickles: -1,
-  onions: 15,
-  top_bun: 23.5,
+  cheese: -7,
+  pickles: -7,
+  onions: -7,
+  bacon: -12,
+  top_bun: -2,
 };
 
 interface StackResult {
@@ -73,7 +73,7 @@ export interface BurgerIngredients {
   cheeseCount?: number // 0 to pattyCount
   pickles?: number     // 0, 1, or 2
   onions?: number      // 0, 1, or 2
-  // bacon?: number       // 0, 1, 2, or 3
+  bacon?: number       // 0, 1, 2, or 3
 }
 
 /**
@@ -102,6 +102,36 @@ export function stackBurgerLayers(
   let cursorY = 0;
 
   for (const name of layers) {
+    if (name === "bacon") {
+      
+      const baconStrips = Object.keys(meshes)
+        .filter(k => k.startsWith("bacon_"))
+        .map(k => meshes[k])
+
+      const baconGroup = new THREE.Group()
+      baconStrips.forEach(strip => {
+        const stripClone = strip.clone(true)
+        baconGroup.add(stripClone)
+      })
+
+      const baconGeo = meshes["bacon_1"].geometry
+      baconGeo.computeBoundingBox()
+      const baconMinY = baconGeo.boundingBox!.min.y
+      const baconMaxY = baconGeo.boundingBox!.max.y
+      const baconCorrection = HEADROOM_CORRECTION["bacon"] ?? 0
+      const baconNudge = PLACEMENT_NUDGE["bacon"] ?? 0
+
+      baconGroup.position.set(0, cursorY - baconMinY + baconNudge, 0)
+      group.add(baconGroup)
+      cursorY += (baconMaxY - baconMinY) - baconCorrection
+
+      baconGroup.position.set(0, cursorY - baconMinY + baconNudge, 0)
+console.log("bacon position Y:", cursorY - baconMinY + baconNudge)
+console.log("baconMinY:", baconMinY, "baconMaxY:", baconMaxY)
+group.add(baconGroup)
+      continue
+    }
+
     const sourceMesh = meshes[name];
     if (!sourceMesh) continue;
 
@@ -188,6 +218,10 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   // add onions if present
   const onionsCount = Math.min(ingredients.onions ?? 0, MAX_ONIONS)
   for (let i = 0; i < onionsCount; i++) layers.push("onions")
+
+  // add bacon if present
+  const baconCount = Math.min(ingredients.bacon ?? 0, MAX_BACON)
+  for (let i = 0; i < baconCount; i++) layers.push("bacon")
 
   // always end with top bun
   layers.push("top_bun")

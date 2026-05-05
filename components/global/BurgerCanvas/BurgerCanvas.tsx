@@ -23,7 +23,7 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
     const meshes = useRef<{ [key: string]: THREE.Mesh }>({})
 
     // Load the shared GLB model that contains all ingredient meshes
-    const { scene } = useGLTF("/3d-models/assembled-burger.glb") as any
+    const { scene } = useGLTF("/3d-models/burger.glb") as any
 
     const { camera } = useThree()
 
@@ -31,7 +31,17 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
         // Walk through every object in the GLB scene and extract the meshes by name
         scene.traverse((obj: THREE.Object3D) => {
             if ((obj as THREE.Mesh).isMesh) {
-                meshes.current[obj.name] = obj as THREE.Mesh
+                if (obj.name.startsWith("bacon_")) {
+                    // store each bacon strip under a numbered key
+                    // we'll handle combining them in stackBurgerLayers
+                    meshes.current[obj.name] = obj as THREE.Mesh
+                    // also store the first strip as "bacon" for the stacking cursor
+                    if (obj.name === "bacon_1") {
+                        meshes.current["bacon"] = obj as THREE.Mesh
+                    }
+                } else {
+                    meshes.current[obj.name] = obj as THREE.Mesh
+                }
             }
         })
 
@@ -39,15 +49,28 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
         if (!groupRef.current) return
         const { totalBox } = stackBurgerLayers(groupRef.current, meshes.current, buildBurgerSequence(ingredients))
 
+        // moving the burgers on the x axis
+        const burgerWidth = totalBox.max.x - totalBox.min.x
+        if (groupRef.current) {
+            groupRef.current.position.x = burgerWidth * 0 // centered
+        }
+
         // Point the camera at the bottom third of the burger stack
         // so the burger appears to rise from the bottom of the card
         const stackBottom = totalBox.min.y
         const stackTop = totalBox.max.y
+        
         const focusY = stackBottom + (stackTop - stackBottom) * 0.3
+        const lookAtY = stackBottom
 
-        camera.position.set(0, focusY, 35)
-        camera.lookAt(0, focusY, 0)
+        // moving burgers on y axis
+        camera.position.set(0, stackBottom + 14.5, 120) // at the bottom
+
+        ;(camera as THREE.PerspectiveCamera).fov = 15
+        ;(camera as THREE.PerspectiveCamera).updateProjectionMatrix()
+
     }, [scene, ingredients])
+    
     
     return (
         /**
@@ -67,7 +90,6 @@ export default function BurgerCanvas({ ingredients }: BurgerCanvasProps) {
   return (
     <div className={styles.canvasWrapper}>
       <Canvas
-        camera={{ position: [0, 50, 180], fov: 35 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
@@ -81,4 +103,4 @@ export default function BurgerCanvas({ ingredients }: BurgerCanvasProps) {
 }
 
 // Preload the GLB so it's ready before the component mounts
-useGLTF.preload("/3d-models/assembled-burger.glb")
+useGLTF.preload("/3d-models/burger.glb")
