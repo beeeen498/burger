@@ -47,11 +47,14 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
 
         camera.position.set(0, focusY, 35)
         camera.lookAt(0, focusY, 0)
-    }, [scene])
+    }, [scene, ingredients])
     
     return (
-        // The group that stackBurgerLayers populates with cloned ingredient meshes
-        <group ref={groupRef} scale={0.13} rotation={[0.05, 0, 0]}/>
+        /**
+         * The group that stackBurgerLayers populates with cloned ingredient meshes
+         * Rotation controls the tilt of the burger
+         */ 
+        <group ref={groupRef} scale={0.13} rotation={[0.1, 0, 0]}/>
     )
 }
 
@@ -64,7 +67,7 @@ export default function BurgerCanvas({ ingredients }: BurgerCanvasProps) {
   return (
     <div className={styles.canvasWrapper}>
       <Canvas
-        camera={{ position: [0, 50, 180], fov: 55 }}
+        camera={{ position: [0, 50, 180], fov: 35 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >

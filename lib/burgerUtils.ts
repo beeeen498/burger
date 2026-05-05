@@ -29,27 +29,34 @@ import * as THREE from "three";
 // Does not apply to the challenge burger — see buildChallengeSequence
 export const MAX_PATTIES = 5
 export const MAX_CHEESE = 5
+export const MAX_LETTUCE = 2
+export const MAX_TOMATO = 2
+export const MAX_PICKLES = 2
+export const MAX_ONIONS = 2
+// export const MAX_BACON = 3
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
 // Derived from geometry bounding box analysis of the assembled-burger.glb meshes.
+// the order is - bottom_bun → sauce → lettuce → tomato → patty → cheese → pickles → onions → top_bun
 const HEADROOM_CORRECTION: { [key: string]: number } = {
-  bottom_bun: 0,
+  bottom_bun: -3,
   sauce:      0,
-  pickles:    1,
+  lettuce:    7.5,
+  tomato:     2.5,
   patty:      13.3,
   cheese:     14.3,
+  pickles:    1,
   onions:     4,
-  tomato:     0,
-  lettuce:    7.5,
   top_bun:    0,
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  top_bun: 20.5,
-  lettuce: 13,
-  onions: 15,
-  pickles: -1,
   sauce: -2,
+  lettuce: 13,
+  tomato: 14,
+  pickles: -1,
+  onions: 15,
+  top_bun: 23.5,
 };
 
 interface StackResult {
@@ -59,14 +66,14 @@ interface StackResult {
 }
 
 export interface BurgerIngredients {
-  sauce?: boolean
-  lettuce?: boolean
-  tomato?: boolean
-  pattyCount: number
-  cheeseCount?: number
-  pickles?: boolean
-  onions?: boolean
-  bacon?: boolean
+  sauce?: "none" | "regular" | "extra"
+  lettuce?: number     // 0, 1, or 2
+  tomato?: number      // 0, 1, or 2
+  pattyCount: number   // 1-5
+  cheeseCount?: number // 0 to pattyCount
+  pickles?: number     // 0, 1, or 2
+  onions?: number      // 0, 1, or 2
+  // bacon?: number       // 0, 1, 2, or 3
 }
 
 /**
@@ -152,13 +159,15 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   layers.push("bottom_bun")
 
   // add sauce if present
-  if (ingredients.sauce) layers.push("sauce")
+  if (ingredients.sauce === "regular" || ingredients.sauce === "extra") layers.push("sauce")
 
   // add lettuce if present
-  if (ingredients.lettuce) layers.push("lettuce")
+  const lettuceCount = Math.min(ingredients.lettuce ?? 0, MAX_LETTUCE)
+  for (let i = 0; i < lettuceCount; i++) layers.push("lettuce")
 
   // add tomato if present
-  if (ingredients.tomato) layers.push("tomato")
+  const tomatoCount = Math.min(ingredients.tomato ?? 0, MAX_TOMATO)
+  for (let i = 0; i < tomatoCount; i++) layers.push("tomato")
 
   // add patties and cheese
   const pattyCount = Math.min(Math.max(ingredients.pattyCount, 1), MAX_PATTIES)
@@ -173,10 +182,12 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   }
 
   // add pickles if present
-  if (ingredients.pickles) layers.push("pickles")
+  const picklesCount = Math.min(ingredients.pickles ?? 0, MAX_PICKLES)
+  for (let i = 0; i < picklesCount; i++) layers.push("pickles")
 
   // add onions if present
-  if (ingredients.onions) layers.push("onions")
+  const onionsCount = Math.min(ingredients.onions ?? 0, MAX_ONIONS)
+  for (let i = 0; i < onionsCount; i++) layers.push("onions")
 
   // always end with top bun
   layers.push("top_bun")

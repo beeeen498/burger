@@ -13,39 +13,39 @@ const FeaturedItems = () => {
             {/* top left */}
             <Link href="/menu/303" className={styles.card}>
                 <BurgerCanvas ingredients={{
-                    sauce: true,
-                    lettuce: true,
-                    tomato: true,
+                    sauce: "regular",
+                    lettuce: 1,
+                    tomato: 1,
                     pattyCount: 3,
                     cheeseCount: 3,
-                    pickles: true,
-                    onions: true,
+                    pickles: 1,
+                    onions: 1,
                 }} />
             </Link>
 
             {/* bottom left */}
             <Link href="/menu/202" className={styles.card}>
                 <BurgerCanvas ingredients={{
-                    sauce: true,
-                    lettuce: true,
-                    tomato: true,
+                    sauce: "regular",
+                    lettuce: 1,
+                    tomato: 1,
                     pattyCount: 2,
                     cheeseCount: 2,
-                    pickles: true,
-                    onions: true,
+                    pickles: 1,
+                    onions: 1,
                 }} />
             </Link>
 
             {/* right */}
             <Link href="/menu/404" className={styles.card}>
                 <BurgerCanvas ingredients={{
-                    sauce: true,
-                    lettuce: true,
-                    tomato: true,
+                    sauce: "regular",
+                    lettuce: 1,
+                    tomato: 1,
                     pattyCount: 4,
                     cheeseCount: 4,
-                    pickles: true,
-                    onions: true,
+                    pickles: 1,
+                    onions: 1,
                 }} />
             </Link>
         </div>
