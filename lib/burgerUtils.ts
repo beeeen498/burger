@@ -25,30 +25,48 @@
 
 import * as THREE from "three";
 
+// Maximum ingredients allowed in a custom burger build
+// Does not apply to the challenge burger — see buildChallengeSequence
+export const MAX_PATTIES = 5
+export const MAX_CHEESE = 5
+
 // How many units to subtract from each mesh's maxY to find the true visible top.
 // Derived from geometry bounding box analysis of the assembled-burger.glb meshes.
 const HEADROOM_CORRECTION: { [key: string]: number } = {
   bottom_bun: 0,
-  patty:      15,
-  cheese:     14,
   sauce:      0,
-  pickles:    0,
-  onions:     0,
+  pickles:    1,
+  patty:      13.3,
+  cheese:     14.3,
+  onions:     4,
   tomato:     0,
-  lettuce:    0,
+  lettuce:    7.5,
   top_bun:    0,
 };
 
-// Extra Y nudge applied to placement only, not cursor advance.
-// Corrects for meshes whose geometry minY sits far from zero.
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  top_bun: 19.5,
+  top_bun: 20.5,
+  lettuce: 13,
+  onions: 15,
+  pickles: -1,
+  sauce: -2,
 };
 
 interface StackResult {
   bottomBunClone: THREE.Object3D | null;
   topBunClone:    THREE.Object3D | null;
   totalBox:       THREE.Box3;
+}
+
+export interface BurgerIngredients {
+  sauce?: boolean
+  lettuce?: boolean
+  tomato?: boolean
+  pattyCount: number
+  cheeseCount?: number
+  pickles?: boolean
+  onions?: boolean
+  bacon?: boolean
 }
 
 /**
@@ -127,6 +145,41 @@ export function buildChallengeSequence(pattyCount: number): string[] {
  * The caller passes only the middle ingredients in their desired order.
  * Buns are never included in the ingredients array.
  */
-export function buildBurgerSequence(ingredients: string[]): string[] {
-  return ["bottom_bun", ...ingredients, "top_bun"]
+export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
+  const layers: string[] = []
+
+  // always start with bottom bun
+  layers.push("bottom_bun")
+
+  // add sauce if present
+  if (ingredients.sauce) layers.push("sauce")
+
+  // add lettuce if present
+  if (ingredients.lettuce) layers.push("lettuce")
+
+  // add tomato if present
+  if (ingredients.tomato) layers.push("tomato")
+
+  // add patties and cheese
+  const pattyCount = Math.min(Math.max(ingredients.pattyCount, 1), MAX_PATTIES)
+  let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, pattyCount)
+  
+  for (let i = 0; i < pattyCount; i++) {
+    layers.push("patty")
+    if (cheeseRemaining > 0) {
+      layers.push("cheese")
+      cheeseRemaining--
+    }
+  }
+
+  // add pickles if present
+  if (ingredients.pickles) layers.push("pickles")
+
+  // add onions if present
+  if (ingredients.onions) layers.push("onions")
+
+  // always end with top bun
+  layers.push("top_bun")
+
+  return layers
 }

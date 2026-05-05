@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Cta from "@/components/global/Cta/Cta";
+import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import styles from "./FeaturedItems.module.scss";
 
 const FeaturedItems = () => {
@@ -9,14 +10,43 @@ const FeaturedItems = () => {
     <section className={styles.featuredItems}>
         {/* cards */}
         <div className={styles.cardsGrid}>
+            {/* top left */}
             <Link href="/menu/303" className={styles.card}>
-                Card 1
+                <BurgerCanvas ingredients={{
+                    sauce: true,
+                    lettuce: true,
+                    tomato: true,
+                    pattyCount: 3,
+                    cheeseCount: 3,
+                    pickles: true,
+                    onions: true,
+                }} />
             </Link>
+
+            {/* bottom left */}
             <Link href="/menu/202" className={styles.card}>
-                Card 2
+                <BurgerCanvas ingredients={{
+                    sauce: true,
+                    lettuce: true,
+                    tomato: true,
+                    pattyCount: 2,
+                    cheeseCount: 2,
+                    pickles: true,
+                    onions: true,
+                }} />
             </Link>
+
+            {/* right */}
             <Link href="/menu/404" className={styles.card}>
-                Card 3
+                <BurgerCanvas ingredients={{
+                    sauce: true,
+                    lettuce: true,
+                    tomato: true,
+                    pattyCount: 4,
+                    cheeseCount: 4,
+                    pickles: true,
+                    onions: true,
+                }} />
             </Link>
         </div>
 
