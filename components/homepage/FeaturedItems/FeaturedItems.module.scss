@@ -10,12 +10,19 @@
         display: grid;
         grid-template-columns: 1fr 1.4fr;
         grid-template-rows: 300px 300px;
-        gap: 16px;
+        gap: 20px;
         max-width: 1200px;
         margin: 0 auto;
 
         .card{
-            background-color: aqua;
+            background-color: var(--blue);
+            border: var(--border);
+            box-shadow: 0px 8px 24px rgba(26, 26, 26, 0.3);
+            overflow: hidden;
+
+            &:hover{
+                box-shadow: 7px 7px 0px var(--black);
+            }
         }
         
         .card:nth-child(1) {
