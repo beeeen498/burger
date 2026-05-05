@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { CiWarning } from "react-icons/ci";
-import { stackBurgerLayers, buildLayerSequence } from "@/lib/stackBurger";
+import { stackBurgerLayers, buildChallengeSequence } from "@/lib/burgerUtils";
 import Cta from "@/components/global/Cta/Cta";
 import * as THREE from "three";
 import styles from "./BurgerChallengeTeaser.module.scss";
 
 // how many patties are displayed
 const PATTY_COUNT = 20; 
-const LAYER_SEQUENCE = buildLayerSequence(PATTY_COUNT);
+const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 
 // control animation
 const DESCEND_DURATION  = 4.5;

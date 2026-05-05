@@ -22,10 +22,20 @@ function BurgerModel() {
 
   // Center the scene geometry on mount
   useEffect(() => {
-    const box = new THREE.Box3().setFromObject(scene);
-    const center = box.getCenter(new THREE.Vector3());
-    scene.position.sub(center); // shift scene so its center is at origin
-  }, [scene]);
+  const box = new THREE.Box3().setFromObject(scene);
+  const center = box.getCenter(new THREE.Vector3());
+  scene.position.sub(center);
+
+  // temporary logging
+  scene.traverse((obj: THREE.Object3D) => {
+    const mesh = obj as THREE.Mesh
+    if (mesh.isMesh && mesh.geometry) {
+      mesh.geometry.computeBoundingBox()
+      const box = mesh.geometry.boundingBox
+      console.log(mesh.name, 'minY:', box?.min.y, 'maxY:', box?.max.y)
+    }
+  })
+}, [scene]);
 
   useFrame((_, delta) => {
     if (!floatRef.current || !spinRef.current) return;

@@ -1,17 +1,22 @@
 /**
  * Shared burger stacking utility.
  *
- * Both the challenge section and the burger builder need to stack
- * ingredients in 3D. Instead of duplicating the logic, this utility
- * handles it in one place.
- *
- * buildLayerSequence(pattyCount) — returns an ordered array of mesh
- * names from bottom_bun to top_bun, with [patty, cheese] repeated
- * pattyCount times in between.
+ * Used by the burger builder, featured items, menu cards, and challenge
+ * teaser to stack ingredients in 3D. Instead of duplicating the logic,
+ * this utility handles it in one place.
  *
  * stackBurgerLayers(group, meshes, layers) — clones each mesh, measures
  * its real geometry height via bounding box, and stacks the layers flush
  * on top of each other inside the provided Three.js group.
+ *
+ * buildChallengeSequence(pattyCount) — returns an ordered array of mesh
+ * names for the challenge teaser, with [patty, cheese] repeated
+ * pattyCount times between the buns.
+ *
+ * buildBurgerSequence(ingredients) — returns an ordered array of mesh
+ * names for a custom burger. Always enforces bottom_bun as first and
+ * top_bun as last. The caller passes only the middle ingredients in
+ * their desired order.
  *
  * headroomCorrection and placementNudge values were derived by logging
  * the actual geometry bounds of each mesh in assembled-burger.glb during
@@ -26,6 +31,11 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   bottom_bun: 0,
   patty:      15,
   cheese:     14,
+  sauce:      0,
+  pickles:    0,
+  onions:     0,
+  tomato:     0,
+  lettuce:    0,
   top_bun:    0,
 };
 
@@ -103,10 +113,20 @@ export function stackBurgerLayers(
  * Builds the layer sequence for a burger stack.
  * Pattern: bottom_bun → [patty, cheese] × pattyCount → top_bun
  */
-export function buildLayerSequence(pattyCount: number): string[] {
+export function buildChallengeSequence(pattyCount: number): string[] {
   return [
     "bottom_bun",
     ...Array.from({ length: pattyCount }, () => ["patty", "cheese"]).flat(),
     "top_bun",
   ];
+}
+
+/**
+ * Builds the layer sequence for a custom burger.
+ * Always enforces bottom_bun as first and top_bun as last.
+ * The caller passes only the middle ingredients in their desired order.
+ * Buns are never included in the ingredients array.
+ */
+export function buildBurgerSequence(ingredients: string[]): string[] {
+  return ["bottom_bun", ...ingredients, "top_bun"]
 }
