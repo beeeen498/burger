@@ -8,7 +8,6 @@
   text-transform: uppercase;
   text-decoration: none;
   color: var(--black);
-  background: var(--pink);
   border: 2.5px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
   padding: 0.75rem 1.75rem;
@@ -17,13 +16,29 @@
     box-shadow 80ms ease;
 
   &:hover {
-    background-color: var(--white);
-    color: var(--pink);
     box-shadow: 2px 2px 0 var(--black);
   }
 
   &:active {
     transform: translate(4px, 4px);
     box-shadow: 0px 0px 0 var(--black);
+  }
+}
+
+.pink {
+  background: var(--pink);
+  
+  &:hover {
+    background-color: var(--white);
+    color: var(--pink);
+  }
+}
+
+.yellow {
+  background: var(--yellow);
+  
+  &:hover {
+    background-color: var(--white);
+    color: var(--pink);
   }
 }

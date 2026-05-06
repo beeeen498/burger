@@ -32,7 +32,6 @@ function BurgerModel() {
     if (mesh.isMesh && mesh.geometry) {
       mesh.geometry.computeBoundingBox()
       const box = mesh.geometry.boundingBox
-      console.log(mesh.name, 'minY:', box?.min.y, 'maxY:', box?.max.y)
     }
   })
 }, [scene]);

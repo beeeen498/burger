@@ -52,11 +52,11 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  cheese: -7,
+  cheese: -4,
   pickles: -7,
   onions: -7,
   bacon: -12,
-  top_bun: -2,
+  top_bun: -4,
 };
 
 interface StackResult {
@@ -126,9 +126,7 @@ export function stackBurgerLayers(
       cursorY += (baconMaxY - baconMinY) - baconCorrection
 
       baconGroup.position.set(0, cursorY - baconMinY + baconNudge, 0)
-console.log("bacon position Y:", cursorY - baconMinY + baconNudge)
-console.log("baconMinY:", baconMinY, "baconMaxY:", baconMaxY)
-group.add(baconGroup)
+      group.add(baconGroup)
       continue
     }
 

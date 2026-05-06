@@ -200,6 +200,7 @@
 - Subtle steam animation on burger images — CSS wiggly lines rising up
 - A menu item popularity bar — thin colored bar under each card showing relative popularity
 - Skeleton loaders in yellow shimmer instead of typical grey while menu loads
+-  New arrival animation - When admin adds a new menu item it slides into the menu grid with a special entrance animation and a pulsing "NEW" badge for 24 hours. Does not apply to secret menu items.
 
 **Menu Page Features**
 - A "Surprise Me" roulette wheel — shake to spin on mobile, button click on desktop. Drumroll sound when spinning, fanfare when it lands. Behind feature flag `enableShakeToRandomize`
@@ -224,6 +225,30 @@ a sine wave applied to the upper patties and top bun in `useFrame`, like the
 burger is barely holding itself together due to its absurd height. Wobble 
 intensity increases slightly on hover, like you're threatening to knock it over
 
+**Secret Menu**
+- Secret menu — confirmed burgers:
+Everything Everywhere All At Once — everything bagel bun, every topping, multiple patties. Description: "Contains every ingredient from every timeline. We're not responsible for what happens next 🌀". Unlock animation: ingredients scatter like a tornado, spin chaotically, then form into the burger — reverse of the hero burger breakdown effect
+The Simpsons — donut buns, beef patty, cheese, ketchup. Description: "D'oh 🍩 Homer would be proud. Don't tell your cardiologist."
+The Land, Sea and Sky — beef patty, lobster tail, fried egg. Description: "The ultimate surf and turf situation. We salute you 🫡"
+- Secret menu — *burger ideas to choose from later:
+*The Insomniac — only available midnight to 3am, everything bagel bun, double patty, egg, hash brown, bacon
+*The Inception — burger within a burger, mini slider as a topping
+*The Developer — exactly 10 patties, plain, binary joke
+*The YOLO — completely randomized ingredients every time, roulette animation
+*The Karen — pre-filled order notes with 47 ridiculous requests
+*The Regret — maximum spice everything, special warning modal, deep red 3D tint
+*The Nostalgia — plain bun, single patty, ketchup only
+- Secret menu — unlock animations:
+Each secret menu burger has its own unique unlock animation
+Everything Everywhere All At Once — ingredients scatter like a tornado, spin chaotically, then form into the burger. Reverse of hero burger breakdown effect
+Other burger animations to be decided during build
+- Secret menu — timer:
+When unlocked, timestamp saved to localStorage — secretMenuUnlockedAt
+Access lasts 24 hours from unlock moment
+Dramatic countdown displayed on secret menu — "Access expires in 23:47:12" — ticking in real time, styled dark and mysterious
+When countdown hits zero — secret menu items glitch out, ingredients scatter, section fades to black with "Your access has expired 🔒 — you know what to do"
+Daily password change and 24 hour timer naturally sync up
+
 ---
 
 ## Build Your Own Burger
@@ -246,6 +271,29 @@ intensity increases slightly on hover, like you're threatening to knock it over
 - Ingredient list is a horizontal scrollable strip on mobile
 - Drag and drop ingredient list using `@dnd-kit` — **maybe, revisit after core features are done**
 - Behind feature flag `enable3DBurgerBuilder`
+- Sesame and poppy seed bun mesh already created — used as default bun
+Gluten free bun mesh in progress — used as gluten free option, ties into dietary filter
+- Extra ingredients for burger builder
+Standard unusual (available to everyone):
+Guacamole
+Fried egg
+Mushrooms
+Pineapple slice — triggers "Pineapple on a burger? Bold choice 🍍"
+Hash brown — triggers "Breakfast energy. We support it 🌅"
+Everything bagel bun — replaces regular bun
+Gluten free bun — replaces regular bun
+
+Truly secret (locked behind secret menu):
+Nuggets
+Ramen noodles
+Donut bun — replaces regular bun
+Lobster tail
+Fried fish
+
+- Protein logic in burger builder - Proteins are mix and match — beef patty, chicken patty, nuggets can be combined freely. Minimum one protein required at all times. Secret only proteins — lobster tail, fried fish — only unlocked via secret menu. Nuggets are a secret ingredient — user can mix nuggets with beef or chicken patty but only after unlocking secret menu.
+- Secret menu — hybrid ingredient approach - Standard but unusual ingredients available to everyone. Truly secret ingredients locked behind secret menu.
+Secret menu has pre-built named combinations with their own lore and descriptions.
+- Rebuild burger from URL - Visiting a shared burger URL pre-loads the exact same burger configuration in the builder. Shows URL state management.
 
 ---
 
@@ -316,7 +364,7 @@ banner and the delivery delay logic
 ---
 
 ## Order Confirmation
-- Confetti explosion on confirm (`canvas-confetti` library)
+- Confetti palette colors ("canvas-confetti" library) uses specific palette colors #f7e558, #df2c8b, #6bbbe8 — applies to both order confirmation and loyalty milestone bursts.
 - A digital scratch card — reveals discount code, free item, or "better luck next time". Uses canvas for scratch effect
 - Receipt UI — monospace font, dashed borders, torn paper SVG wave edge at bottom
 - A "signature burger" name on the receipt if a custom burger was ordered — "The John Special"
@@ -366,6 +414,16 @@ banner and the delivery delay logic
 - A motivational message that changes throughout the day — "Morning rush incoming ☕", "Lunch peak 🔥 stay focused"
 - Admin dashboard shows different emoji based on pending order count — "😴 Quiet day Chef", "🔥 It's getting spicy in here"
 - Demo moment — two browser windows side by side showing live order status update
+- Secret menu — admin management - Admin burger builder has all ingredients unlocked including secret ones
+Toggle when saving — "Secret menu item" vs "Regular menu item"
+Secret items stored in separate secret_menu_items table in Supabase
+Never appear in regular menu, never get "NEW" badge
+Admin can add and retire secret items over time
+Daily password set by admin in admin dashboard — stored in restaurant_settings table with secret_menu_password column and password_updated_at timestamp. Auto expires at midnight
+- Weather delivery delay toggle — admin can enable or disable weather-aware 
+delivery time adjustments from the dashboard without a code change. Stored 
+in `restaurant_settings` table. If the feature flag `enableWeatherDeliveryDelay` 
+is off this toggle is hidden entirely
 
 ---
 
@@ -376,7 +434,7 @@ banner and the delivery delay logic
 - No full auth needed, works across devices
 - A "Burger Points" counter in the navbar with a satisfying fill/progress bar animation
 - A level system — "Burger Apprentice" → "Grill Master" → "Burger Legend" based on points. Shown as a chunky retro badge
-- Confetti burst when hitting a loyalty milestone
+- Confetti burst when hitting a loyalty milestone (see order confirmation section)
 - Behind feature flag `enableLoyaltySystem`
 
 ---
@@ -473,6 +531,28 @@ banner and the delivery delay logic
 - Secret menu item appears after 60 seconds on the order page
 - Shake to randomize on mobile triggers the roulette wheel — DeviceMotion API. Behind feature flag `enableShakeToRandomize`
 - Behind feature flag `enableEasterEggs`
+- Secret menu — daily password hiding methods (choose one later).
+Hidden in browser console as a styled console.log on page load
+Hidden in robots.txt file as a comment
+Hidden as a tiny QR code somewhere on the page
+
+**Secret menu — full discovery flow**
+Complete step by step story arc:
+
+Step 1 — The whisper popup — after 30 seconds on the menu page, a small mysterious popup appears in the corner. "Psst... can you keep a secret? 👀" with two buttons — "Yes 🤫" and "Maybe later". Response saved to localStorage so it never repeats. If "Maybe later" reappears after 5 minutes but never more than twice total
+Step 2 — The hint — user clicks "Yes 🤫". Popup changes to "There's a burger on the homepage that hides a secret. Click on it 😉". Popup disappears. No further instructions
+Step 3 — Discovery on the hero — user navigates to homepage, finds the 3D burger and starts clicking. Escalating feedback with each click:
+
+Click 1 — very subtle pulse, barely noticeable
+Click 2 — slightly bigger pulse, faint glow appears
+Click 3 — noticeable wobble, glow intensifies
+Click 4 — burger starts spinning slightly, glow is bright
+Click 5 — full animation triggers. Burger floats up high, spins very fast, returns to normal floating behavior
+
+Step 4 — The code reveal — as burger settles, a card appears beneath it styled like a torn piece of paper. Code displayed in ransom note style — each letter wrapped in a <span> randomly assigned one of 4-5 different fonts, random sizes, slight random rotations. Looks like letters cut from different magazines. Next to code is a copy icon — clicking copies to clipboard with "Copied! 🤫" tooltip. Message beneath reads "I'll see you at the 🔒 — keep an eye on the menu 😉"
+Step 5 — The lock appears — user returns to menu page. The lock icon slides in from the edge of the screen with a slight bounce or glow pulse to catch the eye, then settles into a quiet subtle idle state. Option B — lock only appears after burger interaction is complete
+Step 6 — The unlock — user clicks lock icon, it expands into an input field. They type or paste the code. The secret menu explodes into view with a dramatic unlock animation. Secret menu timer starts from this moment
+Dev shortcut — a keyboard combination that skips straight to the lock icon for demo/portfolio review purposes
 
 ---
 
@@ -504,6 +584,11 @@ banner and the delivery delay logic
 - CSRF protection on API routes — mentioned in README
 - `robots.txt` and `sitemap.xml`
 - README with GIF/screen recording, architecture diagram, design decisions, known limitations, lessons learned, Lighthouse screenshot, live demo link, and single command local setup
+- /api/health endpoint - A simple API route that returns the status of all connected services — Supabase, Stripe, weather API, Redis. All green or red. Great for demos.
+- NProgress page load indicator - Thin progress bar at the very top of the browser in #df2c8b. Uses NProgress library. Triggers on every route change.
+- middleware.ts - Protects the /admin route by checking for an admin session before serving the page. Standard Next.js pattern, shows understanding of middleware and route protection beyond client side guards.
+- Structured error handling - Custom error classes for different failure types — DatabaseError, PaymentError, WeatherAPIError. Each has a specific user-facing message and specific logging behavior. Rare in portfolio projects, impressive to senior developers.
+- constants.ts file - All magic numbers and strings in one place — delivery time thresholds, loyalty point values, max cart items, API endpoints. No hardcoded values scattered through the codebase.
 
 ---
 

@@ -1,9 +1,16 @@
 .featuredItems{
     width: 100%;
-    background-color: var(--white);
+    background-color: var(--pink);
     position: relative;
     z-index: 1;
     padding: 80px 40px;
+    border-top: var(--border);
+
+    // heading
+    h2{
+        margin-bottom: 24px;
+        text-align: center;
+    }
 
     // grid
     .cardsGrid{
@@ -15,11 +22,37 @@
         margin: 0 auto;
 
         .card{
+            position: relative;
             background-color: var(--blue);
             border: var(--border);
             box-shadow: 0px 8px 24px rgba(26, 26, 26, 0.3);
             transition: box-shadow 200ms ease, transform 200ms ease;
             overflow: hidden;
+
+            .cardName {
+                position: absolute;
+                left: 16px;
+                top: 16px;
+                font-family: var(--header-font);
+                font-size: clamp(1.5rem, 3vw, 2.5rem);
+                text-transform: uppercase;
+                color: var(--black);
+                line-height: 1;
+            }
+
+            .cardPrice {
+                position: absolute;
+                right: 16px;
+                top: 16px;
+                font-family: var(--header-font);
+                font-size: 1rem;
+                background: var(--yellow);
+                border: var(--border);
+                padding: 4px 10px;
+                color: var(--black);
+                // slight rotation for sticker feel
+                transform: rotate(5deg);
+            }
 
             &:hover{
                 box-shadow: 7px 7px 0px var(--black);

@@ -169,7 +169,7 @@ export default function BurgerChallenge() {
           {PATTY_COUNT} patties. One hour. Your meal is free if you finish.
         </p>
         
-        <Cta label="See the challenge" href="/menu#challenge"></Cta>
+        <Cta variant="pink" label="See the challenge" href="/menu#challenge"></Cta>
       </div>
 
       <div className={styles.warningTape} />
