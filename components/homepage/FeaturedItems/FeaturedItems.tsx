@@ -56,6 +56,7 @@ const FEATURED_ITEMS = [
 const FeaturedItems = () => {
     const gridRef = useRef<HTMLDivElement>(null)
 
+    // tilt & shadow effect to the mouse on hover
     useEffect(() => {
         const grid = gridRef.current
         if (!grid) return
@@ -71,15 +72,24 @@ const FeaturedItems = () => {
             const normalX = x * 2 - 1
             const normalY = y * 2 - 1
 
+            // tilt
             card.style.transform = `perspective(800px) rotateX(${-normalY * 5}deg) rotateY(${normalX * 5}deg)`
             card.style.transition = 'transform 0.1s ease, box-shadow 200ms ease'
+
+            // dynamic shadow — follows opposite of tilt direction
+            const shadowX = normalX * 8
+            const shadowY = normalY * 8
+            const shadowBlur = Math.abs(normalX) * 6 + Math.abs(normalY) * 6
+            card.style.transition = 'transform 0.15s ease, box-shadow 0.15s ease'
+            card.style.boxShadow = `${shadowX}px ${shadowY}px 0px rgba(26,26,26,1)`
         }
 
         const cards = grid.querySelectorAll('a')
         const handleMouseLeave = (e: Event) => {
             const card = e.currentTarget as HTMLElement
             card.style.transform = ''
-            card.style.transition = 'transform 0.4s ease, box-shadow 200ms ease'
+            card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease'
+            card.style.boxShadow = '0px 8px 24px rgba(26, 26, 26, 0.4)'
         }
 
         grid.addEventListener('mousemove', handleMouseMove)
