@@ -14,7 +14,7 @@ const PATTY_COUNT = 20;
 const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 
 // control animation
-const DESCEND_DURATION  = 4.5;
+const DESCEND_DURATION  = 5.5;
 const PAUSE_DURATION    = 1.2;
 const ASCEND_DURATION   = 0.6;
 const RESTART_PAUSE     = 1.0;
@@ -37,7 +37,7 @@ interface StackedBurgerProps {
 }
 
 function StackedBurger({ play }: StackedBurgerProps) {
-  const { scene } = useGLTF("/3d-models/assembled-burger.glb") as any;
+  const { scene } = useGLTF("/3d-models/burger.glb") as any;
   const { camera } = useThree();
 
   const phase      = useRef<"idle" | "descend" | "pause" | "ascend" | "restart">("idle");
@@ -177,4 +177,4 @@ export default function BurgerChallenge() {
   );
 }
 
-useGLTF.preload("/3d-models/assembled-burger.glb");
+useGLTF.preload("/3d-models/burger.glb");
