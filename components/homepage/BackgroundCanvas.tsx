@@ -148,7 +148,9 @@ const BackgroundCanvas = () => {
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      shapes = Array.from({ length: 30 }, () => makeShape(canvas.width, canvas.height));
+
+      // setting the number of shapes
+      shapes = Array.from({ length: 60 }, () => makeShape(canvas.width, canvas.height));
     };
 
     const tick = () => {
