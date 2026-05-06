@@ -45,6 +45,7 @@ const FEATURED_ITEMS = [
         price: "$19.99",
         href: "/menu/404",
         ingredients: {
+            bunType: "poppy",
             lettuce: 1,
             tomato: 1,
             pattyCount: 4,

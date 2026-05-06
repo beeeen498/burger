@@ -31,6 +31,7 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
         // Walk through every object in the GLB scene and extract the meshes by name
         scene.traverse((obj: THREE.Object3D) => {
             if ((obj as THREE.Mesh).isMesh) {
+              console.log(obj.name)
                 if (obj.name.startsWith("bacon_")) {
                     // store each bacon strip under a numbered key
                     // we'll handle combining them in stackBurgerLayers

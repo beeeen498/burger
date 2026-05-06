@@ -49,6 +49,7 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   onions:     0,
   bacon:      1.5,
   top_bun:    0,
+  poppy_bun: -4
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
@@ -57,6 +58,7 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   onions: -7,
   bacon: -12,
   top_bun: -4,
+  poppy_bun: -4
 };
 
 interface StackResult {
@@ -66,6 +68,7 @@ interface StackResult {
 }
 
 export interface BurgerIngredients {
+  bunType?: "regular" | "poppy"
   sauce?: "none" | "regular" | "extra"
   lettuce?: number     // 0, 1, or 2
   tomato?: number      // 0, 1, or 2
@@ -222,7 +225,9 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   for (let i = 0; i < baconCount; i++) layers.push("bacon")
 
   // always end with top bun
-  layers.push("top_bun")
+  const topBun = ingredients.bunType === "poppy" ? "poppy_bun" : "top_bun"
+  layers.push(topBun)
 
+  console.log("layers:", layers)
   return layers
 }
