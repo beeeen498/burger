@@ -1,6 +1,8 @@
 'use client'
 
 import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/src/ScrollTrigger";
 import Link from "next/link";
 import Cta from "@/components/global/Cta/Cta";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
@@ -56,10 +58,33 @@ const FEATURED_ITEMS = [
 const FeaturedItems = () => {
     const gridRef = useRef<HTMLDivElement>(null)
 
-    // tilt & shadow effect to the mouse on hover
+    // scroll animation and card hover effects
     useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger)
+
         const grid = gridRef.current
         if (!grid) return
+
+        const cards = grid.querySelectorAll('a')
+
+        // set initial state — cards start invisible and offset down
+        gsap.set(cards[0], { opacity: 0, y: 60 })
+        gsap.set(cards[1], { opacity: 0, y: 60 })
+        gsap.set(cards[2], { opacity: 0, y: 100 }) // tall card travels further
+
+        // animate in on scroll
+        gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.15,
+            scrollTrigger: {
+                trigger: grid,
+                start: "top 40%",
+                once: true,
+            }
+        })
 
         const handleMouseMove = (e: MouseEvent) => {
             const card = (e.target as HTMLElement).closest(`.${styles.card}`) as HTMLElement
@@ -74,7 +99,6 @@ const FeaturedItems = () => {
 
             // tilt
             card.style.transform = `perspective(800px) rotateX(${-normalY * 5}deg) rotateY(${normalX * 5}deg)`
-            card.style.transition = 'transform 0.1s ease, box-shadow 200ms ease'
 
             // dynamic shadow — follows opposite of tilt direction
             const shadowX = normalX * 8
@@ -84,7 +108,6 @@ const FeaturedItems = () => {
             card.style.boxShadow = `${shadowX}px ${shadowY}px 0px rgba(26,26,26,1)`
         }
 
-        const cards = grid.querySelectorAll('a')
         const handleMouseLeave = (e: Event) => {
             const card = e.currentTarget as HTMLElement
             card.style.transform = ''
