@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 import Cta from "@/components/global/Cta/Cta";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
@@ -53,6 +54,43 @@ const FEATURED_ITEMS = [
 ]
 
 const FeaturedItems = () => {
+    const gridRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const grid = gridRef.current
+        if (!grid) return
+
+        const handleMouseMove = (e: MouseEvent) => {
+            const card = (e.target as HTMLElement).closest(`.${styles.card}`) as HTMLElement
+            if (!card) return
+
+            const rect = card.getBoundingClientRect()
+            const x = (e.clientX - rect.left) / rect.width
+            const y = (e.clientY - rect.top) / rect.height
+
+            const normalX = x * 2 - 1
+            const normalY = y * 2 - 1
+
+            card.style.transform = `perspective(800px) rotateX(${-normalY * 5}deg) rotateY(${normalX * 5}deg)`
+            card.style.transition = 'transform 0.1s ease, box-shadow 200ms ease'
+        }
+
+        const cards = grid.querySelectorAll('a')
+        const handleMouseLeave = (e: Event) => {
+            const card = e.currentTarget as HTMLElement
+            card.style.transform = ''
+            card.style.transition = 'transform 0.4s ease, box-shadow 200ms ease'
+        }
+
+        grid.addEventListener('mousemove', handleMouseMove)
+        cards.forEach(card => card.addEventListener('mouseleave', handleMouseLeave))
+
+        return () => {
+            grid.removeEventListener('mousemove', handleMouseMove)
+            cards.forEach(card => card.removeEventListener('mouseleave', handleMouseLeave))
+        }
+    }, [])
+
   return (
     <section className={styles.featuredItems}>
         <div className={styles.container}>
@@ -76,7 +114,7 @@ const FeaturedItems = () => {
             </svg>
 
             {/* cards */}
-            <div className={styles.cardsGrid}>
+            <div className={styles.cardsGrid} ref={gridRef}>
                 {FEATURED_ITEMS.map((item) => (
                     <Link
                         key={item.id}
