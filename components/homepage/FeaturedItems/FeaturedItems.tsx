@@ -16,6 +16,7 @@ const FEATURED_ITEMS = [
         name: "303",
         price: "$16.99",
         href: "/menu/303",
+        sideItems: ["french_fries", "milkshake"],
         ingredients: {
             lettuce: 1,
             tomato: 1,
@@ -44,8 +45,9 @@ const FEATURED_ITEMS = [
         name: "404",
         price: "$19.99",
         href: "/menu/404",
+        sideItems: ["french_fries", "milkshake"],
         ingredients: {
-            bunType: "poppy",
+            bunType: "poppy" as const,
             lettuce: 1,
             tomato: 1,
             pattyCount: 4,
@@ -156,7 +158,10 @@ const FeaturedItems = () => {
                         className={styles.card}
                         aria-label={`View the ${item.name} burger — ${item.price}`}
                     >
-                        <BurgerCanvas ingredients={item.ingredients} />
+                        <BurgerCanvas 
+                            ingredients={item.ingredients} 
+                            sideItems={item.sideItems}
+                        />
                         <span className={styles.cardName}>{item.name}</span>
                         <span className={styles.cardPrice}>{item.price}</span>
                     </Link>

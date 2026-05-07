@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { FaChevronDown } from "react-icons/fa";
@@ -19,37 +19,36 @@ function BurgerModel() {
   const floatRef = useRef<THREE.Group>(null);
   const spinRef  = useRef<THREE.Group>(null);
   const clock    = useRef(0);
+  const clonedScene = useMemo(() => scene.clone(), [scene])
 
   // Center the scene geometry on mount
   useEffect(() => {
-  const box = new THREE.Box3().setFromObject(scene);
-  const center = box.getCenter(new THREE.Vector3());
-  scene.position.sub(center);
+      const box = new THREE.Box3().setFromObject(clonedScene);
+      const center = box.getCenter(new THREE.Vector3());
+      clonedScene.position.sub(center);
 
-  // temporary logging
-  scene.traverse((obj: THREE.Object3D) => {
-    const mesh = obj as THREE.Mesh
-    if (mesh.isMesh && mesh.geometry) {
-      mesh.geometry.computeBoundingBox()
-      const box = mesh.geometry.boundingBox
-    }
-  })
-}, [scene]);
+      // hide extra meshes that aren't part of the assembled hero burger
+      clonedScene.traverse((obj: THREE.Object3D) => {
+          if (obj.name === "poppy_bun") {
+              obj.visible = false
+          }
+      })
+    }, [clonedScene]);
 
-  useFrame((_, delta) => {
-    if (!floatRef.current || !spinRef.current) return;
-    clock.current += delta;
-    // Float on the outer group
-    floatRef.current.position.y = Math.sin(clock.current) * 0.3;
-    // Spin on the inner group
-    spinRef.current.rotation.y += 0.005;
+    useFrame((_, delta) => {
+      if (!floatRef.current || !spinRef.current) return;
+      clock.current += delta;
+      // Float on the outer group
+      floatRef.current.position.y = Math.sin(clock.current) * 0.3;
+      // Spin on the inner group
+      spinRef.current.rotation.y += 0.005;
   });
 
   return (
-    // tilting the burger
+    // tilting burger
     <group ref={floatRef} rotation={[-0.05, 0, 0]}> 
       <group ref={spinRef}>
-        <primitive object={scene} />
+        <primitive object={clonedScene} />
       </group>
     </group>
   );
@@ -119,4 +118,4 @@ export default function Hero() {
   );
 }
 
-useGLTF.preload("/3d-models/assembled-burger.glb");
+useGLTF.preload("/3d-models/burger.glb");

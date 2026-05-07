@@ -10,6 +10,35 @@ import styles from "./BurgerCanvas.module.scss";
 // Props accepted by both the outer and inner components
 interface BurgerCanvasProps {
   ingredients: BurgerIngredients,
+  sideItems?: string[]  // e.g. ["french_fries", "milkshake"]
+}
+
+// Props for SideItem
+interface SideItemProps {
+  model: string
+  position: [number, number, number]
+  scale: number
+}
+
+// Inner component — loads and renders a single side item (fries, milkshake etc)
+// Must live inside <Canvas> to access the Three.js context
+function SideItem({ model, position, scale }: SideItemProps) {
+  console.log("SideItem rendering:", model)
+  const { scene } = useGLTF(model) as any
+
+  return (
+    <primitive 
+      object={scene} 
+      position={position} 
+      scale={scale} 
+    />
+  )
+}
+
+// positioning the side items
+const SIDE_ITEM_CONFIG: { [key: string]: { position: [number, number, number], scale: number } } = {
+  french_fries: { position: [-2, 6, 0], scale: 0.10 },
+  milkshake:    { position: [-9, 6, 0], scale: 0.13 },
 }
 
 // Inner component — must live inside <Canvas> to access the Three.js context.
@@ -87,17 +116,28 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
 // Accepts an ingredients prop — a BurgerIngredients object describing
 // which ingredients to include. The fixed stacking order is enforced
 // internally by buildBurgerSequence in burgerUtils.
-export default function BurgerCanvas({ ingredients }: BurgerCanvasProps) {
+export default function BurgerCanvas({ ingredients, sideItems }: BurgerCanvasProps) {
   return (
     <div className={styles.canvasWrapper}>
       <Canvas
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
-        {/* Ambient light for base illumination, directional for depth and shadow */}
         <ambientLight intensity={1.2} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} />
+        <directionalLight position={[5, 5, 5]} intensity={2} />
         <BurgerScene ingredients={ingredients} />
+        {sideItems?.map((item) => {
+          const config = SIDE_ITEM_CONFIG[item]
+          if (!config) return null
+          return (
+            <SideItem
+              key={item}
+              model={`/3d-models/${item}.glb`}
+              position={config.position}
+              scale={config.scale}
+            />
+          )
+        })}
       </Canvas>
     </div>
   )
@@ -105,3 +145,5 @@ export default function BurgerCanvas({ ingredients }: BurgerCanvasProps) {
 
 // Preload the GLB so it's ready before the component mounts
 useGLTF.preload("/3d-models/burger.glb")
+useGLTF.preload("/3d-models/french_fries.glb")
+useGLTF.preload("/3d-models/milkshake.glb")

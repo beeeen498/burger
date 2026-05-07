@@ -27,6 +27,7 @@ import * as THREE from "three";
 
 // Maximum ingredients allowed in a custom burger build
 // Does not apply to the challenge burger — see buildChallengeSequence
+// cheese max is now pattyCount + nuggetCount, handled dynamically in the function
 export const MAX_PATTIES = 5
 export const MAX_CHEESE = 5
 export const MAX_LETTUCE = 2
@@ -34,16 +35,18 @@ export const MAX_TOMATO = 2
 export const MAX_PICKLES = 2
 export const MAX_ONIONS = 2
 export const MAX_BACON = 2
+export const MAX_NUGGETS = 2
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
 // Derived from geometry bounding box analysis of the burger.glb meshes.
-// the order is - bottom_bun → sauce → lettuce → tomato → patty → cheese → pickles → onions → bacon → top_bun
+// the order is - bottom_bun → sauce → lettuce → tomato → [patty + cheese] → [nuggets + cheese] → pickles → onions → bacon → top_bun/poppy_bun
 const HEADROOM_CORRECTION: { [key: string]: number } = {
   bottom_bun: 0,
   sauce:      0,
   lettuce:    0,
   tomato:     0,
   patty:      0,
+  nuggets:    0,
   cheese:     0,
   pickles:    0,
   onions:     0,
@@ -53,11 +56,11 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  cheese: -4,
-  pickles: -7,
-  onions: -7,
-  bacon: -12,
-  top_bun: -4,
+  cheese:    -4,
+  pickles:   -7,
+  onions:    -7,
+  bacon:    -12,
+  top_bun:   -4,
   poppy_bun: -4
 };
 
@@ -77,6 +80,7 @@ export interface BurgerIngredients {
   pickles?: number     // 0, 1, or 2
   onions?: number      // 0, 1, or 2
   bacon?: number       // 0, 1, 2, or 3
+  nuggets?: number     // 0, 1, or 2
 }
 
 /**
@@ -128,8 +132,6 @@ export function stackBurgerLayers(
       group.add(baconGroup)
       cursorY += (baconMaxY - baconMinY) - baconCorrection
 
-      baconGroup.position.set(0, cursorY - baconMinY + baconNudge, 0)
-      group.add(baconGroup)
       continue
     }
 
@@ -200,12 +202,23 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   const tomatoCount = Math.min(ingredients.tomato ?? 0, MAX_TOMATO)
   for (let i = 0; i < tomatoCount; i++) layers.push("tomato")
 
-  // add patties and cheese
+  // add patties and nuggets with shared cheese pool
   const pattyCount = Math.min(Math.max(ingredients.pattyCount, 1), MAX_PATTIES)
-  let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, pattyCount)
+  const nuggetCount = Math.min(ingredients.nuggets ?? 0, MAX_NUGGETS)
+  let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, pattyCount + nuggetCount)
   
+  // patties first
   for (let i = 0; i < pattyCount; i++) {
     layers.push("patty")
+    if (cheeseRemaining > 0) {
+      layers.push("cheese")
+      cheeseRemaining--
+    }
+  }
+
+  // nuggets after
+  for (let i = 0; i < nuggetCount; i++) {
+    layers.push("nuggets")
     if (cheeseRemaining > 0) {
       layers.push("cheese")
       cheeseRemaining--
