@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { stackBurgerLayers, buildBurgerSequence, BurgerIngredients } from "@/lib/burgerUtils"
 import styles from "./BurgerCanvas.module.scss";
@@ -23,8 +23,8 @@ interface SideItemProps {
 // Inner component — loads and renders a single side item (fries, milkshake etc)
 // Must live inside <Canvas> to access the Three.js context
 function SideItem({ model, position, scale }: SideItemProps) {
-  console.log("SideItem rendering:", model)
   const { scene } = useGLTF(model) as any
+  const clonedScene = useMemo(() => scene.clone(), [scene])
 
   return (
     <primitive 
@@ -60,15 +60,25 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
         // Walk through every object in the GLB scene and extract the meshes by name
         scene.traverse((obj: THREE.Object3D) => {
             if ((obj as THREE.Mesh).isMesh) {
-              console.log(obj.name)
+                
+                // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
+                // store each strip individually and also map bacon_1 as "bacon" 
+                // for stackBurgerLayers to use as the reference mesh
                 if (obj.name.startsWith("bacon_")) {
-                    // store each bacon strip under a numbered key
-                    // we'll handle combining them in stackBurgerLayers
                     meshes.current[obj.name] = obj as THREE.Mesh
-                    // also store the first strip as "bacon" for the stacking cursor
                     if (obj.name === "bacon_1") {
                         meshes.current["bacon"] = obj as THREE.Mesh
                     }
+                
+                // nuggets are exported as multiple pieces (nuggets_1, nuggets_2 etc)
+                // same pattern as bacon — store individually and map nuggets_1 as "nuggets"
+                } else if (obj.name.startsWith("nuggets_")) {
+                    meshes.current[obj.name] = obj as THREE.Mesh
+                    if (obj.name === "nuggets_1") {
+                        meshes.current["nuggets"] = obj as THREE.Mesh
+                    }
+                
+                // all other meshes are single objects — store directly by name
                 } else {
                     meshes.current[obj.name] = obj as THREE.Mesh
                 }

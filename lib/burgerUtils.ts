@@ -39,14 +39,14 @@ export const MAX_NUGGETS = 2
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
 // Derived from geometry bounding box analysis of the burger.glb meshes.
-// the order is - bottom_bun → sauce → lettuce → tomato → [patty + cheese] → [nuggets + cheese] → pickles → onions → bacon → top_bun/poppy_bun
+// the order is - bottom_bun → sauce → lettuce → tomato → [patty + cheese] → pickles → onions → nuggets → bacon → top_bun/poppy_bun
 const HEADROOM_CORRECTION: { [key: string]: number } = {
   bottom_bun: 0,
   sauce:      0,
   lettuce:    0,
   tomato:     0,
   patty:      0,
-  nuggets:    0,
+  nuggets:    3.5,
   cheese:     0,
   pickles:    0,
   onions:     0,
@@ -57,6 +57,7 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
   cheese:    -4,
+  nuggets:    -5,
   pickles:   -7,
   onions:    -7,
   bacon:    -12,
@@ -108,6 +109,7 @@ export function stackBurgerLayers(
   let topBunClone:    THREE.Object3D | null = null;
   let cursorY = 0;
 
+  // bacon
   for (const name of layers) {
     if (name === "bacon") {
       
@@ -132,6 +134,33 @@ export function stackBurgerLayers(
       group.add(baconGroup)
       cursorY += (baconMaxY - baconMinY) - baconCorrection
 
+      continue
+    }
+
+    // nuggets
+    if (name === "nuggets") {
+      // collect all nugget pieces (nuggets_1, nuggets_2 etc) into a single group
+      const nuggetPieces = Object.keys(meshes)
+          .filter(k => k.startsWith("nuggets_"))
+          .map(k => meshes[k])
+
+      const nuggetGroup = new THREE.Group()
+      nuggetPieces.forEach(piece => {
+          const pieceClone = piece.clone(true)
+          nuggetGroup.add(pieceClone)
+      })
+
+      // use nuggets_1 geometry for bounding box calculation
+      const nuggetGeo = meshes["nuggets_1"].geometry
+      nuggetGeo.computeBoundingBox()
+      const nuggetMinY = nuggetGeo.boundingBox!.min.y
+      const nuggetMaxY = nuggetGeo.boundingBox!.max.y
+      const nuggetCorrection = HEADROOM_CORRECTION["nuggets"] ?? 0
+      const nuggetNudge = PLACEMENT_NUDGE["nuggets"] ?? 0
+
+      nuggetGroup.position.set(0, cursorY - nuggetMinY + nuggetNudge, 0)
+      group.add(nuggetGroup)
+      cursorY += (nuggetMaxY - nuggetMinY) - nuggetCorrection
       continue
     }
 
@@ -202,12 +231,11 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   const tomatoCount = Math.min(ingredients.tomato ?? 0, MAX_TOMATO)
   for (let i = 0; i < tomatoCount; i++) layers.push("tomato")
 
-  // add patties and nuggets with shared cheese pool
+  // add patties if present
   const pattyCount = Math.min(Math.max(ingredients.pattyCount, 1), MAX_PATTIES)
-  const nuggetCount = Math.min(ingredients.nuggets ?? 0, MAX_NUGGETS)
-  let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, pattyCount + nuggetCount)
-  
-  // patties first
+  let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, MAX_CHEESE)
+
+  // patties first, one cheese each
   for (let i = 0; i < pattyCount; i++) {
     layers.push("patty")
     if (cheeseRemaining > 0) {
@@ -216,13 +244,10 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
     }
   }
 
-  // nuggets after
-  for (let i = 0; i < nuggetCount; i++) {
-    layers.push("nuggets")
-    if (cheeseRemaining > 0) {
-      layers.push("cheese")
-      cheeseRemaining--
-    }
+  // any remaining extra cheese stacks on top of last patty
+  while (cheeseRemaining > 0) {
+    layers.push("cheese")
+    cheeseRemaining--
   }
 
   // add pickles if present
@@ -232,6 +257,10 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   // add onions if present
   const onionsCount = Math.min(ingredients.onions ?? 0, MAX_ONIONS)
   for (let i = 0; i < onionsCount; i++) layers.push("onions")
+
+  // add nuggets if present 
+  const nuggetCount = Math.min(ingredients.nuggets ?? 0, MAX_NUGGETS)
+  for (let i = 0; i < nuggetCount; i++) layers.push("nuggets")
 
   // add bacon if present
   const baconCount = Math.min(ingredients.bacon ?? 0, MAX_BACON)

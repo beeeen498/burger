@@ -29,7 +29,7 @@ function BurgerModel() {
 
       // hide extra meshes that aren't part of the assembled hero burger
       clonedScene.traverse((obj: THREE.Object3D) => {
-          if (obj.name === "poppy_bun") {
+          if (obj.name === "poppy_bun" || obj.name.startsWith("nuggets_")) {
               obj.visible = false
           }
       })
