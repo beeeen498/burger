@@ -63,7 +63,7 @@
   background: radial-gradient(
     ellipse 70% 60% at 50% 50%,
     transparent 40%,
-    rgba(0, 0, 0, 0.7) 100%
+    rgb(0, 0, 0) 100%
   );
   pointer-events: none;
   z-index: 3;
@@ -90,7 +90,7 @@
     left: 0;
     right: 0;
     height: 320px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.92) 60%);
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.549) 60%);
     z-index: -1;
     pointer-events: none;
   }

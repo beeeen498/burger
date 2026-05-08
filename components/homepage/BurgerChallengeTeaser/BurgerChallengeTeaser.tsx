@@ -15,7 +15,7 @@ const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 
 // control animation
 const DESCEND_DURATION  = 8.5;
-const PAUSE_DURATION    = 1.2;
+const PAUSE_DURATION    = 100.2;
 const ASCEND_DURATION   = 0.6;
 const RESTART_PAUSE     = 1.0;
 
@@ -34,6 +34,12 @@ function easeInCubic(t: number) {
 
 interface StackedBurgerProps {
   play: boolean;
+}
+
+// side items
+function SideItem({ model, position, scale }: { model: string, position: [number, number, number], scale: number }) {
+  const { scene } = useGLTF(model) as any;
+  return <primitive object={scene} position={position} scale={scale} />;
 }
 
 function StackedBurger({ play }: StackedBurgerProps) {
@@ -154,7 +160,14 @@ export default function BurgerChallenge() {
           <ambientLight intensity={0.6} />
           <directionalLight position={[4, 10, 6]}  intensity={1.4} color="#ff6b00" />
           <directionalLight position={[-4, 2, -4]} intensity={0.4} color="#ffcc00" />
-          <StackedBurger play={play} />
+
+          <group position={[0, -5.5, 0]}> 
+            <StackedBurger play={play} />
+
+            {/* side items */}
+            <SideItem model="/3d-models/french_fries.glb" position={[-2, -1, -10]} scale={0.1} />
+            <SideItem model="/3d-models/milkshake.glb"    position={[-4,  -1, -10]} scale={0.1} />
+          </group>
         </Canvas>
         <div className={styles.vignette} />
       </div>
@@ -178,3 +191,5 @@ export default function BurgerChallenge() {
 }
 
 useGLTF.preload("/3d-models/burger.glb");
+useGLTF.preload("/3d-models/french_fries.glb");
+useGLTF.preload("/3d-models/milkshake.glb");
