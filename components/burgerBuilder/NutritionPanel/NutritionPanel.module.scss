@@ -1,0 +1,73 @@
+.panel {
+  border: var(--border);
+  background: var(--white);
+  z-index: 1;
+
+  // ── Header ──────────────────────────────────────────
+  .header {
+    padding: 8px 12px 4px;
+
+    .title {
+      font-family: var(--header-font);
+      font-size: 28px;
+      text-transform: none;
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
+  }
+
+  // ── Thick divider ────────────────────────────────────
+  .thick {
+    height: 8px;
+    background: var(--black);
+  }
+
+  // ── Calories row ─────────────────────────────────────
+  .caloriesRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px;
+    border-bottom: 4px solid var(--black);
+
+    .caloriesLabel {
+      font-family: var(--header-font);
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .caloriesValue {
+      font-family: var(--header-font);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+    }
+  }
+
+  // ── Macro rows ───────────────────────────────────────
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+
+    .rowLabel {
+      font-size: 13px;
+      font-family: var(--header-font);
+      text-transform: uppercase;
+    }
+
+    .rowValue {
+      font-size: 13px;
+      font-family: var(--header-font);
+    }
+  }
+
+  // ── Thin divider between rows ────────────────────────
+  .divider {
+    height: 1px;
+    background: var(--black);
+    opacity: 0.2;
+    margin: 0 12px;
+  }
+}

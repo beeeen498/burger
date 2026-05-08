@@ -1,0 +1,64 @@
+.badge {
+  // ── Size and position ───────────────────────────────
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 24px;
+  right: -20px;
+
+  // ── Reset button styles ─────────────────────────────
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  // ── Slight rotation for sticker feel ───────────────
+  transform: rotate(15deg);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+
+  &:hover {
+    transform: rotate(20deg) scale(1.1);
+  }
+
+  &:active {
+    transform: rotate(15deg) scale(0.95);
+  }
+
+  // ── SVG fills the button ────────────────────────────
+  .hexagon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  // ── Text centered over the hexagon ──────────────────
+  .textWrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 2px;
+  }
+
+  // ── Arrow icon ──────────────────────────────────────
+  .arrow {
+    font-size: 24px;
+    color: var(--white);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  // ── Label ───────────────────────────────────────────
+  .text {
+    font-family: var(--header-font);
+    font-size: 15px;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1.1;
+    pointer-events: none;
+  }
+}

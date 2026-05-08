@@ -1,0 +1,32 @@
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  justify-content: center;
+
+  // ── Individual tab ─────────────────────────────────
+  .tab {
+    font-family: var(--header-font);
+    font-size: 16px;
+    text-transform: uppercase;
+    background: var(--white);
+    border: var(--border);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1),
+                box-shadow 0.2s ease;
+    box-shadow: 4px 4px 0px var(--black);
+    z-index: 1;
+
+    &:hover {
+      transform: rotate(-2deg) scale(1.05);
+    }
+
+    // ── Active tab ─────────────────────────────────────
+    &.active {
+      background: var(--yellow);
+      transform: rotate(-2deg) scale(1.05);
+      box-shadow: 6px 6px 0px var(--black);
+    }
+  }
+}

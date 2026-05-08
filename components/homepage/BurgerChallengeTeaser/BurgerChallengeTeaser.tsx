@@ -194,7 +194,7 @@ export default function BurgerChallengeTeaser() {
           <span className={styles.headingAccent}>HANDLE IT?</span>
         </h2>
         <p className={styles.subtext}>
-          {PATTY_COUNT} patties. One hour. Your meal is free if you finish.
+          {PATTY_COUNT} patties, large fries, and a milkshake.<br />One hour. Your meal is free if you finish.
         </p>
         <Cta variant="pink" label="See the challenge" href="/menu#challenge" />
       </div>

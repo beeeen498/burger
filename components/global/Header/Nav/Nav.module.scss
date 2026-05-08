@@ -12,6 +12,15 @@
     height: 100%;
     align-items: stretch;
 
+    // when any OTHER item is hovered, reset the active item
+    &:has(.navListItem:not(.active):hover) .navListItem.active {
+      transform: none;
+
+      &::before {
+        transform: scaleX(0);
+      }
+    }
+
     .navListItem {
       position: relative;
       display: flex;
