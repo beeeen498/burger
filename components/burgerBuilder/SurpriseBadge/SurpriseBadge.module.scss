@@ -5,6 +5,9 @@
     position: absolute;
     top: 24px;
     left: -20px;
+    
+    // idle — slow Y rotation loop
+    animation: spin3d 5s ease-in-out infinite;
 
     // ── Reset button styles ─────────────────────────────
     background: none;
@@ -16,8 +19,10 @@
     transform: rotate(-15deg);
     transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
 
+    // on hover — snaps flat
     &:hover {
-        transform: rotate(20deg) scale(1.1);
+    animation: none;
+    transform: rotate(20deg) scale(1.1);
     }
 
     &:active {
@@ -54,3 +59,10 @@
         pointer-events: none;
     }
 }
+
+// ── 360 continuous Y rotation ───────────────────────
+@keyframes spin3d {
+  0%   { transform: rotate(-15deg) rotateY(0deg); }
+  100% { transform: rotate(-15deg) rotateY(360deg); }
+}
+

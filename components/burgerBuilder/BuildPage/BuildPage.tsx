@@ -83,8 +83,22 @@ const BuildPage = () => {
 
   // ── Surprise Me — randomize all ingredients ─────────
   const handleSurprise = () => {
-    setIngredients(randomizeIngredients());
+    const randomized = randomizeIngredients();
+    setIngredients(randomized);
     playAdd();
+
+    // ── Switch to first non-bun category with active ingredients ──
+    const firstActive = Object.keys(CATEGORIES)
+      .filter(key => key !== "bun") // bun is always active, skip it
+      .find(categoryKey =>
+        CATEGORIES[categoryKey].ingredients.some(ingredient => {
+          if (ingredient.type === "counter") {
+            return ((randomized[ingredient.key] as number) ?? 0) > 0;
+          }
+          return randomized[ingredient.key] === ingredient.value && ingredient.value !== "none";
+        })
+      );
+    if (firstActive) setActiveCategory(firstActive);
   };
 
   // ── Reset burger to default state ──────────────────
@@ -92,7 +106,6 @@ const BuildPage = () => {
     setIngredients(DEFAULT_INGREDIENTS);
     playRemove();
   };
-  
 
   return (
     <main className={styles.page}>
@@ -133,7 +146,7 @@ const BuildPage = () => {
               onChange={setActiveCategory}
               ingredients={ingredients}
             />
-            
+
             <div className={styles.ingredientList}>
               {CATEGORIES[activeCategory].ingredients.map((ingredient) => (
                 <IngredientCard
