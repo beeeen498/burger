@@ -5,11 +5,11 @@
 
   // ── Header ──────────────────────────────────────────
   .header {
-    padding: 8px 12px 4px;
+    padding: 4px 12px 2px;
 
     .title {
       font-family: var(--header-font);
-      font-size: 28px;
+      font-size: 20px;
       text-transform: none;
       letter-spacing: -0.5px;
       margin: 0;
@@ -18,7 +18,7 @@
 
   // ── Thick divider ────────────────────────────────────
   .thick {
-    height: 8px;
+    height: 5px;
     background: var(--black);
   }
 
@@ -27,18 +27,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 12px;
-    border-bottom: 4px solid var(--black);
+    padding: 2px 12px;
+    border-bottom: 3px solid var(--black);
 
     .caloriesLabel {
       font-family: var(--header-font);
-      font-size: 14px;
+      font-size: 12px;
       text-transform: uppercase;
     }
 
     .caloriesValue {
       font-family: var(--header-font);
-      font-size: 36px;
+      font-size: 26px;
       font-weight: 700;
       line-height: 1;
     }
@@ -49,16 +49,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 12px;
+    padding: 4px 12px;
 
     .rowLabel {
-      font-size: 13px;
+      font-size: 11px;
       font-family: var(--header-font);
       text-transform: uppercase;
     }
 
     .rowValue {
-      font-size: 13px;
+      font-size: 11px;
       font-family: var(--header-font);
     }
   }

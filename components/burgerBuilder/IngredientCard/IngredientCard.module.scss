@@ -73,34 +73,44 @@
 
   // ── +/- buttons ────────────────────────────────────
   .btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border: var(--border);
     background: var(--white);
-    font-size: 18px;
+    font-size: 20px;
     font-family: var(--header-font);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease, transform 0.1s ease;
+    box-shadow: 3px 3px 0px var(--black);
+    transition: box-shadow 0.08s ease,
+                transform 0.08s ease;
     flex-shrink: 0;
+    z-index: 2;
 
     &:disabled {
       opacity: 0.3;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     &:not(:disabled):hover {
       background: var(--yellow);
-      transform: scale(1.1);
     }
 
-    // ── Red flash when at max ───────────────────────
+    // ── Press down effect ───────────────────────────────
+    &:not(:disabled):active {
+      transform: translate(3px, 3px);
+      box-shadow: 0px 0px 0px var(--black);
+    }
+
+    // ── Red flash when at max ───────────────────────────
     &.btnMax {
       background: red;
       color: var(--white);
       border-color: red;
+      box-shadow: 3px 3px 0px var(--black);
     }
   }
 }

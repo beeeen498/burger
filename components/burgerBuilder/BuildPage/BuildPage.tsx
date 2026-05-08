@@ -131,7 +131,9 @@ const BuildPage = () => {
             <IngredientTabs
               activeCategory={activeCategory}
               onChange={setActiveCategory}
+              ingredients={ingredients}
             />
+            
             <div className={styles.ingredientList}>
               {CATEGORIES[activeCategory].ingredients.map((ingredient) => (
                 <IngredientCard

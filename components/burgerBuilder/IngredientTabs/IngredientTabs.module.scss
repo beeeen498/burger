@@ -6,6 +6,7 @@
 
   // ── Individual tab ─────────────────────────────────
   .tab {
+    position: relative;
     font-family: var(--header-font);
     font-size: 16px;
     text-transform: uppercase;
@@ -16,17 +17,33 @@
     transition: transform 0.2s cubic-bezier(.34,1.56,.64,1),
                 box-shadow 0.2s ease;
     box-shadow: 4px 4px 0px var(--black);
-    z-index: 1;
 
     &:hover {
       transform: rotate(-2deg) scale(1.05);
     }
 
-    // ── Active tab ─────────────────────────────────────
+    // ── Active tab ───────────────────────────────────
     &.active {
       background: var(--yellow);
       transform: rotate(-2deg) scale(1.05);
       box-shadow: 6px 6px 0px var(--black);
+    }
+
+    // ── Count badge ──────────────────────────────────
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--pink);
+      color: var(--white);
+      border: 2px solid var(--black);
+      font-size: 11px;
+      font-family: var(--header-font);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

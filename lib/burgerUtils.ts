@@ -62,7 +62,7 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   onions:    3,
   bacon:    -2.5,
   top_bun:    0,
-  poppy_bun: 2.5
+  poppy_bun: 0,
 };
 
 interface StackResult {
