@@ -28,7 +28,7 @@ function SideItem({ model, position, scale }: SideItemProps) {
 
   return (
     <primitive 
-      object={scene} 
+      object={clonedScene} 
       position={position} 
       scale={scale} 
     />

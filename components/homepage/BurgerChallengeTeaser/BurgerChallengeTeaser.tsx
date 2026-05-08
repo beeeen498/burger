@@ -9,17 +9,14 @@ import Cta from "@/components/global/Cta/Cta";
 import * as THREE from "three";
 import styles from "./BurgerChallengeTeaser.module.scss";
 
-// how many patties are displayed
-const PATTY_COUNT = 20; 
+const PATTY_COUNT = 20;
 const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 
-// control animation
-const DESCEND_DURATION  = 8.5;
-const PAUSE_DURATION    = 100.2;
+const DESCEND_DURATION  = 5.5;
+const PAUSE_DURATION    = 3.2;
 const ASCEND_DURATION   = 0.6;
 const RESTART_PAUSE     = 1.0;
 
-// Keep these in sync with the Canvas camera props and group scale
 const GROUP_SCALE = 0.13;
 const CAM_Z       = 22;
 const CAM_FOV     = 42;
@@ -34,15 +31,20 @@ function easeInCubic(t: number) {
 
 interface StackedBurgerProps {
   play: boolean;
+  onReady: () => void;
 }
 
-// side items
-function SideItem({ model, position, scale }: { model: string, position: [number, number, number], scale: number }) {
+function SideItem({ model, position, scale, rotation }: {
+  model: string;
+  position: [number, number, number];
+  scale: number;
+  rotation?: [number, number, number];
+}) {
   const { scene } = useGLTF(model) as any;
-  return <primitive object={scene} position={position} scale={scale} />;
+  return <primitive object={scene} position={position} scale={scale} rotation={rotation} />;
 }
 
-function StackedBurger({ play }: StackedBurgerProps) {
+function StackedBurger({ play, onReady }: StackedBurgerProps) {
   const { scene } = useGLTF("/3d-models/burger.glb") as any;
   const { camera } = useThree();
 
@@ -50,55 +52,59 @@ function StackedBurger({ play }: StackedBurgerProps) {
   const clock      = useRef(0);
   const camTopY    = useRef(0);
   const camBottomY = useRef(0);
-  const meshes     = useRef<{ [key: string]: THREE.Mesh }>({});
   const groupRef   = useRef<THREE.Group>(null);
 
+  // Single useEffect — extract meshes and stack in one cycle
   useEffect(() => {
+    if (!groupRef.current) return;
+
+    const meshes: { [key: string]: THREE.Mesh } = {};
     scene.traverse((obj: THREE.Object3D) => {
       if ((obj as THREE.Mesh).isMesh) {
-        meshes.current[obj.name] = obj as THREE.Mesh;
+        meshes[obj.name] = obj as THREE.Mesh;
       }
     });
-  }, [scene]);
 
-  useEffect(() => {
-  if (!groupRef.current) return;
+    const { bottomBunClone, totalBox } = stackBurgerLayers(
+      groupRef.current,
+      meshes,
+      LAYER_SEQUENCE
+    );
 
-  const { bottomBunClone, totalBox } = stackBurgerLayers(
-    groupRef.current,
-    meshes.current,
-    LAYER_SEQUENCE
-  );
+    const stackTop = totalBox.max.y;
+    camTopY.current = stackTop + 1;
 
-  const stackTop = totalBox.max.y;
-  camTopY.current = stackTop + 1;
+    if (bottomBunClone) {
+      const bunBox      = new THREE.Box3().setFromObject(bottomBunClone);
+      const halfVhWorld = Math.tan((CAM_FOV / 2) * (Math.PI / 180)) * CAM_Z;
+      camBottomY.current = bunBox.max.y - halfVhWorld * 0.05;
+    } else {
+      camBottomY.current = totalBox.min.y - 1;
+    }
 
-  if (bottomBunClone) {
-    const bunBox       = new THREE.Box3().setFromObject(bottomBunClone);
-    const halfVhWorld  = Math.tan((CAM_FOV / 2) * (Math.PI / 180)) * CAM_Z;
-    camBottomY.current = bunBox.max.y - halfVhWorld * 0.05;
-  } else {
-    camBottomY.current = totalBox.min.y - 1;
-  }
-
-  camera.position.set(0, camTopY.current, CAM_Z);
-  camera.lookAt(0, camTopY.current, 0);
-}, [scene, camera]);
-
-useEffect(() => {
-  if (play) {
-    phase.current = "descend";
-    clock.current = 0;
-  } else {
-    // Reset when section leaves view
-    phase.current = "idle";
-    clock.current = 0;
     camera.position.set(0, camTopY.current, CAM_Z);
     camera.lookAt(0, camTopY.current, 0);
-  }
-}, [play, camera]);
 
-useFrame((_, delta) => {
+    groupRef.current.visible = true;
+
+    // Tell parent burger is ready — IntersectionObserver starts only after this
+    onReady();
+  }, [scene, camera]);
+
+  // Start/stop animation
+  useEffect(() => {
+    if (play) {
+      phase.current = "descend";
+      clock.current = 0;
+    } else {
+      phase.current = "idle";
+      clock.current = 0;
+      camera.position.set(0, camTopY.current, CAM_Z);
+      camera.lookAt(0, camTopY.current, 0);
+    }
+  }, [play, camera]);
+
+  useFrame((_, delta) => {
     if (!play || phase.current === "idle") return;
 
     clock.current += delta;
@@ -109,7 +115,7 @@ useFrame((_, delta) => {
       const t    = Math.min(clock.current / DESCEND_DURATION, 1);
       const camY = top + (bottom - top) * easeInOut(t);
       camera.position.y = camY;
-      camera.lookAt(0, camY, 0);
+      camera.lookAt(0, camY + 3.5, 0);
       if (t >= 1) { phase.current = "pause"; clock.current = 0; }
 
     } else if (phase.current === "pause") {
@@ -119,7 +125,7 @@ useFrame((_, delta) => {
       const t    = Math.min(clock.current / ASCEND_DURATION, 1);
       const camY = bottom + (top - bottom) * easeInCubic(t);
       camera.position.y = camY;
-      camera.lookAt(0, camY, 0);
+      camera.lookAt(0, camY + 3.5, 0);
       if (t >= 1) { phase.current = "restart"; clock.current = 0; }
 
     } else if (phase.current === "restart") {
@@ -128,15 +134,18 @@ useFrame((_, delta) => {
   });
 
   return (
-    <group ref={groupRef} scale={GROUP_SCALE} rotation={[0.4, 0, 0]} />
+    <group ref={groupRef} visible={false} scale={GROUP_SCALE} rotation={[0.4, 0, 0]} />
   );
 }
 
-export default function BurgerChallenge() {
+export default function BurgerChallengeTeaser() {
   const sectionRef = useRef<HTMLElement>(null);
   const [play, setPlay]   = useState(false);
+  const [ready, setReady] = useState(false);
 
+  // Only start observing intersection once burger is fully stacked and ready
   useEffect(() => {
+    if (!ready) return;
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -145,7 +154,7 @@ export default function BurgerChallenge() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [ready]);
 
   return (
     <section className={styles.challenge} ref={sectionRef}>
@@ -161,13 +170,19 @@ export default function BurgerChallenge() {
           <directionalLight position={[4, 10, 6]}  intensity={1.4} color="#ff6b00" />
           <directionalLight position={[-4, 2, -4]} intensity={0.4} color="#ffcc00" />
 
-          <group position={[0, -5.5, 0]}> 
-            <StackedBurger play={play} />
-
-            {/* side items */}
-            <SideItem model="/3d-models/french_fries.glb" position={[-2, -1, -10]} scale={0.1} />
-            <SideItem model="/3d-models/milkshake.glb"    position={[-4,  -1, -10]} scale={0.1} />
-          </group>
+          <StackedBurger play={play} onReady={() => setReady(true)} />
+          <SideItem
+            model="/3d-models/french_fries.glb"
+            position={[-2, -1, -10]}
+            scale={0.1}
+            rotation={[0.4, 0, 0]}
+          />
+          <SideItem
+            model="/3d-models/milkshake.glb"
+            position={[-4, -1, -10]}
+            scale={0.1}
+            rotation={[0.4, 0, 0]}
+          />
         </Canvas>
         <div className={styles.vignette} />
       </div>
@@ -181,8 +196,7 @@ export default function BurgerChallenge() {
         <p className={styles.subtext}>
           {PATTY_COUNT} patties. One hour. Your meal is free if you finish.
         </p>
-        
-        <Cta variant="pink" label="See the challenge" href="/menu#challenge"></Cta>
+        <Cta variant="pink" label="See the challenge" href="/menu#challenge" />
       </div>
 
       <div className={styles.warningTape} />

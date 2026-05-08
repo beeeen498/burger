@@ -61,8 +61,8 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   pickles:   3,
   onions:    3,
   bacon:    -12,
-  top_bun:   3,
-  poppy_bun: 3
+  top_bun:    0,
+  poppy_bun: 2.5
 };
 
 interface StackResult {
@@ -76,7 +76,7 @@ export interface BurgerIngredients {
   sauce?: "none" | "regular" | "extra"
   lettuce?: number     // 0, 1, or 2
   tomato?: number      // 0, 1, or 2
-  pattyCount: number   // 1-5
+  pattyCount?: number  // 0-5
   cheeseCount?: number // 0 to pattyCount
   pickles?: number     // 0, 1, or 2
   onions?: number      // 0, 1, or 2
@@ -232,7 +232,7 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   for (let i = 0; i < tomatoCount; i++) layers.push("tomato")
 
   // add patties if present
-  const pattyCount = Math.min(Math.max(ingredients.pattyCount, 1), MAX_PATTIES)
+  const pattyCount = Math.min(Math.max(ingredients.pattyCount ?? 0, 0), MAX_PATTIES)
   let cheeseRemaining = Math.min(ingredients.cheeseCount ?? 0, MAX_CHEESE)
 
   // patties first, one cheese each
@@ -260,7 +260,13 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
 
   // add nuggets if present 
   const nuggetCount = Math.min(ingredients.nuggets ?? 0, MAX_NUGGETS)
-  for (let i = 0; i < nuggetCount; i++) layers.push("nuggets")
+  for (let i = 0; i < nuggetCount; i++) {
+    layers.push("nuggets")
+    if (cheeseRemaining > 0) {
+      layers.push("cheese")
+      cheeseRemaining--
+    }
+  }
 
   // add bacon if present
   const baconCount = Math.min(ingredients.bacon ?? 0, MAX_BACON)

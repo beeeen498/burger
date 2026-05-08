@@ -10,7 +10,6 @@ import styles from "./StickyHeader.module.scss";
 const StickyHeader = () => {
   const [visible, setVisible] = useState(false);
   const scrolledIn = useRef(false);
-  const [ready, setReady] = useState(false);
   const logoRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -24,6 +23,13 @@ const StickyHeader = () => {
     
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // adjust the height
+  useEffect(() => {
+    const el = document.querySelector('header');
+    if (!el) return;
+    document.documentElement.style.setProperty('--header-height', `${el.offsetHeight}px`);
   }, []);
 
   // glitch effect on logo — same as Header.tsx
