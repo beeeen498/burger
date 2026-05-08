@@ -14,7 +14,7 @@ const PATTY_COUNT = 20;
 const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 
 // control animation
-const DESCEND_DURATION  = 5.5;
+const DESCEND_DURATION  = 8.5;
 const PAUSE_DURATION    = 1.2;
 const ASCEND_DURATION   = 0.6;
 const RESTART_PAUSE     = 1.0;

@@ -32,8 +32,8 @@ const FEATURED_ITEMS = [
         price: "$10.99",
         href: "/menu/202",
         ingredients: {
-            pattyCount: 1,
-            cheeseCount: 3,
+            pattyCount: 2,
+            cheeseCount: 2,
             // nuggets: 2,
             lettuce: 1,
             tomato: 1,

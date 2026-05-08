@@ -45,24 +45,24 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   sauce:      0,
   lettuce:    0,
   tomato:     0,
-  patty:      0,
+  patty:      4,
   nuggets:    3.5,
-  cheese:     0,
-  pickles:    0,
-  onions:     0,
+  cheese:     4,
+  pickles:    1,
+  onions:     -2.5,
   bacon:      1.5,
   top_bun:    0,
   poppy_bun: -4
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
-  cheese:    -4,
+  cheese:    -4.5,
   nuggets:    -5,
-  pickles:   -7,
-  onions:    -7,
+  pickles:   3,
+  onions:    3,
   bacon:    -12,
-  top_bun:   -4,
-  poppy_bun: -4
+  top_bun:   3,
+  poppy_bun: 3
 };
 
 interface StackResult {

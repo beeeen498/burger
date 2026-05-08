@@ -37,8 +37,8 @@ function SideItem({ model, position, scale }: SideItemProps) {
 
 // positioning the side items
 const SIDE_ITEM_CONFIG: { [key: string]: { position: [number, number, number], scale: number } } = {
-  french_fries: { position: [-2, 6, 0], scale: 0.10 },
-  milkshake:    { position: [-9, 6, 0], scale: 0.13 },
+  french_fries: { position: [-2, 6, -10], scale: 0.10 },
+  milkshake:    { position: [-9, 6, -10], scale: 0.13 },
 }
 
 // Inner component — must live inside <Canvas> to access the Three.js context.
