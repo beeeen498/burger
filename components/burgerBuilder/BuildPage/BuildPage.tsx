@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/global/Header/Header";
 import IngredientTabs from "../IngredientTabs/IngredientTabs";
 import IngredientCard from "../IngredientCard/IngredientCard";
@@ -9,6 +9,7 @@ import NutritionPanel from "../NutritionPanel/NutritionPanel";
 import { useIngredientFeedback } from "../hooks/useIngredientFeedback";
 import SurpriseBadge from "../SurpriseBadge/SurpriseBadge";
 import ResetBadge from "../ResetBadge/ResetBadge";
+import IngredientSummary from "../IngredientSummary/IngredientSummary";
 import Cta from "@/components/global/Cta/Cta";
 import { CATEGORIES, calculateNutrition, calculatePrice, randomizeIngredients } from "../data/builderData";
 import { BurgerIngredients } from "@/lib/burgerUtils";
@@ -31,7 +32,22 @@ const DEFAULT_INGREDIENTS: BurgerIngredients = {
 const BuildPage = () => {
   // ── State ───────────────────────────────────────────
   const [activeCategory, setActiveCategory] = useState("bun");
-  const [ingredients, setIngredients] = useState<BurgerIngredients>(DEFAULT_INGREDIENTS);
+  
+  // ── State — persisted to localStorage ──────────────
+  const [ingredients, setIngredients] = useState<BurgerIngredients>(() => {
+    if (typeof window === "undefined") return DEFAULT_INGREDIENTS;
+    try {
+      const saved = localStorage.getItem("burgerBuilder");
+      return saved ? JSON.parse(saved) : DEFAULT_INGREDIENTS;
+    } catch {
+      return DEFAULT_INGREDIENTS;
+    }
+  });
+
+  // ── Persist ingredients to localStorage on change ──
+  useEffect(() => {
+    localStorage.setItem("burgerBuilder", JSON.stringify(ingredients));
+  }, [ingredients]);
 
   // ── Calculated nutrition and price ─────────────────
   const nutrition = calculateNutrition(ingredients);
@@ -76,6 +92,7 @@ const BuildPage = () => {
     setIngredients(DEFAULT_INGREDIENTS);
     playRemove();
   };
+  
 
   return (
     <main className={styles.page}>
@@ -89,7 +106,14 @@ const BuildPage = () => {
 
         {/* ── Left panel — sticky 3D burger ── */}
         <div className={styles.burgerPanel}>
-          <BurgerCanvas ingredients={ingredients} />
+          <BurgerCanvas 
+            ingredients={ingredients}
+            cameraOffset={14}
+            scale={0.11}
+          />
+
+          {/* ── Ingredient summary ── */}
+          <IngredientSummary ingredients={ingredients} />
 
           {/* ── Surprise Me badge — left ── */}
           <SurpriseBadge onClick={handleSurprise} />

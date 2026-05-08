@@ -21,7 +21,6 @@
     .layout {
         display: flex;
         gap: 40px;
-        // padding here instead — only affects the two columns
         padding: 0 40px;
         height: calc(100vh - 103px);
         max-width: 1400px;

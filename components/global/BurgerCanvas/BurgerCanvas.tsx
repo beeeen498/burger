@@ -10,7 +10,9 @@ import styles from "./BurgerCanvas.module.scss";
 // Props accepted by both the outer and inner components
 interface BurgerCanvasProps {
   ingredients: BurgerIngredients,
-  sideItems?: string[]  // e.g. ["french_fries", "milkshake"]
+  sideItems?: string[]
+  cameraOffset?: number  // controls vertical camera position — default 14.5
+  scale?: number         // controls burger scale — default 0.13
 }
 
 // Props for SideItem
@@ -43,7 +45,7 @@ const SIDE_ITEM_CONFIG: { [key: string]: { position: [number, number, number], s
 
 // Inner component — must live inside <Canvas> to access the Three.js context.
 // Responsible for loading the GLB, extracting meshes, and stacking the burger layers.
-function BurgerScene({ ingredients }: BurgerCanvasProps) {
+function BurgerScene({ ingredients, cameraOffset = 14.5, scale = 0.13 }: BurgerCanvasProps) {
     // Ref to the Three.js group that holds the stacked burger layers
     const groupRef = useRef<THREE.Group>(null)
 
@@ -104,7 +106,7 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
         const lookAtY = stackBottom
 
         // moving burgers on y axis
-        camera.position.set(0, stackBottom + 14.5, 120) // at the bottom
+        camera.position.set(0, stackBottom + cameraOffset, 120) // at the bottom
 
         ;(camera as THREE.PerspectiveCamera).fov = 15
         ;(camera as THREE.PerspectiveCamera).updateProjectionMatrix()
@@ -117,7 +119,7 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
          * The group that stackBurgerLayers populates with cloned ingredient meshes
          * Rotation controls the tilt of the burger
          */ 
-        <group ref={groupRef} scale={0.13} rotation={[0.1, 0, 0]}/>
+        <group ref={groupRef} scale={scale} rotation={[0.1, 0, 0]}/>
     )
 }
 
@@ -126,7 +128,7 @@ function BurgerScene({ ingredients }: BurgerCanvasProps) {
 // Accepts an ingredients prop — a BurgerIngredients object describing
 // which ingredients to include. The fixed stacking order is enforced
 // internally by buildBurgerSequence in burgerUtils.
-export default function BurgerCanvas({ ingredients, sideItems }: BurgerCanvasProps) {
+export default function BurgerCanvas({ ingredients, sideItems, cameraOffset, scale }: BurgerCanvasProps) {
   return (
     <div className={styles.canvasWrapper}>
       <Canvas
@@ -135,7 +137,7 @@ export default function BurgerCanvas({ ingredients, sideItems }: BurgerCanvasPro
       >
         <ambientLight intensity={1.2} />
         <directionalLight position={[5, 5, 5]} intensity={2} />
-        <BurgerScene ingredients={ingredients} />
+        <BurgerScene ingredients={ingredients} cameraOffset={cameraOffset} scale={scale} />
         {sideItems?.map((item) => {
           const config = SIDE_ITEM_CONFIG[item]
           if (!config) return null
