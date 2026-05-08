@@ -50,17 +50,17 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   cheese:     4,
   pickles:    1,
   onions:     -2.5,
-  bacon:      -16,
+  bacon:      -3,
   top_bun:    0,
   poppy_bun: -4
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
   cheese:    -4.5,
-  nuggets:    -5,
+  nuggets:    -2,
   pickles:   3,
   onions:    3,
-  bacon:    5,
+  bacon:    -2.5,
   top_bun:    0,
   poppy_bun: 2.5
 };
