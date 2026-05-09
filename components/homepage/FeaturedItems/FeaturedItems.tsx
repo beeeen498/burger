@@ -19,7 +19,7 @@ const FEATURED_ITEMS = [
         sideItems: ["french_fries", "milkshake"],
         ingredients: {
             cheeseCount: 1,
-            // nuggets: 2,
+            nuggets: 2,
             lettuce: 1,
             tomato: 1,
             pickles: 1,

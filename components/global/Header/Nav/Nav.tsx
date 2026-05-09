@@ -10,6 +10,9 @@ const Nav = () => {
   return (
     <nav className={styles.nav}>
       <ul className={styles.navList}>
+        <li className={`${styles.navListItem} ${pathname === '/' ? styles.active : ''}`}>
+          <Link href="/">Home</Link>
+        </li>
         <li className={`${styles.navListItem} ${pathname === '/menu' ? styles.active : ''}`}>
           <Link href="/menu">Menu</Link>
         </li>
