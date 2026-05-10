@@ -1,7 +1,7 @@
 "use client";
 
-import ChallengeBurgerScene from "@/components/challenge/ChallengeBurgerScene/ChallengeBurgerScene";
+import ChallengePage from "@/components/challenge/ChallengePage/ChallengePage";
 
 export default function Page() {
-  return <ChallengeBurgerScene />;
+  return <ChallengePage />;
 }

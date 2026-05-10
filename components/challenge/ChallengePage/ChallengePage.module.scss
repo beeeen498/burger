@@ -1,0 +1,16 @@
+.page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  padding-top: var(--header-height);
+  width: 100%;
+  overflow: hidden;
+
+  .contentCol {
+    // content styles come later
+  }
+
+  .sceneCol {
+    height: 100%;
+  }
+}

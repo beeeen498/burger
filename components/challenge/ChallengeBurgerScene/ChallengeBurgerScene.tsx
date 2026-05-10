@@ -103,7 +103,7 @@ function ChallengeBurger() {
     camera.position.set(0, 2, 45);
     (camera as THREE.PerspectiveCamera).fov = 40;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
-camera.lookAt(0, 45, 0);
+    camera.lookAt(0, 45, 0);
   }, [scene, camera]);
 
   // wobble the whole burger like a tower in wind
