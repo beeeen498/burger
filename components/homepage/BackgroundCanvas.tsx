@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const COLORS = ["#f7e558", "#df2c8b", "#efefef"];
+const COLORS = ["#f7e558", "#df2c8b", "#efefef", "#c2ff8b"];
 const STROKE = "#1a1a1a";
 const SHAPE_TYPES = ["circle", "donut", "halfCircle", "triangle", "star", "squiggle"] as const;
 type ShapeType = typeof SHAPE_TYPES[number];

@@ -158,48 +158,50 @@ export default function BurgerChallengeTeaser() {
 
   return (
     <section className={styles.challenge} ref={sectionRef}>
-      <div className={styles.warningTape} />
+      <div className={styles.challengeContainer}>
+        <div className={styles.warningTape} />
 
-      <div className={styles.viewport}>
-        <Canvas
-          camera={{ position: [0, 0, CAM_Z], fov: CAM_FOV }}
-          gl={{ antialias: true, alpha: true }}
-          onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
-        >
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[4, 10, 6]}  intensity={1.4} color="#ff6b00" />
-          <directionalLight position={[-4, 2, -4]} intensity={0.4} color="#ffcc00" />
+        <div className={styles.viewport}>
+          <Canvas
+            camera={{ position: [0, 0, CAM_Z], fov: CAM_FOV }}
+            gl={{ antialias: true, alpha: true }}
+            onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
+          >
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[4, 10, 6]}  intensity={1.4} color="#ff6b00" />
+            <directionalLight position={[-4, 2, -4]} intensity={0.4} color="#ffcc00" />
 
-          <StackedBurger play={play} onReady={() => setReady(true)} />
-          <SideItem
-            model="/3d-models/french_fries.glb"
-            position={[-2, -1, -10]}
-            scale={0.1}
-            rotation={[0.4, 0, 0]}
-          />
-          <SideItem
-            model="/3d-models/milkshake.glb"
-            position={[-4, -1, -10]}
-            scale={0.1}
-            rotation={[0.4, 0, 0]}
-          />
-        </Canvas>
-        <div className={styles.vignette} />
+            <StackedBurger play={play} onReady={() => setReady(true)} />
+            <SideItem
+              model="/3d-models/french_fries.glb"
+              position={[-2, -1, -10]}
+              scale={0.1}
+              rotation={[0.4, 0, 0]}
+            />
+            <SideItem
+              model="/3d-models/milkshake.glb"
+              position={[-4, -1, -10]}
+              scale={0.1}
+              rotation={[0.4, 0, 0]}
+            />
+          </Canvas>
+          <div className={styles.vignette} />
+        </div>
+
+        <div className={styles.overlay}>
+          <div className={styles.warningBadge}><CiWarning /> &nbsp; CHALLENGE</div>
+          <h2 className={styles.heading}>
+            THINK YOU CAN<br />
+            <span className={styles.headingAccent}>HANDLE IT?</span>
+          </h2>
+          <p className={styles.subtext}>
+            {PATTY_COUNT} patties, large fries, and a milkshake.<br />One hour. Your meal is free if you finish.
+          </p>
+          <Cta variant="pink" label="See the challenge" href="/menu#challenge" />
+        </div>
+
+        <div className={styles.warningTape} />
       </div>
-
-      <div className={styles.overlay}>
-        <div className={styles.warningBadge}><CiWarning /> &nbsp; CHALLENGE</div>
-        <h2 className={styles.heading}>
-          THINK YOU CAN<br />
-          <span className={styles.headingAccent}>HANDLE IT?</span>
-        </h2>
-        <p className={styles.subtext}>
-          {PATTY_COUNT} patties, large fries, and a milkshake.<br />One hour. Your meal is free if you finish.
-        </p>
-        <Cta variant="pink" label="See the challenge" href="/menu#challenge" />
-      </div>
-
-      <div className={styles.warningTape} />
     </section>
   );
 }

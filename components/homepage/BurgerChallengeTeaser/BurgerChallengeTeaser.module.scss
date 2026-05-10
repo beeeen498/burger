@@ -2,8 +2,11 @@
   position: relative;
   width: 100%;
   height: calc(100vh - var(--header-height, 64px));
-  background-color: #0d0d0d;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  // justify-content: center;
 
   // Subtle noise texture
   &::before {
@@ -16,127 +19,137 @@
     pointer-events: none;
     z-index: 1;
   }
-}
 
-// ─── Warning tape ─────────────────────────────────────────────────
-.warningTape {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 28px;
-  background: repeating-linear-gradient(
-    -55deg,
-    var(--yellow) 0px,
-    var(--yellow) 20px,
-    var(--black) 20px,
-    var(--black) 40px
-  );
-  border-top: 2.5px solid var(--black);
-  border-bottom: 2.5px solid var(--black);
-  z-index: 10;
+  .challengeContainer{
+    background-color: #0d0d0d;
+    position: relative;
+    height: 100%;
+    width: 80%;
+    margin: 0 auto; 
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    border: var(--border);
 
-  &:first-child {
-    top: 0;
+    // ─── Warning tape ─────────────────────────────────────────────────
+    .warningTape {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: repeating-linear-gradient(
+        -55deg,
+        var(--yellow) 0px,
+        var(--yellow) 20px,
+        var(--black) 20px,
+        var(--black) 40px
+      );
+      z-index: 10;
+    
+      &:first-child {
+        top: 0;
+      }
+    
+      &:last-child {
+        bottom: 0;
+      }
+    }
+    
+    // ─── 3D viewport ──────────────────────────────────────────────────
+    .viewport {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
+    
+    // Radial vignette to frame the burger
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 40%,
+        rgb(0, 0, 0) 100%
+      );
+      pointer-events: none;
+      z-index: 3;
+    }
+    
+    // ─── Overlay text ─────────────────────────────────────────────────
+    .overlay {
+      position: absolute;
+      height: 100%;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    
+      // Gradient fade up from bottom so text is always readable
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 0;
+        right: 0;
+        height: 320px;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.549) 60%);
+        z-index: -1;
+        pointer-events: none;
+      }
+    }
+    
+    .warningBadge {
+      display: inline-block;
+      display: flex;
+      align-items: center;
+      font-family: var(--header-font);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--black);
+      background: var(--yellow);
+      border: 2.5px solid var(--black);
+      box-shadow: 3px 3px 0 var(--black);
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    
+    .heading {
+      font-family: var(--header-font);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.5rem;
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.15);
+    }
+    
+    .headingAccent {
+      color: var(--pink);
+      -webkit-text-stroke: 1.5px var(--pink);
+      text-shadow:
+        0 0 40px rgba(223, 44, 139, 0.5),
+        0 0 80px rgba(223, 44, 139, 0.2);
+    }
+    
+    .subtext {
+      font-family: var(--body-font);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: rgba(239, 239, 239, 0.7);
+      margin: 0 0 1.75rem;
+      letter-spacing: 0.02em;
+    }
   }
-
-  &:last-child {
-    bottom: 0;
-  }
 }
 
-// ─── 3D viewport ──────────────────────────────────────────────────
-.viewport {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-
-  canvas {
-    width: 100% !important;
-    height: 100% !important;
-  }
-}
-
-// Radial vignette to frame the burger
-.vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 70% 60% at 50% 50%,
-    transparent 40%,
-    rgb(0, 0, 0) 100%
-  );
-  pointer-events: none;
-  z-index: 3;
-}
-
-// ─── Overlay text ─────────────────────────────────────────────────
-.overlay {
-  position: absolute;
-  height: 100%;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  // Gradient fade up from bottom so text is always readable
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: -40px;
-    left: 0;
-    right: 0;
-    height: 320px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.549) 60%);
-    z-index: -1;
-    pointer-events: none;
-  }
-}
-
-.warningBadge {
-  display: inline-block;
-  display: flex;
-  align-items: center;
-  font-family: var(--header-font);
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  color: var(--black);
-  background: var(--yellow);
-  border: 2.5px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  padding: 0.3rem 0.9rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-}
-
-.heading {
-  font-family: var(--header-font);
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
-  line-height: 1;
-  color: var(--white);
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  margin: 0 0 0.5rem;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.15);
-}
-
-.headingAccent {
-  color: var(--pink);
-  -webkit-text-stroke: 1.5px var(--pink);
-  text-shadow:
-    0 0 40px rgba(223, 44, 139, 0.5),
-    0 0 80px rgba(223, 44, 139, 0.2);
-}
-
-.subtext {
-  font-family: var(--body-font);
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  color: rgba(239, 239, 239, 0.7);
-  margin: 0 0 1.75rem;
-  letter-spacing: 0.02em;
-}
 
 
