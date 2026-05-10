@@ -1,0 +1,104 @@
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  background: #f7e558;
+  border: 3.5px solid #1a1a1a;
+  box-shadow: 6px 6px 0 #1a1a1a;
+  padding: 1rem 1.25rem;
+  position: relative;
+
+  .trophy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
+    background: #1a1a1a;
+    gap: 0.1rem;
+
+    .trophyIcon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .trophyLabel {
+      font-family: var(--header-font);
+      font-size: 0.55rem;
+      color: #f7e558;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+
+    .header {
+      font-family: var(--header-font);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .initials {
+      font-family: var(--header-font);
+      font-size: 2rem;
+      line-height: 1;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+    }
+
+    .name {
+      font-family: var(--body-font);
+      font-size: 0.78rem;
+      color: #1a1a1a;
+      opacity: 0.8;
+    }
+
+    .time {
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+      margin-top: 0.2rem;
+
+      .timeValue {
+        font-family: var(--header-font);
+        font-size: 1.4rem;
+        color: #df2c8b;
+        line-height: 1;
+      }
+
+      .timeSuffix {
+        font-family: var(--body-font);
+        font-size: 0.75rem;
+        color: #1a1a1a;
+        opacity: 0.7;
+      }
+    }
+
+    .date {
+      font-family: var(--body-font);
+      font-size: 0.72rem;
+      color: #1a1a1a;
+      opacity: 0.65;
+    }
+
+    .age {
+      font-family: var(--body-font);
+      font-size: 0.72rem;
+      color: #1a1a1a;
+
+      strong {
+        font-weight: 700;
+        color: #df2c8b;
+      }
+    }
+  }
+}
