@@ -7,8 +7,6 @@ import { useGLTF } from "@react-three/drei";
 import { stackBurgerLayers, buildChallengeSequence } from "@/lib/burgerUtils";
 import styles from "./ChallengeBurgerScene.module.scss";
 
-
-
 const PATTY_COUNT    = 20;
 const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
 const GROUP_SCALE    = 0.13;
@@ -43,6 +41,7 @@ function Cloud({ position, scale, speed, opacity, drift }: CloudProps) {
 
     // subtle horizontal bob on all clouds
     groupRef.current.position.x = position[0] + Math.sin(offset.current * 0.3) * 2;
+    
 
     if (drift) {
       // slowly move upward, wrap back to start when off screen
@@ -96,14 +95,13 @@ function ChallengeBurger() {
 
     // log world space bounds after scale is applied
     const box = new THREE.Box3().setFromObject(groupRef.current);
-    console.log("world min Y:", box.min.y);
-    console.log("world max Y:", box.max.y);
-    console.log("world center:", box.getCenter(new THREE.Vector3()));
 
     camera.position.set(0, 2, 45);
     (camera as THREE.PerspectiveCamera).fov = 40;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
     camera.lookAt(0, 45, 0);
+    console.log("camera position:", camera.position);
+console.log("camera fov:", (camera as THREE.PerspectiveCamera).fov);
   }, [scene, camera]);
 
   // wobble the whole burger like a tower in wind
@@ -139,11 +137,10 @@ export default function ChallengeBurgerScene() {
         <ChallengeBurger />
 
         {/* clouds — mix of drifting and bobbing at different heights */}
-        <Cloud position={[ 4,  6, -5]} scale={0.9} speed={0.4} opacity={0.55} drift={false} />
-        <Cloud position={[-5,  9, -8]} scale={1.1} speed={0.3} opacity={0.45} drift={true}  />
-        <Cloud position={[ 3, 13, -6]} scale={0.7} speed={0.5} opacity={0.5}  drift={false} />
-        <Cloud position={[-4, 17, -7]} scale={1.0} speed={0.35} opacity={0.4} drift={true}  />
+        <Cloud position={[ 5, 42, 20]}  scale={2.5} speed={0.3} opacity={0.9} drift={false} /> {/* in front */}
+        <Cloud position={[-12, 50, -5]}  scale={2.0} speed={0.4} opacity={0.9} drift={false} /> {/* behind */}
       </Canvas>
+      
     </div>
   );
 }
