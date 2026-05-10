@@ -6,24 +6,36 @@ import { FaUser } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import Nav from "@/components/global/Header/Nav/Nav";
 import styles from "./StickyHeader.module.scss";
+import { usePathname } from "next/navigation";
 
 const StickyHeader = () => {
   const [visible, setVisible] = useState(false);
   const scrolledIn = useRef(false);
   const logoRef = useRef<HTMLHeadingElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
+    setVisible(false);
+    scrolledIn.current = false;
+
     const handleScroll = () => {
       scrolledIn.current = true;
       setVisible(window.scrollY > 130);
     };
 
-    // On mount: set visible with no animation
-    if (window.scrollY > 130) setVisible(true);
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (document.body.scrollHeight <= window.innerHeight) {
+          setVisible(true);
+          return;
+        }
+        if (window.scrollY > 130) setVisible(true);
+        window.addEventListener("scroll", handleScroll, { passive: true });
+      });
+    });
+
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
 
   // adjust the height
   useEffect(() => {
