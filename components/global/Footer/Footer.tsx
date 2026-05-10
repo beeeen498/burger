@@ -7,7 +7,7 @@ import styles from "./Footer.module.scss"
 const NAV_LINKS = [
   { label: "Menu", href: "/menu" },
   { label: "Build a Burger", href: "/build" },
-  { label: "About", href: "/about" },
+  { label: "Challenge", href: "/challenge" },
   { label: "Contact", href: "/contact" },
 ]
 

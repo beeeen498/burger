@@ -19,8 +19,8 @@ const Nav = () => {
         <li className={`${styles.navListItem} ${pathname === '/build' ? styles.active : ''}`}>
           <Link href="/build">Build a Burger</Link>
         </li>
-        <li className={`${styles.navListItem} ${pathname === '/about' ? styles.active : ''}`}>
-          <Link href="/about">About</Link>
+        <li className={`${styles.navListItem} ${pathname === '/challenge' ? styles.active : ''}`}>
+          <Link href="/challenge">Challenge</Link>
         </li>
         <li className={`${styles.navListItem} ${pathname === '/contact' ? styles.active : ''}`}>
           <Link href="/contact">Contact</Link>
