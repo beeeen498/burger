@@ -1,16 +1,7 @@
 "use client";
 
-import styles from "./ChallengePage.module.scss"
+import ChallengeBurgerScene from "@/components/challenge/ChallengeBurgerScene/ChallengeBurgerScene";
 
-// ─── Main page ────────────────────────────────────────────────────────────────
-
-export default function ChallengePage() {
-
-  return (
-    <main className={styles.page}>
-
-    </main>
-  );
+export default function Page() {
+  return <ChallengeBurgerScene />;
 }
-
-// useGLTF.preload("/3d-models/burger.glb");
