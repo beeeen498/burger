@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { FaInstagram, FaTiktok, FaXTwitter } from "react-icons/fa6"
 import styles from "./Footer.module.scss"
+import { log } from "console"
 
 const NAV_LINKS = [
   { label: "Menu", href: "/menu" },
@@ -31,6 +32,9 @@ const HOURS = [
 
 const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" })
+  const year = new Date().getFullYear();
+  console.log(year);
+  
 
   return (
     <footer className={styles.footer}>
@@ -92,7 +96,7 @@ const Footer = () => {
 
       {/* credit line */}
       <div className={styles.credit}>
-        <span>Made with love and cheese</span>
+        <span>Created by Ben Kedem &copy;{year}</span>
       </div>
 
     </footer>
