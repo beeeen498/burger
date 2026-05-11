@@ -5,6 +5,7 @@ import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Hero from "@/components/homepage/Hero/Hero";
 import FeaturedItems from "@/components/homepage/FeaturedItems/FeaturedItems";
 import BurgerChallengeTeaser from "@/components/homepage/BurgerChallengeTeaser/BurgerChallengeTeaser";
+import Contact from "@/components/homepage/Contact/Contact";
 import Footer from "@/components/global/Footer/Footer";
 import { useEffect } from "react";
 
@@ -23,6 +24,7 @@ export default function Page() {
       <Hero />
       <FeaturedItems />
       <BurgerChallengeTeaser />
+      <Contact />
       <Footer />
     </>
   );
