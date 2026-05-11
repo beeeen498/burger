@@ -1,0 +1,146 @@
+.contact {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+
+  // --- container ---
+  .contactContainer {
+    background-color: var(--green);
+    box-shadow: var(--box-shadow);
+    width: 80%;
+    border: var(--border);
+    padding: 30px 0;
+
+    // --- texture ---
+    .texture {
+      position: absolute;
+      inset: 0;
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    // --- inner wrapper ---
+    .inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+
+      // --- heading ---
+      .heading {
+        font-family: var(--header-font);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        color: var(--black);
+        text-align: center;
+        letter-spacing: -1px;
+      }
+
+      // --- subheading ---
+      .subheading {
+        font-family: var(--body-font);
+        font-size: 1rem;
+        color: var(--black);
+        text-align: center;
+        opacity: 0.75;
+        max-width: 440px;
+        line-height: 1.6;
+      }
+
+      // --- form ---
+      .form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        // --- field wrapper ---
+        .field {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          // --- label ---
+          .label {
+            font-family: var(--header-font);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--black);
+          }
+
+          // --- input and textarea ---
+          .input,
+          .textarea {
+            font-family: var(--body-font);
+            font-size: 1rem;
+            color: var(--black);
+            background: var(--white);
+            border: var(--border);
+            padding: 12px 14px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            resize: none;
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+
+            &::placeholder {
+              color: rgba(26, 26, 26, 0.35);
+            }
+
+            &:focus {
+              background: var(--yellow);
+              box-shadow: 3px 3px 0px var(--black);
+            }
+          }
+
+          // --- error input state ---
+          .inputError {
+            border-color: var(--pink);
+            background: #fff0f7;
+          }
+
+          // --- error message ---
+          .error {
+            font-family: var(--header-font);
+            font-size: 0.8rem;
+            color: var(--pink);
+            margin: 0;
+          }
+        }
+
+        // --- submit button ---
+        .submitBtn {
+          width: 100%;
+          padding: 16px;
+          font-family: var(--header-font);
+          font-size: 1.1rem;
+          letter-spacing: 0.05em;
+          color: var(--white);
+          background: var(--pink);
+          border: var(--border);
+          box-shadow: var(--box-shadow);
+          cursor: pointer;
+          transition: box-shadow 0.1s ease, transform 0.1s ease;
+
+          &:hover {
+            box-shadow: 6px 6px 0px var(--black);
+            background-color: var(--white);
+            color: var(--pink);
+            box-shadow: 2px 2px 0 var(--black);
+          }
+
+          &:active {
+            box-shadow: none;
+            transform: translate(4px, 4px);
+          }
+        }
+      }
+    }
+  }
+}
