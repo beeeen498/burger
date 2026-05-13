@@ -19,35 +19,37 @@ function BurgerModel() {
   const floatRef = useRef<THREE.Group>(null);
   const spinRef  = useRef<THREE.Group>(null);
   const clock    = useRef(0);
-  const clonedScene = useMemo(() => scene.clone(), [scene])
 
-  // Center the scene geometry on mount
-  useEffect(() => {
-      const box = new THREE.Box3().setFromObject(clonedScene);
-      const center = box.getCenter(new THREE.Vector3());
-      clonedScene.position.sub(center);
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    
+    // center the geometry
+    const box = new THREE.Box3().setFromObject(clone);
+    const center = box.getCenter(new THREE.Vector3());
+    clone.position.sub(center);
 
-      // hide extra meshes that aren't part of the assembled hero burger
-      clonedScene.traverse((obj: THREE.Object3D) => {
-          if (
-            obj.name === "poppy_bun" 
-            || obj.name.startsWith("nuggets_") 
-            || obj.name.startsWith("top_donut")
-            || obj.name.startsWith("bottom_donut")
-          )
-            {
-              obj.visible = false
-            }
-      })
-    }, [clonedScene]);
+    // hide extra meshes before first render
+    clone.traverse((obj: THREE.Object3D) => {
+      if (
+        obj.name === "poppy_bun" ||
+        obj.name.startsWith("nuggets_") ||
+        obj.name.startsWith("top_donut") ||
+        obj.name.startsWith("bottom_donut")
+      ) {
+        obj.visible = false;
+      }
+    });
 
-    useFrame((_, delta) => {
-      if (!floatRef.current || !spinRef.current) return;
-      clock.current += delta;
-      // Float on the outer group
-      floatRef.current.position.y = Math.sin(clock.current) * 0.3;
-      // Spin on the inner group
-      spinRef.current.rotation.y += 0.005;
+    return clone;
+  }, [scene]);
+
+  useFrame((_, delta) => {
+    if (!floatRef.current || !spinRef.current) return;
+    clock.current += delta;
+    // Float on the outer group
+    floatRef.current.position.y = Math.sin(clock.current) * 0.3;
+    // Spin on the inner group
+    spinRef.current.rotation.y += 0.005;
   });
 
   return (

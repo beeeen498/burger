@@ -100,6 +100,7 @@ export function stackBurgerLayers(
   meshes: { [key: string]: THREE.Mesh },
   layers: string[]
 ): StackResult {
+  
   // Clear existing children
   while (group.children.length) {
     group.remove(group.children[0]);
@@ -276,6 +277,5 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   const topBun = ingredients.bunType === "poppy" ? "poppy_bun" : "top_bun"
   layers.push(topBun)
 
-  console.log("layers:", layers)
   return layers
 }

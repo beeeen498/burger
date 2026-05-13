@@ -46,81 +46,90 @@ const SIDE_ITEM_CONFIG: { [key: string]: { position: [number, number, number], s
 // Inner component — must live inside <Canvas> to access the Three.js context.
 // Responsible for loading the GLB, extracting meshes, and stacking the burger layers.
 function BurgerScene({ ingredients, cameraOffset = 14.5, scale = 0.13 }: BurgerCanvasProps) {
-    // Ref to the Three.js group that holds the stacked burger layers
-    const groupRef = useRef<THREE.Group>(null)
+  // Ref to the Three.js group that holds the stacked burger layers
+  const groupRef = useRef<THREE.Group>(null)
 
-    // Ref to store extracted meshes by name — e.g. meshes.current["patty"]
-    // useRef is used instead of useState because we don't need a re-render when meshes populate
-    const meshes = useRef<{ [key: string]: THREE.Mesh }>({})
+  // Ref to store extracted meshes by name — e.g. meshes.current["patty"]
+  // useRef is used instead of useState because we don't need a re-render when meshes populate
+  const meshes = useRef<{ [key: string]: THREE.Mesh }>({})
 
-    // Load the shared GLB model that contains all ingredient meshes
-    const { scene } = useGLTF("/3d-models/burger.glb") as any
+  // Load the shared GLB model that contains all ingredient meshes
+  const { scene } = useGLTF("/3d-models/burger.glb") as any
 
-    const { camera } = useThree()
+  const { camera } = useThree()
 
-    useEffect(() => {
-        // Walk through every object in the GLB scene and extract the meshes by name
-        scene.traverse((obj: THREE.Object3D) => {
-            if ((obj as THREE.Mesh).isMesh) {
-                
-                // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
-                // store each strip individually and also map bacon_1 as "bacon" 
-                // for stackBurgerLayers to use as the reference mesh
-                if (obj.name.startsWith("bacon_")) {
-                    meshes.current[obj.name] = obj as THREE.Mesh
-                    if (obj.name === "bacon_1") {
-                        meshes.current["bacon"] = obj as THREE.Mesh
-                    }
-                
-                // nuggets are exported as multiple pieces (nuggets_1, nuggets_2 etc)
-                // same pattern as bacon — store individually and map nuggets_1 as "nuggets"
-                } else if (obj.name.startsWith("nuggets_")) {
-                    meshes.current[obj.name] = obj as THREE.Mesh
-                    if (obj.name === "nuggets_1") {
-                        meshes.current["nuggets"] = obj as THREE.Mesh
-                    }
-                
-                // all other meshes are single objects — store directly by name
-                } else {
-                    meshes.current[obj.name] = obj as THREE.Mesh
-                }
-            }
-        })
+  useEffect(() => {
+    scene.traverse((obj: THREE.Object3D) => {
+      if (obj.name.startsWith("bottom_donut") || obj.name.startsWith("top_donut")) {
+        obj.visible = false;
+      }
+    })
 
-        // Stack the layers and get the total bounding box of the assembled burger
-        if (!groupRef.current) return
-        const { totalBox } = stackBurgerLayers(groupRef.current, meshes.current, buildBurgerSequence(ingredients))
-
-        // moving the burgers on the x axis
-        const burgerWidth = totalBox.max.x - totalBox.min.x
-        if (groupRef.current) {
-            groupRef.current.position.x = burgerWidth * 0 // centered
+    // Walk through every object in the GLB scene and extract the meshes by name
+    scene.traverse((obj: THREE.Object3D) => {
+      if ((obj as THREE.Mesh).isMesh) {
+        // hide donuts
+        if (obj.name.startsWith("bottom_donut") || obj.name.startsWith("top_donut")) {
+          obj.visible = false;
+          return;
         }
 
-        // Point the camera at the bottom third of the burger stack
-        // so the burger appears to rise from the bottom of the card
-        const stackBottom = totalBox.min.y
-        const stackTop = totalBox.max.y
+        // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
+        // store each strip individually and also map bacon_1 as "bacon" 
+        // for stackBurgerLayers to use as the reference mesh
+        if (obj.name.startsWith("bacon_")) {
+            meshes.current[obj.name] = obj as THREE.Mesh
+            if (obj.name === "bacon_1") {
+                meshes.current["bacon"] = obj as THREE.Mesh
+            }
         
-        const focusY = stackBottom + (stackTop - stackBottom) * 0.3
-        const lookAtY = stackBottom
+        // nuggets are exported as multiple pieces (nuggets_1, nuggets_2 etc)
+        // same pattern as bacon — store individually and map nuggets_1 as "nuggets"
+        } else if (obj.name.startsWith("nuggets_")) {
+            meshes.current[obj.name] = obj as THREE.Mesh
+            if (obj.name === "nuggets_1") {
+                meshes.current["nuggets"] = obj as THREE.Mesh
+            }
+        
+        // all other meshes are single objects — store directly by name
+        } else {
+            meshes.current[obj.name] = obj as THREE.Mesh
+        }
+      }
+    })
 
-        // moving burgers on y axis
-        camera.position.set(0, stackBottom + cameraOffset, 120) // at the bottom
+    // Stack the layers and get the total bounding box of the assembled burger
+    if (!groupRef.current) return
+    const { totalBox } = stackBurgerLayers(groupRef.current, meshes.current, buildBurgerSequence(ingredients))
 
-        ;(camera as THREE.PerspectiveCamera).fov = 15
-        ;(camera as THREE.PerspectiveCamera).updateProjectionMatrix()
+    // moving the burgers on the x axis
+    const burgerWidth = totalBox.max.x - totalBox.min.x
+    if (groupRef.current) {
+        groupRef.current.position.x = burgerWidth * 0 // centered
+    }
 
-    }, [scene, ingredients])
+    // Point the camera at the bottom third of the burger stack
+    // so the burger appears to rise from the bottom of the card
+    const stackBottom = totalBox.min.y
+    const stackTop = totalBox.max.y
     
+    const focusY = stackBottom + (stackTop - stackBottom) * 0.3
+    const lookAtY = stackBottom
+
+    // moving burgers on y axis
+    camera.position.set(0, stackBottom + cameraOffset, 120) // at the bottom
+
+    ;(camera as THREE.PerspectiveCamera).fov = 15
+    ;(camera as THREE.PerspectiveCamera).updateProjectionMatrix()
+  }, [scene, ingredients])
     
-    return (
-        /**
-         * The group that stackBurgerLayers populates with cloned ingredient meshes
-         * Rotation controls the tilt of the burger
-         */ 
-        <group ref={groupRef} scale={scale} rotation={[0.1, 0, 0]}/>
-    )
+  return (
+      /**
+       * The group that stackBurgerLayers populates with cloned ingredient meshes
+       * Rotation controls the tilt of the burger
+       */ 
+      <group ref={groupRef} scale={scale} rotation={[0.1, 0, 0]}/>
+  )
 }
 
 // Outer component — renders the Canvas wrapper and scene lighting.
