@@ -21,7 +21,7 @@ const ChallengePage = () => {
         </p>
         <ChallengeRecordCard />
         <ChallengeStats />
-        <Cta label="I'm Ready. Let's Talk." variant="yellow" href="/#contact" />
+        <Cta label="I'm Ready. Let's Talk." variant="yellow" href="/?from=challenge#contact" />
         <p className={styles.finePrint}>
           * Challengers must contact us at least 24 hours in advance — full payment required upfront — a waiver must be signed before the challenge begins.
         </p>

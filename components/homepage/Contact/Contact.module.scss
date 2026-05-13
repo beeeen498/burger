@@ -140,6 +140,72 @@
             transform: translate(4px, 4px);
           }
         }
+
+        // --- challenge checkbox ---
+        .checkboxField {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .checkboxLabel {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                cursor: pointer;
+            }
+
+            // hide native checkbox
+            .checkbox {
+                position: absolute;
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            // custom checkbox box
+            .checkboxCustom {
+                flex-shrink: 0;
+                width: 22px;
+                height: 22px;
+                border: var(--border);
+                background: var(--white);
+                display: inline-block;
+                margin-top: 1px;
+                transition: background 0.15s ease;
+                position: relative;
+
+                // checkmark
+                &::after {
+                content: '';
+                position: absolute;
+                display: none;
+                left: 5px;
+                top: 1px;
+                width: 7px;
+                height: 12px;
+                border: 2.5px solid var(--black);
+                border-top: none;
+                border-left: none;
+                transform: rotate(45deg);
+                }
+            }
+
+            // checked state
+            .checkbox:checked + .checkboxCustom {
+                background: var(--yellow);
+
+                &::after {
+                display: block;
+                }
+            }
+
+            .checkboxText {
+                font-family: var(--body-font);
+                font-size: 0.9rem;
+                color: var(--black);
+                line-height: 1.5;
+            }
+        }
       }
     }
   }
