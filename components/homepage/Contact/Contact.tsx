@@ -1,11 +1,13 @@
 'use client'
 
+import { supabase } from '@/lib/supabase'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import styles from './Contact.module.scss'
 
 const CHALLENGE_MESSAGE = "Hey! I want to take on the burger challenge - give me a call!"
+const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
 
 // --- zod schema ---
 const contactSchema = z.object({
@@ -43,7 +45,7 @@ export default function Contact() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const result = contactSchema.safeParse(form)
     if (!result.success) {
@@ -61,7 +63,22 @@ export default function Contact() {
       return
     }
     // all good — Step 6 will handle the submit
-    console.log('valid:', result.data)
+    setStatus('loading')
+    try {
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([{
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          from_challenge: isFromChallenge,
+        }])
+      if (error) throw error
+      setStatus('success')
+    } catch (err) {
+      console.error(err)
+      setStatus('idle')
+    }
   }
 
   return (
@@ -143,10 +160,9 @@ export default function Contact() {
             )}
 
             {/* submit */}
-            <button className={styles.submitBtn} type="submit">
-              Send it 🍔
+            <button className={styles.submitBtn} type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'Sending...' : 'Send it 🍔'}
             </button>
-
           </form>
         </div>
       </div>
