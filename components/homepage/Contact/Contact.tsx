@@ -7,7 +7,6 @@ import { z } from 'zod'
 import styles from './Contact.module.scss'
 
 const CHALLENGE_MESSAGE = "Hey! I want to take on the burger challenge - give me a call!"
-const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
 
 // --- zod schema ---
 const contactSchema = z.object({
@@ -26,6 +25,7 @@ type ContactErrors = Partial<Record<keyof ContactFields, string>>
 export default function Contact() {
   const searchParams = useSearchParams()
   const isFromChallenge = searchParams.get('from') === 'challenge'
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
 
   const [form, setForm] = useState<ContactFields>({
     name: '',
@@ -75,6 +75,13 @@ export default function Contact() {
         }])
       if (error) throw error
       setStatus('success')
+      setForm({
+        name: '',
+        email: '',
+        message: '',
+        challengeAck: false,
+      })
+      setErrors({})
     } catch (err) {
       console.error(err)
       setStatus('idle')
