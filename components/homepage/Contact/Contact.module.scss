@@ -11,7 +11,7 @@
     box-shadow: var(--box-shadow);
     width: 80%;
     border: var(--border);
-    padding: 30px 0;
+    padding: 15px 0;
 
     // --- texture ---
     .texture {
@@ -32,6 +32,7 @@
       flex-direction: column;
       align-items: center;
       gap: 24px;
+      min-height: 600px;
 
       // --- heading ---
       .heading {
@@ -51,6 +52,19 @@
         opacity: 0.75;
         max-width: 440px;
         line-height: 1.6;
+      }
+
+      // --- form wrapper ---
+      .formWrapper {
+        width: 100%;
+        transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1),
+                    opacity 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+
+        &.slideOut {
+          transform: translateY(-40px);
+          opacity: 0;
+          pointer-events: none;
+        }
       }
 
       // --- form ---
@@ -126,10 +140,9 @@
           border: var(--border);
           box-shadow: var(--box-shadow);
           cursor: pointer;
-          transition: box-shadow 0.1s ease, transform 0.1s ease;
+          transition: box-shadow 0.1s ease, transform 0.1s ease, background 0.1s ease, color 0.1s ease;
 
           &:hover {
-            box-shadow: 6px 6px 0px var(--black);
             background-color: var(--white);
             color: var(--pink);
             box-shadow: 2px 2px 0 var(--black);
@@ -139,72 +152,135 @@
             box-shadow: none;
             transform: translate(4px, 4px);
           }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
         }
 
         // --- challenge checkbox ---
         .checkboxField {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          .checkboxLabel {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+          }
 
-            .checkboxLabel {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                cursor: pointer;
+          // hide native checkbox
+          .checkbox {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+
+          // custom checkbox box
+          .checkboxCustom {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border: var(--border);
+            background: var(--white);
+            display: inline-block;
+            margin-top: 1px;
+            transition: background 0.15s ease;
+            position: relative;
+
+            // checkmark
+            &::after {
+              content: '';
+              position: absolute;
+              display: none;
+              left: 5px;
+              top: 1px;
+              width: 7px;
+              height: 12px;
+              border: 2.5px solid var(--black);
+              border-top: none;
+              border-left: none;
+              transform: rotate(45deg);
             }
+          }
 
-            // hide native checkbox
-            .checkbox {
-                position: absolute;
-                opacity: 0;
-                width: 0;
-                height: 0;
+          // checked state
+          .checkbox:checked + .checkboxCustom {
+            background: var(--yellow);
+
+            &::after {
+              display: block;
             }
+          }
 
-            // custom checkbox box
-            .checkboxCustom {
-                flex-shrink: 0;
-                width: 22px;
-                height: 22px;
-                border: var(--border);
-                background: var(--white);
-                display: inline-block;
-                margin-top: 1px;
-                transition: background 0.15s ease;
-                position: relative;
+          .checkboxText {
+            font-family: var(--body-font);
+            font-size: 0.9rem;
+            color: var(--black);
+            line-height: 1.5;
+          }
+        }
+      }
 
-                // checkmark
-                &::after {
-                content: '';
-                position: absolute;
-                display: none;
-                left: 5px;
-                top: 1px;
-                width: 7px;
-                height: 12px;
-                border: 2.5px solid var(--black);
-                border-top: none;
-                border-left: none;
-                transform: rotate(45deg);
-                }
-            }
+      // --- success card ---
+      .successCard {
+        display: none; // only this, remove the display: flex above it
+        width: 100%;
+        background: var(--yellow);
+        border: var(--border);
+        box-shadow: var(--box-shadow);
+        padding: 56px 36px;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1),
+                    opacity 0.45s cubic-bezier(0.76, 0, 0.24, 1);
 
-            // checked state
-            .checkbox:checked + .checkboxCustom {
-                background: var(--yellow);
+        &.slideIn {
+          display: flex; 
+          opacity: 1;
+          transform: translateY(0);
+        }
 
-                &::after {
-                display: block;
-                }
-            }
+        // --- check icon ---
+        .successCheck {
+          font-family: var(--header-font);
+          font-size: 3.5rem;
+          color: var(--black);
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 72px;
+          height: 72px;
+          border: var(--border);
+          background: var(--green);
+          box-shadow: var(--box-shadow);
+        }
 
-            .checkboxText {
-                font-family: var(--body-font);
-                font-size: 0.9rem;
-                color: var(--black);
-                line-height: 1.5;
-            }
+        // --- title ---
+        .successTitle {
+          font-family: var(--header-font);
+          font-size: 2rem;
+          color: var(--black);
+          margin: 0;
+        }
+
+        // --- text ---
+        .successText {
+          font-family: var(--body-font);
+          font-size: 1rem;
+          color: var(--black);
+          opacity: 0.75;
+          margin: 0;
+          line-height: 1.6;
         }
       }
     }
