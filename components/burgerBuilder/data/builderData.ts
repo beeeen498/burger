@@ -1,4 +1,4 @@
-import { BurgerIngredients, MAX_PATTIES, MAX_CHEESE, MAX_LETTUCE, MAX_TOMATO, MAX_PICKLES, MAX_ONIONS, MAX_BACON, MAX_NUGGETS } from "@/lib/burgerUtils"
+import { BurgerIngredients, MAX_PATTIES, MAX_CHEESE, MAX_LETTUCE, MAX_TOMATO, MAX_PICKLES, MAX_ONIONS, MAX_BACON, MAX_NUGGETS, MAX_EGG, MAX_ONION_RINGS, MAX_FRIED_FISH } from "@/lib/burgerUtils"
 
 // ── Ingredient definitions for the burger builder ──────────────────
 export type IngredientKey =
@@ -12,6 +12,9 @@ export type IngredientKey =
   | "bacon"
   | "nuggets"
   | "sauce"
+  | "friedEgg"
+  | "friedFish"
+  | "onionRings"
 
 // counter ingredient — has quantity (patty, cheese, etc.)
 export interface CounterIngredient {
@@ -55,12 +58,14 @@ export const NUTRITION: Record<string, Nutrition> = {
   // ── Buns ────────────────────────────────────────────
   regular_bun: { calories: 120, protein: 4,  carbs: 22, fat: 2  },
   poppy_bun:   { calories: 130, protein: 4,  carbs: 23, fat: 3  },
+  waffle_bun:  { calories: 200, protein: 5,  carbs: 30, fat: 8  },
+  toast_bun:   { calories: 140, protein: 5,  carbs: 24, fat: 3  },
 
   // ── Proteins ────────────────────────────────────────
-  patty: { calories: 290, protein: 19, carbs: 0, fat: 23 },
-
+  patty:       { calories: 290, protein: 19, carbs: 0,  fat: 23 },
   nuggets:     { calories: 90,  protein: 6,  carbs: 5,  fat: 5  },
   bacon:       { calories: 70,  protein: 5,  carbs: 0,  fat: 5  },
+  fried_fish:  { calories: 200, protein: 14, carbs: 12, fat: 10 },
 
   // ── Toppings ────────────────────────────────────────
   cheese:      { calories: 60,  protein: 3,  carbs: 1,  fat: 5  },
@@ -68,6 +73,8 @@ export const NUTRITION: Record<string, Nutrition> = {
   tomato:      { calories: 5,   protein: 0,  carbs: 1,  fat: 0  },
   pickles:     { calories: 2,   protein: 0,  carbs: 0,  fat: 0  },
   onions:      { calories: 5,   protein: 0,  carbs: 1,  fat: 0  },
+  fried_egg:   { calories: 90,  protein: 6,  carbs: 0,  fat: 7  },
+  onion_rings: { calories: 150, protein: 2,  carbs: 18, fat: 8  },
 
   // ── Sauce ────────────────────────────────────────────
   sauce:       { calories: 80,  protein: 0,  carbs: 2,  fat: 8  },
@@ -86,19 +93,22 @@ export const CATEGORIES: Record<string, Category> = {
   protein: {
     label: "Protein",
     ingredients: [
-      { type: "counter", label: "Beef Patty", key: "pattyCount", max: 5, price: 2.5, emoji: "🥩" },
-      { type: "counter", label: "Nuggets",    key: "nuggets",    max: 2, price: 1.5, emoji: "🍗" },
-      { type: "counter", label: "Bacon",      key: "bacon",      max: 2, price: 1.5, emoji: "🥓" },
+      { type: "counter", label: "Beef Patty",  key: "pattyCount", max: MAX_PATTIES,    price: 2.5, emoji: "🥩" },
+      { type: "counter", label: "Nuggets",     key: "nuggets",    max: MAX_NUGGETS,    price: 1.5, emoji: "🍗" },
+      { type: "counter", label: "Bacon",       key: "bacon",      max: MAX_BACON,      price: 1.5, emoji: "🥓" },
+      { type: "counter", label: "Fried Fish",  key: "friedFish",  max: MAX_FRIED_FISH, price: 2.0, emoji: "🐟" },
     ],
   },
   toppings: {
     label: "Toppings",
     ingredients: [
-      { type: "counter", label: "Cheese",  key: "cheeseCount", max: 5, price: 0.5, emoji: "🧀" },
-      { type: "counter", label: "Lettuce", key: "lettuce",     max: 2, price: 0,   emoji: "🥬" },
-      { type: "counter", label: "Tomato",  key: "tomato",      max: 2, price: 0,   emoji: "🍅" },
-      { type: "counter", label: "Pickles", key: "pickles",     max: 2, price: 0,   emoji: "🥒" },
-      { type: "counter", label: "Onions",  key: "onions",      max: 2, price: 0,   emoji: "🧅" },
+      { type: "counter", label: "Cheese",      key: "cheeseCount", max: MAX_CHEESE,      price: 0.5, emoji: "🧀" },
+      { type: "counter", label: "Lettuce",     key: "lettuce",     max: MAX_LETTUCE,     price: 0,   emoji: "🥬" },
+      { type: "counter", label: "Tomato",      key: "tomato",      max: MAX_TOMATO,      price: 0,   emoji: "🍅" },
+      { type: "counter", label: "Pickles",     key: "pickles",     max: MAX_PICKLES,     price: 0,   emoji: "🥒" },
+      { type: "counter", label: "Onions",      key: "onions",      max: MAX_ONIONS,      price: 0,   emoji: "🧅" },
+      { type: "counter", label: "Fried Egg",   key: "friedEgg",    max: MAX_EGG,         price: 1.0, emoji: "🍳" },
+      { type: "counter", label: "Onion Rings", key: "onionRings",  max: MAX_ONION_RINGS, price: 1.0, emoji: "🧅" },
     ],
   },
   sauce: {
@@ -124,23 +134,31 @@ export function calculateNutrition(ingredients: BurgerIngredients): Nutrition {
     totals.fat      += n.fat      * qty
   }
 
-  // ── Bun ───────────────────────────────────────────
-  add(ingredients.bunType === "poppy" ? "poppy_bun" : "regular_bun")
+  // bun
+  const bunKey =
+    ingredients.bunType === "poppy"  ? "poppy_bun"  :
+    ingredients.bunType === "waffle" ? "waffle_bun" :
+    ingredients.bunType === "toast"  ? "toast_bun"  :
+    "regular_bun"
+  add(bunKey)
 
-  // ── Proteins ──────────────────────────────────────
-  add("patty",   ingredients.pattyCount  ?? 0)
-  add("nuggets", ingredients.nuggets     ?? 0)
-  add("bacon",   ingredients.bacon       ?? 0)
+  // proteins
+  add("patty",      ingredients.pattyCount  ?? 0)
+  add("nuggets",    ingredients.nuggets     ?? 0)
+  add("bacon",      ingredients.bacon       ?? 0)
+  add("fried_fish", ingredients.friedFish   ?? 0)
 
-  // ── Toppings ──────────────────────────────────────
-  add("cheese",  ingredients.cheeseCount ?? 0)
-  add("lettuce", ingredients.lettuce     ?? 0)
-  add("tomato",  ingredients.tomato      ?? 0)
-  add("pickles", ingredients.pickles     ?? 0)
-  add("onions",  ingredients.onions      ?? 0)
+  // toppings
+  add("cheese",      ingredients.cheeseCount ?? 0)
+  add("lettuce",     ingredients.lettuce     ?? 0)
+  add("tomato",      ingredients.tomato      ?? 0)
+  add("pickles",     ingredients.pickles     ?? 0)
+  add("onions",      ingredients.onions      ?? 0)
+  add("fried_egg",   ingredients.friedEgg    ?? 0)
+  add("onion_rings", ingredients.onionRings  ?? 0)
 
-  // ── Sauce ─────────────────────────────────────────
-  if (ingredients.sauce === "extra")   add("sauce_extra")
+  // sauce
+  if (ingredients.sauce === "extra")        add("sauce_extra")
   else if (ingredients.sauce === "regular") add("sauce")
 
   return totals
@@ -150,21 +168,26 @@ export function calculateNutrition(ingredients: BurgerIngredients): Nutrition {
 export function calculatePrice(ingredients: BurgerIngredients): number {
   let total = 5.99 // base price — bun included
 
-  // extra for poppy bun
-  if (ingredients.bunType === "poppy") total += 0.5
+  // bun upgrades
+  if (ingredients.bunType === "poppy")  total += 0.5
+  if (ingredients.bunType === "waffle") total += 1.0
+  if (ingredients.bunType === "toast")  total += 0.5
 
   // proteins
   total += (ingredients.pattyCount  ?? 0) * 2.5
   total += (ingredients.nuggets     ?? 0) * 1.5
   total += (ingredients.bacon       ?? 0) * 1.5
+  total += (ingredients.friedFish   ?? 0) * 2.0
 
   // toppings
   total += (ingredients.cheeseCount ?? 0) * 0.5
+  total += (ingredients.friedEgg    ?? 0) * 1.0
+  total += (ingredients.onionRings  ?? 0) * 1.0
 
   // sauce
   if (ingredients.sauce === "extra") total += 0.5
 
-  return Math.round(total * 100) / 100 // avoid floating point weirdness
+  return Math.round(total * 100) / 100
 }
 
 // ── Randomize ingredients within their max limits ───────────────────
@@ -182,5 +205,8 @@ export function randomizeIngredients(): BurgerIngredients {
     onions:      rand(MAX_ONIONS),
     bacon:       rand(MAX_BACON),
     nuggets:     rand(MAX_NUGGETS),
+    friedEgg:    rand(MAX_EGG),
+    friedFish:   rand(MAX_FRIED_FISH),
+    onionRings:  rand(MAX_ONION_RINGS),
   }
 }

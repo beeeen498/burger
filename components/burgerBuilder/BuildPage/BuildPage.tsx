@@ -27,6 +27,10 @@ const DEFAULT_INGREDIENTS: BurgerIngredients = {
   onions: 0,
   bacon: 0,
   nuggets: 0,
+  friedEgg: 0,
+  friedFish: 0,
+  onionRings: 0,
+  potatoChips: 0,
 }
 
 const BuildPage = () => {
@@ -134,7 +138,6 @@ const BuildPage = () => {
           {/* ── Reset badge — right ── */}
           <ResetBadge onClick={handleReset} />
         </div>
-
 
         {/* ── Right panel — ingredient selector ── */}
         <div className={styles.selectorPanel}>

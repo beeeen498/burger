@@ -15,7 +15,7 @@ const FEATURED_ITEMS = [
         id: "nuggets",
         name: "nuggets",
         price: "$16.99",
-        href: "/menu/303",
+        href: "/menu/nuggets",
         sideItems: ["french_fries", "milkshake"],
         ingredients: {
             cheeseCount: 1,
@@ -50,13 +50,16 @@ const FEATURED_ITEMS = [
         href: "/menu/404",
         sideItems: ["french_fries", "milkshake"],
         ingredients: {
-            lettuce: 1,
-            tomato: 1,
-            pattyCount: 4,
-            cheeseCount: 4,
-            pickles: 1,
-            onions: 1,
-            sauce: "regular" as const,
+            bunType: "donut" as const,
+            // lettuce: 1,
+            // tomato: 1,
+            pattyCount: 2,
+            cheeseCount: 2,
+            // pickles: 1,
+            // onions: 1,
+            // onionRings: 1,
+            // potatoChips: 1,
+            // sauce: "regular" as const,
         }
     },
 ]

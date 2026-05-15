@@ -23,7 +23,7 @@ const Nav = () => {
           <Link href="/challenge">Challenge</Link>
         </li>
         <li className={`${styles.navListItem} ${pathname === '/contact' ? styles.active : ''}`}>
-          <Link href="/contact">Contact</Link>
+          <Link href="/#contact">Contact</Link>
         </li>
       </ul>
     </nav>

@@ -59,20 +59,10 @@ function BurgerScene({ ingredients, cameraOffset = 14.5, scale = 0.13 }: BurgerC
   const { camera } = useThree()
 
   useEffect(() => {
-    scene.traverse((obj: THREE.Object3D) => {
-      if (obj.name.startsWith("bottom_donut") || obj.name.startsWith("top_donut")) {
-        obj.visible = false;
-      }
-    })
-
     // Walk through every object in the GLB scene and extract the meshes by name
     scene.traverse((obj: THREE.Object3D) => {
+      console.log("loaded meshes:", Object.keys(meshes.current))
       if ((obj as THREE.Mesh).isMesh) {
-        // hide donuts
-        if (obj.name.startsWith("bottom_donut") || obj.name.startsWith("top_donut")) {
-          obj.visible = false;
-          return;
-        }
 
         // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
         // store each strip individually and also map bacon_1 as "bacon" 

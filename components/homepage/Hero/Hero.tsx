@@ -34,7 +34,15 @@ function BurgerModel() {
         obj.name === "poppy_bun" ||
         obj.name.startsWith("nuggets_") ||
         obj.name.startsWith("top_donut") ||
-        obj.name.startsWith("bottom_donut")
+        obj.name.startsWith("bottom_donut") || 
+        obj.name === "onion_rings" ||
+        obj.name === "bottom_waffle" ||
+        obj.name === "top_waffle" ||
+        obj.name === "bottom_toast" ||
+        obj.name === "top_toast" ||
+        obj.name === "fried_egg" ||
+        obj.name === "potato_chips" ||
+        obj.name === "fried_fish"
       ) {
         obj.visible = false;
       }
