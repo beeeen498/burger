@@ -65,8 +65,8 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   poppy_bun:     -4,
   top_waffle:    0,
   top_toast:     0,
-  bottom_donut: 0,
-  top_donut:    0,
+  bottom_donut:  0,
+  top_donut:     0,
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
@@ -74,7 +74,7 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   nuggets:       -2,
   pickles:       3,
   onions:        3,
-  bacon:         -2.5,
+  bacon:         -0.5,
   fried_egg:     6,
   onion_rings:   0,
   fried_fish:    7.5,
@@ -83,8 +83,8 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   poppy_bun:     0,
   top_waffle:    4,
   top_toast:     0,
-  bottom_donut: 0,
-  top_donut:    0,
+  bottom_donut:  0,
+  top_donut:     0,
 };
 
 interface StackResult {
