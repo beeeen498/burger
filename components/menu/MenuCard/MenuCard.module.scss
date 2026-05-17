@@ -1,0 +1,189 @@
+.card {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+
+    // ── 3D model placeholder ────────────────────────
+    .canvas {
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+        border: var(--border);
+        border-radius: 8px;
+        background: var(--blue);
+    }
+
+    // ── Sold out state ──────────────────────────────
+    &.soldOut {
+        cursor: default;
+        pointer-events: none;
+        
+        .canvas,
+        .content,
+        .actions {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+    }
+
+    // ── Hover — only when not sold out ─────────────
+        &:not(.soldOut) {
+            cursor: pointer;
+            transition: transform 0.15s ease;
+
+        &:hover {
+            transform: translateY(-3px);
+        }
+    }
+
+    // ── Badge — top right corner sticker ───────────
+    .badge {
+        position: absolute;
+        top: -10px;
+        right: -6px;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border: var(--border);
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 2px 2px 0 var(--black);
+        z-index: 2;
+
+        &.chefPick {
+            background: var(--yellow);
+            color: var(--black);
+            transform: rotate(3deg);
+        }
+
+        &.mostPopular {
+            background: var(--blue);
+            color: var(--black);
+            transform: rotate(-2deg);
+        }
+
+        &.isNew {
+            background: var(--pink);
+            color: var(--white);
+            transform: rotate(2deg);
+        }
+
+        &.isSoldOut {
+            background: var(--black);
+            color: var(--white);
+            transform: rotate(2deg);
+        }
+
+        &.isVegan {
+            background: #4caf50;
+            color: var(--white);
+            transform: rotate(-3deg);
+        }
+
+        &.isVegetarian {
+            background: #8bc34a;
+            color: var(--black);
+            transform: rotate(2deg);
+        }
+    }
+
+    // ── Name, description, price ────────────────────
+    .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .name {
+            font-size: 1.1rem;
+            color: var(--black);
+            margin: 0;
+        }
+
+        .description {
+            font-size: 0.75rem;
+            color: #444;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .price {
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: var(--yellow);
+            border: var(--border);
+            border-radius: 5px;
+            padding: 2px 8px;
+            display: inline-block;
+            box-shadow: 2px 2px 0 var(--black);
+            align-self: flex-start;
+        }
+    }
+
+    // ── Quantity controls + add to cart ─────────────
+    .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+        // ── Minus / number / plus ──
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .qtyBtn {
+                width: 30px;
+                height: 30px;
+                background: var(--black);
+                color: var(--yellow);
+                border: var(--border);
+                border-radius: 6px;
+                font-size: 1.1rem;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 2px 2px 0 var(--yellow);
+
+                // ── Minus button has inverted colors ──
+                &:first-child {
+                    background: var(--white);
+                    color: var(--black);
+                    box-shadow: 2px 2px 0 var(--black);
+                }
+            }
+
+            .qtyNum {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--black);
+            min-width: 20px;
+            text-align: center;
+            }
+        }
+
+        // ── Add to cart button ──
+        .addBtn {
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: var(--black);
+            color: var(--yellow);
+            border: var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 var(--yellow);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+    }
+}

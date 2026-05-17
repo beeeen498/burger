@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { BurgerIngredients } from "@/lib/burgerUtils"
+import MenuCard from "../MenuCard/MenuCard"
 
 export interface MenuItem {
   id: string
@@ -77,10 +78,9 @@ export default function MenuPage() {
             {/* Section heading */}
             <h2>{category}</h2>
 
+            {/* Card */}
             {categoryItems.map(item => (
-              <div key={item.id}>
-                <p>{item.name} — ${item.price}</p>
-              </div>
+                <MenuCard key={item.id} item={item} />
             ))}
 
           </section>
