@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/global/Header/Header";
 import IngredientTabs from "../IngredientTabs/IngredientTabs";
 import IngredientCard from "../IngredientCard/IngredientCard";
@@ -33,13 +34,39 @@ const DEFAULT_INGREDIENTS: BurgerIngredients = {
   potatoChips: 0,
 }
 
+// Parsing URL params into BurgerIngredients:
+function parseIngredientsFromParams(params: URLSearchParams): BurgerIngredients | null {
+  if (!params.toString()) return null
+  return {
+    bunType:     (params.get("bunType") as BurgerIngredients["bunType"]) ?? "regular",
+    sauce:       (params.get("sauce") as BurgerIngredients["sauce"]) ?? "none",
+    pattyCount:  parseInt(params.get("pattyCount") ?? "0"),
+    cheeseCount: parseInt(params.get("cheeseCount") ?? "0"),
+    lettuce:     parseInt(params.get("lettuce") ?? "0"),
+    tomato:      parseInt(params.get("tomato") ?? "0"),
+    pickles:     parseInt(params.get("pickles") ?? "0"),
+    onions:      parseInt(params.get("onions") ?? "0"),
+    bacon:       parseInt(params.get("bacon") ?? "0"),
+    nuggets:     parseInt(params.get("nuggets") ?? "0"),
+    friedEgg:    parseInt(params.get("friedEgg") ?? "0"),
+    friedFish:   parseInt(params.get("friedFish") ?? "0"),
+    onionRings:  parseInt(params.get("onionRings") ?? "0"),
+    potatoChips: parseInt(params.get("potatoChips") ?? "0"),
+  }
+}
+
 const BuildPage = () => {
-  // ── State ───────────────────────────────────────────
+  const searchParams = useSearchParams()
   const [activeCategory, setActiveCategory] = useState("bun");
+  const [copied, setCopied] = useState(false)
   
-  // ── State — persisted to localStorage ──────────────
+  // Saving the burger to local storage & parsing to url
   const [ingredients, setIngredients] = useState<BurgerIngredients>(() => {
     if (typeof window === "undefined") return DEFAULT_INGREDIENTS;
+    
+    // URL params take priority over localStorage
+    const fromParams = parseIngredientsFromParams(searchParams)
+    if (fromParams) return fromParams
     try {
       const saved = localStorage.getItem("burgerBuilder");
       return saved ? JSON.parse(saved) : DEFAULT_INGREDIENTS;
@@ -111,6 +138,20 @@ const BuildPage = () => {
     playRemove();
   };
 
+  // ── Sharing the built burger ──────────────────
+  const handleShare = useCallback(() => {
+    const params = new URLSearchParams()
+    Object.entries(ingredients).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== 0 && value !== "none") {
+        params.set(key, String(value))
+      }
+    })
+    const url = `${window.location.origin}/build?${params.toString()}`
+    navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [ingredients])
+
   return (
     <main className={styles.page}>
 
@@ -174,6 +215,7 @@ const BuildPage = () => {
             {/* ── Price and Add to Cart ── */}
             <div className={styles.cartRow}>
               <span className={styles.price}>${price.toFixed(2)}</span>
+              <Cta label={copied ? "Copied! 🔗" : "Share"} variant="pink" onClick={handleShare} />
               <Cta label="Add to Cart" variant="yellow" onClick={() => console.log("add to cart", ingredients)} />
             </div>
           </div>
