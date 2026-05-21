@@ -1,0 +1,66 @@
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 140px;
+    flex-shrink: 0;
+
+    // ── Sticky on desktop ──
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+
+    // ── Mobile — horizontal row ──
+    @media (max-width: 768px) {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+        position: static;
+        overflow-x: auto;
+        padding: 20px 0;
+
+        // ── Hide scrollbar but keep functionality ──
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .btn {
+            text-align: center;
+            width: auto;
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+    }
+
+    .btn {
+        background: var(--white);
+        color: var(--black);
+        border: var(--border);
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.1s ease;
+        width: 100%;
+
+        &:hover {
+            transform: translateY(-1px);
+        }
+
+        &.active {
+            background: var(--yellow);
+        }
+
+        @media (max-width: 768px) {
+            text-align: center;
+            width: auto;
+            flex: 0 0 auto;
+        }
+    }
+}

@@ -1,0 +1,74 @@
+// ── Page — pink background with dot grid ────────────
+.page {
+  min-height: 100vh;
+  background-color: var(--pink);
+  position: relative;
+  padding-bottom: 60px;
+  margin-top: 30px;
+
+  // ── Dot grid overlay ──
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #1a1a1a 1.5px, transparent 1.5px);
+    background-size: 25px 25px;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  // ── Header wrapper ──────────────────────────────────
+  .headerWrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  // ── Layout — sidebar + content ──────────────────────
+  .layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0;
+      padding: 16px 16px 60px;
+    }
+
+    // ── Cards area ──────────────────────────────────
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    // ── Category section ────────────────────────────
+    .section {
+      margin-bottom: 48px;
+    }
+
+    // ── Section label ────────────────────────────────
+    .sectionLabel {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--off-white);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 16px;
+      border-left: 4px solid var(--yellow);
+      padding-left: 10px;
+    }
+
+    // ── Cards list — vertical stack ──────────────────
+    .cardList {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+}

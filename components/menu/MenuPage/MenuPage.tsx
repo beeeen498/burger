@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { BurgerIngredients } from "@/lib/burgerUtils"
+import Header from "@/components/global/Header/Header"
+import MenuFilters from "../MenuFilters/MenuFilters"
 import MenuCard from "../MenuCard/MenuCard"
+import styles from "./MenuPage.module.scss"
 
 export interface MenuItem {
   id: string
@@ -40,6 +43,14 @@ export default function MenuPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // ── Active category for the filter ──
+  const [activeCategory, setActiveCategory] = useState("single")
+
+  // ── Categories that actually have items ──
+  const availableCategories = CATEGORIES.filter(cat =>
+    items.some(item => item.category === cat)
+  )
+
   // ── Fetch menu items from Supabase ──────────────────
   useEffect(() => {
     async function fetchMenuItems() {
@@ -64,28 +75,45 @@ export default function MenuPage() {
   if (error) return <p>Error: {error}</p>
 
   return (
-    <main>
-      {/* ── Loop through categories in order ── */}
-      {CATEGORIES.map(category => {
-        const categoryItems = items.filter(item => item.category === category)
+    <main className={styles.page}>
 
-        // If no items exist for this category, skip rendering the section entirely
-        if (categoryItems.length === 0) return null
+      {/* ── Static header ── */}
+      <div className={styles.headerWrapper}>
+        <Header />
+      </div>
 
-        return (
-          <section key={category}>
+      {/* ── Page layout — filters + cards ── */}
+      <div className={styles.layout}>
 
-            {/* Section heading */}
-            <h2>{category}</h2>
+        {/* ── Filters ── */}
+        <MenuFilters
+          categories={availableCategories}
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+        />
 
-            {/* Card */}
-            {categoryItems.map(item => (
-                <MenuCard key={item.id} item={item} />
-            ))}
+        {/* ── Cards ── */}
+        <div className={styles.content}>
+          {CATEGORIES.map(category => {
+            const categoryItems = items.filter(item => item.category === category)
+            if (categoryItems.length === 0) return null
 
-          </section>
-        )
-      })}
+            return (
+              <section key={category} className={styles.section}>
+                <h2 className={styles.sectionLabel}>
+                  {category}
+                </h2>
+                <div className={styles.cardList}>
+                  {categoryItems.map(item => (
+                    <MenuCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </section>
+            )
+          })}
+        </div>
+
+      </div>
     </main>
   )
 }
