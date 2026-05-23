@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { BurgerIngredients } from "@/lib/burgerUtils"
+import { useRouter } from "next/navigation"
 import Header from "@/components/global/Header/Header"
 import MenuFilters from "../MenuFilters/MenuFilters"
 import MenuCard from "../MenuCard/MenuCard"
@@ -42,6 +43,7 @@ export default function MenuPage() {
   const [items, setItems] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   // ── Active category for the filter ──
   const [activeCategory, setActiveCategory] = useState("single")
@@ -56,8 +58,8 @@ export default function MenuPage() {
     async function fetchMenuItems() {
       const { data, error } = await supabase
         .from("menu_items")
-        .select("*")                              // fetch all columns
-        .order("created_at", { ascending: true }) // oldest first — preserves seed order
+        .select("*")
+        .order("created_at", { ascending: true })
 
       if (error) {
         setError(error.message)
@@ -68,7 +70,51 @@ export default function MenuPage() {
     }
 
     fetchMenuItems()
-  }, []) 
+  }, [])
+
+  // ── Scrollspy — update active category as user scrolls ──
+  useEffect(() => {
+    if (items.length === 0) return
+
+    const observers: IntersectionObserver[] = []
+
+    CATEGORIES.forEach(category => {
+      const section = document.getElementById(`section-${category}`)
+      if (!section) return
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveCategory(category)
+          }
+        },
+        {
+          rootMargin: "-30% 0px -60% 0px", // triggers when section is in the middle of viewport
+        }
+      )
+
+      observer.observe(section)
+      observers.push(observer)
+    })
+
+    return () => observers.forEach(o => o.disconnect())
+  }, [items])
+
+  // ── Scroll to section when filter is clicked ──
+  const handleFilterSelect = (category: string) => {
+    setActiveCategory(category)
+    const section = document.getElementById(`section-${category}`)
+    if (section) {
+      const headerOffset = 120 // adjust this to match your sticky header height
+      const top = section.getBoundingClientRect().top + window.scrollY - headerOffset
+      window.scrollTo({ top, behavior: "smooth" })
+    }
+  }
+
+  // ── Update URL when active category changes ──
+  useEffect(() => {
+    router.replace(`?category=${activeCategory}`, { scroll: false })
+  }, [activeCategory])
 
   // ── Loading and error states ────────────────────────
   if (loading) return <p>Loading...</p>
@@ -89,7 +135,7 @@ export default function MenuPage() {
         <MenuFilters
           categories={availableCategories}
           activeCategory={activeCategory}
-          onSelect={setActiveCategory}
+          onSelect={handleFilterSelect}
         />
 
         {/* ── Cards ── */}
@@ -99,7 +145,7 @@ export default function MenuPage() {
             if (categoryItems.length === 0) return null
 
             return (
-              <section key={category} className={styles.section}>
+              <section key={category} id={`section-${category}`} className={styles.section}>
                 <h2 className={styles.sectionLabel}>
                   {category}
                 </h2>

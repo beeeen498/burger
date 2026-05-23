@@ -55,13 +55,11 @@ function BurgerScene({ ingredients, cameraOffset = 14.5, scale = 0.13 }: BurgerC
 
   // Load the shared GLB model that contains all ingredient meshes
   const { scene } = useGLTF("/3d-models/burger.glb") as any
-
   const { camera } = useThree()
 
   useEffect(() => {
     // Walk through every object in the GLB scene and extract the meshes by name
     scene.traverse((obj: THREE.Object3D) => {
-      console.log("loaded meshes:", Object.keys(meshes.current))
       if ((obj as THREE.Mesh).isMesh) {
 
         // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
