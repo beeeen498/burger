@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import Header from "@/components/global/Header/Header"
 import MenuFilters from "../MenuFilters/MenuFilters"
 import MenuCard from "../MenuCard/MenuCard"
+import SmallCard from "../SmallCard/SmallCard"
 import styles from "./MenuPage.module.scss"
 
 export interface MenuItem {
@@ -36,8 +37,21 @@ export interface MenuItem {
   created_at: string
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  single:    "Singles",
+  meal:      "Meal Items",
+  breakfast: "Breakfast",
+  extras:    "Extras",
+  sauces:    "Sauces",
+  drinks:    "Drinks",
+  desserts:  "Desserts",
+}
+
 // ── Category order ──────────────────────────────────
 const CATEGORIES = ["single", "meal", "breakfast", "extras", "sauces", "drinks", "desserts"]
+
+// ── Categories that use the small card layout ──
+const SMALL_CARD_CATEGORIES = ["extras", "sauces", "drinks", "desserts"]
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItem[]>([])
@@ -147,11 +161,14 @@ export default function MenuPage() {
             return (
               <section key={category} id={`section-${category}`} className={styles.section}>
                 <h2 className={styles.sectionLabel}>
-                  {category}
+                  {CATEGORY_LABELS[category] ?? category}
                 </h2>
-                <div className={styles.cardList}>
+                
+                <div className={SMALL_CARD_CATEGORIES.includes(category) ? styles.smallCardGrid : styles.cardList}>
                   {categoryItems.map(item => (
-                    <MenuCard key={item.id} item={item} />
+                    SMALL_CARD_CATEGORIES.includes(category)
+                      ? <SmallCard key={item.id} item={item} />
+                      : <MenuCard key={item.id} item={item} />
                   ))}
                 </div>
               </section>
