@@ -31,7 +31,7 @@ export default function BurgerOfTheDay() {
         async function fetchData() {
             const { data: settings } = await supabase
             .from("restaurant_settings")
-            .select("burger_of_the_day_type, burger_of_the_day_item_id, burger_of_the_day_build_url, burger_of_the_day_end_type, burger_of_the_day_end_time")
+            .select("burger_of_the_day_type, burger_of_the_day_item_id, burger_of_the_day_build_url, burger_of_the_day_end_type, burger_of_the_day_end_time, burger_of_the_day_has_discount, burger_of_the_day_discount_price")
             .single()
 
             if (!settings || !settings.burger_of_the_day_type) {
@@ -52,7 +52,7 @@ export default function BurgerOfTheDay() {
                     name: item.name,
                     description: item.description,
                     price: item.price,
-                    discountPrice: null,
+                    discountPrice: settings.burger_of_the_day_has_discount ? settings.burger_of_the_day_discount_price : null,
                     ingredients: item.ingredients,
                 })
             }
@@ -80,7 +80,7 @@ export default function BurgerOfTheDay() {
                     name: "Burger of the Day",
                     description: "Today's special creation.",
                     price: 0,
-                    discountPrice: null,
+                    discountPrice: settings.burger_of_the_day_has_discount ? settings.burger_of_the_day_discount_price : null,
                     ingredients,
                 })
             }
