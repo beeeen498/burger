@@ -6,6 +6,7 @@ import { BurgerIngredients } from "@/lib/burgerUtils"
 import { useRouter } from "next/navigation"
 import Header from "@/components/global/Header/Header"
 import MenuFilters from "../MenuFilters/MenuFilters"
+import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay"
 import MenuCard from "../MenuCard/MenuCard"
 import SmallCard from "../SmallCard/SmallCard"
 import styles from "./MenuPage.module.scss"
@@ -154,6 +155,10 @@ export default function MenuPage() {
 
         {/* ── Cards ── */}
         <div className={styles.content}>
+          {/* ── Buerger of the day ── */}
+          <BurgerOfTheDay />
+
+          {/* ── Mapping over the categories ── */}
           {CATEGORIES.map(category => {
             const categoryItems = items.filter(item => item.category === category)
             if (categoryItems.length === 0) return null

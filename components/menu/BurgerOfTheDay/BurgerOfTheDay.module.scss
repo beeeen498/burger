@@ -1,0 +1,171 @@
+.banner {
+  background: var(--green);
+  border: var(--border);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  align-items: center;
+  min-height: 220px;
+  position: relative;
+  overflow: visible;
+  margin-bottom: 40px;
+
+  // ── Badge — top right corner sticker ──
+  .badge {
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    background: var(--pink);
+    color: var(--white);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border: var(--border);
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 2px 2px 0 var(--black);
+    transform: rotate(3deg);
+    z-index: 2;
+  }
+
+  // ── Left — 3D burger canvas ──────────────────────
+  .left {
+    width: 220px;
+    height: 220px;
+    flex-shrink: 0;
+    border: var(--border);
+    background: var(--blue);
+    border-radius: 10px;
+    margin-left: 14px;
+  }
+
+  // ── Right — content ──────────────────────────────
+  .right {
+    flex: 1;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--pink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--off-white);
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .description {
+      font-size: 0.75rem;
+      color: #606060;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    // ── Price row ──
+    .priceRow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .oldPrice {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #555;
+        text-decoration: line-through;
+      }
+
+      .newPrice {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--yellow);
+        background: #111;
+        border: 2px solid var(--blue);
+        border-radius: 6px;
+        padding: 4px 12px;
+        box-shadow: 2px 2px 0 var(--blue);
+      }
+    }
+
+    // ── Countdown ──
+    .countdown {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .countdownLabel {
+        font-size: 0.65rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .timer {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .timeBlock {
+          background: #111;
+          border: 1.5px solid #a1a1a1;
+          border-radius: 5px;
+          padding: 4px 8px;
+          text-align: center;
+
+          .timeNum {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1;
+          }
+
+          .timeLabel {
+            display: block;
+            font-size: 0.5rem;
+            color: #ffffff;
+            text-transform: uppercase;
+          }
+        }
+
+        .timeSep {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #333;
+          padding-bottom: 8px;
+        }
+      }
+    }
+
+    // ── Add to cart button ──
+    .addBtn {
+      background: var(--yellow);
+      color: var(--black);
+      border: var(--border);
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: var(--box-shadow);
+      align-self: flex-start;
+      transition: transform 0.1s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
