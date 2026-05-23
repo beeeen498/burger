@@ -1,107 +1,183 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { supabase } from "@/lib/supabase"
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas"
 import { BurgerIngredients } from "@/lib/burgerUtils"
 import styles from "./BurgerOfTheDay.module.scss"
 
-// ── Hardcoded for now — will come from Supabase later ──
-const MOCK_BURGER: BurgerIngredients = {
-  bunType: "regular",
-  sauce: "regular",
-  pattyCount: 2,
-  cheeseCount: 2,
-  bacon: 1,
-  onionRings: 1,
-  friedEgg: 1,
-  lettuce: 1,
-  tomato: 1,
-  pickles: 1,
-  onions: 1,
-  nuggets: 0,
-  friedFish: 0,
-  potatoChips: 0,
+interface RestaurantSettings {
+  burger_of_the_day_type: "menu_item" | "custom" | null
+  burger_of_the_day_item_id: string | null
+  burger_of_the_day_build_url: string | null
+  burger_of_the_day_end_type: "midnight" | "custom"
+  burger_of_the_day_end_time: string | null
+}
+
+interface BurgerOfTheDayData {
+  name: string
+  description: string
+  price: number
+  discountPrice: number | null
+  ingredients: BurgerIngredients
 }
 
 export default function BurgerOfTheDay() {
+    const [data, setData] = useState<BurgerOfTheDayData | null>(null)
+    const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 })
 
-  // ── Countdown timer state ──
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 })
+    // ── Fetch burger of the day from Supabase ──
+    useEffect(() => {
+        async function fetchData() {
+            const { data: settings } = await supabase
+            .from("restaurant_settings")
+            .select("burger_of_the_day_type, burger_of_the_day_item_id, burger_of_the_day_build_url, burger_of_the_day_end_type, burger_of_the_day_end_time")
+            .single()
 
-  // ── Calculate time left until midnight ──
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date()
-      const midnight = new Date()
-      midnight.setHours(24, 0, 0, 0)
-      const diff = midnight.getTime() - now.getTime()
+            if (!settings || !settings.burger_of_the_day_type) {
+                setData(null)
+                return
+            }
 
-      setTimeLeft({
-        hours:   Math.floor(diff / (1000 * 60 * 60)),
-        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((diff % (1000 * 60)) / 1000),
-      })
-    }
+            if (settings.burger_of_the_day_type === "menu_item" && settings.burger_of_the_day_item_id) {
+                const { data: item } = await supabase
+                .from("menu_items")
+                .select("name, description, price, ingredients")
+                .eq("id", settings.burger_of_the_day_item_id)
+                .single()
 
-    calculateTimeLeft()
-    const interval = setInterval(calculateTimeLeft, 1000)
-    return () => clearInterval(interval)
-  }, [])
+                if (!item || !item.ingredients) return
 
-  const pad = (n: number) => String(n).padStart(2, "0")
+                setData({
+                    name: item.name,
+                    description: item.description,
+                    price: item.price,
+                    discountPrice: null,
+                    ingredients: item.ingredients,
+                })
+            }
 
-  return (
-    <div className={styles.banner}>
+            if (settings.burger_of_the_day_type === "custom" && settings.burger_of_the_day_build_url) {
+                const params = new URLSearchParams(settings.burger_of_the_day_build_url)
+                const ingredients: BurgerIngredients = {
+                    bunType: (params.get("bunType") as BurgerIngredients["bunType"]) ?? "regular",
+                    sauce: (params.get("sauce") as BurgerIngredients["sauce"]) ?? "none",
+                    pattyCount: parseInt(params.get("pattyCount") ?? "0"),
+                    cheeseCount: parseInt(params.get("cheeseCount") ?? "0"),
+                    lettuce: parseInt(params.get("lettuce") ?? "0"),
+                    tomato: parseInt(params.get("tomato") ?? "0"),
+                    pickles: parseInt(params.get("pickles") ?? "0"),
+                    onions: parseInt(params.get("onions") ?? "0"),
+                    bacon: parseInt(params.get("bacon") ?? "0"),
+                    nuggets: parseInt(params.get("nuggets") ?? "0"),
+                    friedEgg: parseInt(params.get("friedEgg") ?? "0"),
+                    friedFish: parseInt(params.get("friedFish") ?? "0"),
+                    onionRings: parseInt(params.get("onionRings") ?? "0"),
+                    potatoChips: parseInt(params.get("potatoChips") ?? "0"),
+                }
 
-      {/* ── Badge — top right corner ── */}
-      <span className={styles.badge}>Burger of the Day</span>
+                setData({
+                    name: "Burger of the Day",
+                    description: "Today's special creation.",
+                    price: 0,
+                    discountPrice: null,
+                    ingredients,
+                })
+            }
+        }
 
-      {/* ── Left — 3D burger ── */}
-      <div className={styles.left}>
-        <BurgerCanvas
-          ingredients={MOCK_BURGER}
-          cameraOffset={14}
-          scale={0.18}
-        />
-      </div>
+        // ── Initial fetch ──
+        fetchData()
 
-      {/* ── Right — details ── */}
-      <div className={styles.right}>
-        <p className={styles.title}>Today's Special</p>
-        <h2 className={styles.name}>The Smash'd Special</h2>
-        <p className={styles.description}>The one that started it all. Chef's pick, no questions asked.</p>
+        // ── Listen for changes in restaurant_settings ──
+        const channel = supabase
+            .channel("burger_of_the_day")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "restaurant_settings" },
+                (payload) => {
+                    fetchData()
+                }
+            )
+            .subscribe()
+        return () => { supabase.removeChannel(channel) }
+    }, [])
 
-        {/* ── Price ── */}
-        <div className={styles.priceRow}>
-          <span className={styles.oldPrice}>$16.99</span>
-          <span className={styles.newPrice}>$12.99</span>
+    // ── Countdown timer ──
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+        const now = new Date()
+        const midnight = new Date()
+        midnight.setHours(24, 0, 0, 0)
+        const diff = midnight.getTime() - now.getTime()
+
+        setTimeLeft({
+            hours: Math.floor(diff / (1000 * 60 * 60)),
+            minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        })
+        }
+
+        calculateTimeLeft()
+        const interval = setInterval(calculateTimeLeft, 1000)
+        return () => clearInterval(interval)
+    }, [])
+
+    // ── Don't render if no burger of the day is set ──
+    if (!data) return null
+
+    const pad = (n: number) => String(n).padStart(2, "0")
+
+    return (
+        <div className={styles.banner}>
+            <span className={styles.badge}>Burger of the Day</span>
+
+            <div className={styles.left}>
+                <BurgerCanvas
+                ingredients={data.ingredients}
+                cameraOffset={14}
+                scale={0.18}
+                />
+            </div>
+
+            <div className={styles.right}>
+                <p className={styles.title}>Today's Special</p>
+                <h2 className={styles.name}>{data.name}</h2>
+                <p className={styles.description}>{data.description}</p>
+
+                <div className={styles.priceRow}>
+                {data.discountPrice ? (
+                    <>
+                    <span className={styles.oldPrice}>${data.price.toFixed(2)}</span>
+                    <span className={styles.newPrice}>${data.discountPrice.toFixed(2)}</span>
+                    </>
+                ) : (
+                    <span className={styles.newPrice}>${data.price.toFixed(2)}</span>
+                )}
+                </div>
+
+                <div className={styles.countdown}>
+                <span className={styles.countdownLabel}>Ends in</span>
+                <div className={styles.timer}>
+                    <div className={styles.timeBlock}>
+                    <span className={styles.timeNum}>{pad(timeLeft.hours)}</span>
+                    <span className={styles.timeLabel}>hrs</span>
+                    </div>
+                    <span className={styles.timeSep}>:</span>
+                    <div className={styles.timeBlock}>
+                    <span className={styles.timeNum}>{pad(timeLeft.minutes)}</span>
+                    <span className={styles.timeLabel}>min</span>
+                    </div>
+                    <span className={styles.timeSep}>:</span>
+                    <div className={styles.timeBlock}>
+                    <span className={styles.timeNum}>{pad(timeLeft.seconds)}</span>
+                    <span className={styles.timeLabel}>sec</span>
+                    </div>
+                </div>
+                </div>
+
+                <button className={styles.addBtn}>Add to Cart</button>
+            </div>
         </div>
-
-        {/* ── Countdown ── */}
-        <div className={styles.countdown}>
-          <span className={styles.countdownLabel}>Ends in</span>
-          <div className={styles.timer}>
-            <div className={styles.timeBlock}>
-              <span className={styles.timeNum}>{pad(timeLeft.hours)}</span>
-              <span className={styles.timeLabel}>hrs</span>
-            </div>
-            <span className={styles.timeSep}>:</span>
-            <div className={styles.timeBlock}>
-              <span className={styles.timeNum}>{pad(timeLeft.minutes)}</span>
-              <span className={styles.timeLabel}>min</span>
-            </div>
-            <span className={styles.timeSep}>:</span>
-            <div className={styles.timeBlock}>
-              <span className={styles.timeNum}>{pad(timeLeft.seconds)}</span>
-              <span className={styles.timeLabel}>sec</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Add to cart ── */}
-        <button className={styles.addBtn}>Add to Cart</button>
-      </div>
-
-    </div>
-  )
+    )
 }
