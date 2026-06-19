@@ -1,66 +1,71 @@
 .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 140px;
-    flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 140px;
+  flex-shrink: 0;
 
-    // ── Sticky on desktop ──
+  // ── Sticky on desktop ──
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+
+  // ── Mobile — horizontal row ──
+  @media (max-width: 768px) {
+    width: calc(100% + 32px); // 32px = 16px padding × 2
+    margin: 0 -16px;
+    transform: translateY(-40px);
+    flex-direction: row;
+    flex-wrap: nowrap;
     position: sticky;
-    top: 120px;
-    align-self: flex-start;
+    top: 140px;
+    z-index: 10;
+    background: var(--pink);
+    overflow-x: auto;
+    padding: 10px 16px; // add horizontal padding back so buttons aren't flush against edges
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--black);
 
-    // ── Mobile — horizontal row ──
-    @media (max-width: 768px) {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        width: 100%;
-        position: static;
-        overflow-x: auto;
-        padding: 20px 0;
-
-        // ── Hide scrollbar but keep functionality ──
-        scrollbar-width: none;
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        .btn {
-            text-align: center;
-            width: auto;
-            flex: 0 0 auto;
-            white-space: nowrap;
-        }
+    &::-webkit-scrollbar {
+      display: none;
     }
 
     .btn {
-        background: var(--white);
-        color: var(--black);
-        border: var(--border);
-        border-radius: 6px;
-        padding: 10px 14px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: var(--box-shadow);
-        cursor: pointer;
-        text-align: left;
-        transition: transform 0.1s ease;
-        width: 100%;
-
-        &:hover {
-            transform: translateY(-1px);
-        }
-
-        &.active {
-            background: var(--yellow);
-        }
-
-        @media (max-width: 768px) {
-            text-align: center;
-            width: auto;
-            flex: 0 0 auto;
-        }
+      text-align: center;
+      width: auto;
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
+  }
+
+  .btn {
+    background: var(--white);
+    color: var(--black);
+    border: var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.1s ease;
+    width: 100%;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &.active {
+      background: var(--yellow);
+    }
+
+    @media (max-width: 768px) {
+      text-align: center;
+      width: auto;
+      flex: 0 0 auto;
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase"
 import { BurgerIngredients } from "@/lib/burgerUtils"
 import { useRouter } from "next/navigation"
 import Header from "@/components/global/Header/Header"
+import KitchenStatus from "../KitchenStatus/KitchenStatus"
 import MenuFilters from "../MenuFilters/MenuFilters"
 import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay"
 import MenuCard from "../MenuCard/MenuCard"
@@ -142,6 +143,9 @@ export default function MenuPage() {
       <div className={styles.headerWrapper}>
         <Header />
       </div>
+
+      {/* ── Kitchen status ──  */}
+      <KitchenStatus />
 
       {/* ── Page layout — filters + cards ── */}
       <div className={styles.layout}>
