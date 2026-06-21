@@ -48,6 +48,15 @@
   justify-content: center;
   gap: 28px;
 
+  // when any OTHER item is hovered, reset the active item — same as desktop Nav
+  &:has(.navListItem:not(.active):hover) .navListItem.active {
+    transform: none;
+
+    &::before {
+      transform: scaleX(0);
+    }
+  }
+
   .navListItem {
     position: relative;
     text-decoration: none;
