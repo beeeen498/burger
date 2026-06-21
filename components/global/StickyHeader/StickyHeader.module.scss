@@ -12,10 +12,22 @@
 
   .headerContent{
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     padding: 0 20px;
     height: 100%;
+
+    .logoLink,
+    .icons {
+        display: flex;
+        align-items: center;
+    }
+
+    .navWrapper {
+        display: flex;
+        align-items: stretch;
+        height: 100%;
+    }
 
     .logoLink {
         text-decoration: none;
@@ -56,13 +68,31 @@
     }
 
     .icons {
-        display: flex;
-        align-items: center;
         gap: 16px;
         color: var(--black);
         cursor: pointer;
+
+        .menuToggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--black);
+            padding: 0;
+            align-items: center;
         }
     }
+
+    @media (max-width: 768px) {
+        .navWrapper {
+            display: none;
+        }
+
+        .icons .menuToggle {
+            display: flex;
+        }
+    }
+  }
 }
 
 .visible {

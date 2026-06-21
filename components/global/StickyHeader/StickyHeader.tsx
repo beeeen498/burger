@@ -1,10 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
+import { HiOutlineMenu } from "react-icons/hi";
 import Nav from "@/components/global/Header/Nav/Nav";
+import MobileMenu from "@/components/global/Header/MobileMenu/MobileMenu";
 import styles from "./StickyHeader.module.scss";
 import { usePathname } from "next/navigation";
 
@@ -13,6 +16,12 @@ const StickyHeader = () => {
   const scrolledIn = useRef(false);
   const logoRef = useRef<HTMLHeadingElement>(null);
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setVisible(false);
@@ -61,6 +70,12 @@ const StickyHeader = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  // lock body scroll while mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   return (
     <header className={`
       ${styles.stickyHeader} 
@@ -79,15 +94,32 @@ const StickyHeader = () => {
                 </h2>
             </Link>
 
-            {/* nav */}
-            <Nav />
+            {/* nav — hidden on mobile via CSS */}
+            <div className={styles.navWrapper}>
+              <Nav />
+            </div>
 
             {/* icons */}
             <div className={styles.icons}>
                 <HiOutlineShoppingBag size={23} />
                 <FaUser size={20} />
+
+                {/* burger toggle — mobile only via CSS */}
+                <button
+                  className={styles.menuToggle}
+                  onClick={() => setMenuOpen(true)}
+                  aria-label="Open menu"
+                >
+                  <HiOutlineMenu size={24} />
+                </button>
             </div>
         </div>
+
+        {/* portal so it always escapes any stacking context above */}
+        {mounted && createPortal(
+          <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />,
+          document.body
+        )}
     </header>
   );
 };

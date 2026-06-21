@@ -3,12 +3,19 @@
     background-color: var(--pink);
     border-bottom: var(--border);
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     padding: 0 20px;
     z-index: 10;
     flex-shrink: 0;
     isolation: isolate; // creates stacking context, blocks body::before grid
+
+    // logo and icons should stay centered, only nav stretches full height
+    .logoLink,
+    .headerIcons {
+        display: flex;
+        align-items: center;
+    }
 
     // logo
     .logoLink {
@@ -48,5 +55,31 @@
         display: flex;
         align-items: center;
         gap: 20px;
+
+        .menuToggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--black);
+            padding: 0;
+            align-items: center;
+        }
+    }
+
+    .navWrapper {
+        display: flex;
+        align-items: stretch;
+        height: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .navWrapper {
+            display: none;
+        }
+
+        .headerIcons .menuToggle {
+            display: flex;
+        }
     }
 }
