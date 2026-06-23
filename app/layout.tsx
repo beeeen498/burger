@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Righteous, Inter } from "next/font/google";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
+import Footer from "@/components/global/Footer/Footer";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -29,6 +30,8 @@ export default function RootLayout({
       <body className={`${righteous.variable} ${inter.variable}`}>
         <StickyHeader />
         {children}
+        <Footer />
+
       </body>
     </html>
   );

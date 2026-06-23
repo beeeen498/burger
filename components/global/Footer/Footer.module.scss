@@ -3,7 +3,7 @@
   background-color: var(--yellow);
   overflow: visible;
   padding: 80px 60px 0;
-  margin-top: 2px;
+  border-top: 1px solid var(--black);
 
   // ── Watermark ─────────────────────────────────────────
   .watermark {
@@ -76,6 +76,7 @@
           &:hover {
             transform: translate(-2px, -2px);
             box-shadow: 5px 5px 0px var(--black);
+            background-color: var(--green);
           }
 
           &:active {
