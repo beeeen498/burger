@@ -8,6 +8,7 @@ interface Props {
   ingredient: CounterIngredient | ToggleIngredient;
   // counter props
   quantity?: number;
+  minQuantity?: number; // floor the minus button can't go below — defaults to 0
   onAdd?: () => void;
   onRemove?: () => void;
   // toggle props
@@ -15,18 +16,35 @@ interface Props {
   onToggle?: () => void;
 }
 
-const IngredientCard = ({ ingredient, quantity = 0, onAdd, onRemove, isSelected, onToggle }: Props) => {
-  const [shaking, setShaking] = useState(false);
+const IngredientCard = ({ ingredient, quantity = 0, minQuantity = 0, onAdd, onRemove, isSelected, onToggle }: Props) => {
+  const [shakingMax, setShakingMax] = useState(false);
+  const [shakingMin, setShakingMin] = useState(false);
 
   // ── Handle clicking + when at max ──────────────────
   const handleAdd = () => {
     if (ingredient.type === "counter") {
       if (quantity >= ingredient.max) {
-        setShaking(true);
-        setTimeout(() => setShaking(false), 500);
+        setShakingMax(true);
+        setTimeout(() => setShakingMax(false), 500);
         return;
       }
       onAdd?.();
+    }
+  };
+
+  // ── Handle clicking − when at the floor ─────────────
+  // Floor is usually 0, but on the item detail page it's the
+  // item's default quantity — toppings can only be added, not removed.
+  // Mirrors handleAdd's pattern — shake-and-block instead of disabling,
+  // so the click is still felt even when it doesn't do anything.
+  const handleRemove = () => {
+    if (ingredient.type === "counter") {
+      if (quantity <= minQuantity) {
+        setShakingMin(true);
+        setTimeout(() => setShakingMin(false), 500);
+        return;
+      }
+      onRemove?.();
     }
   };
 
@@ -34,19 +52,20 @@ const IngredientCard = ({ ingredient, quantity = 0, onAdd, onRemove, isSelected,
   if (ingredient.type === "counter") {
     const isActive = quantity > 0;
     const isAtMax = quantity >= ingredient.max;
+    const isAtMin = quantity <= minQuantity;
 
     return (
       <div className={`
         ${styles.card}
         ${isActive ? styles.active : styles.inactive}
-        ${isAtMax && shaking ? styles.shake : ""}
+        ${isAtMax && shakingMax ? styles.shake : ""}
+        ${isAtMin && shakingMin ? styles.shake : ""}
       `}>
 
         {/* minus button */}
         <button
-          className={styles.btn}
-          onClick={onRemove}
-          disabled={quantity === 0}
+          className={`${styles.btn} ${isAtMin && shakingMin ? styles.btnMax : ""}`}
+          onClick={handleRemove}
           aria-label={`Remove ${ingredient.label}`}
         >
           −
@@ -68,7 +87,7 @@ const IngredientCard = ({ ingredient, quantity = 0, onAdd, onRemove, isSelected,
 
         {/* plus button */}
         <button
-          className={`${styles.btn} ${isAtMax && shaking ? styles.btnMax : ""}`}
+          className={`${styles.btn} ${isAtMax && shakingMax ? styles.btnMax : ""}`}
           onClick={handleAdd}
           aria-label={`Add ${ingredient.label}`}
         >

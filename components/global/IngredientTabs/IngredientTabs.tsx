@@ -11,7 +11,6 @@ interface Props {
 }
 
 const IngredientTabs = ({ activeCategory, onChange, ingredients }: Props) => {
-  
   // ── Count active ingredients per category ───────────
   const getCount = (categoryKey: string): number => {
     return CATEGORIES[categoryKey].ingredients.reduce((total, ingredient) => {
@@ -19,7 +18,13 @@ const IngredientTabs = ({ activeCategory, onChange, ingredients }: Props) => {
         return total + ((ingredients[ingredient.key] as number) ?? 0);
       } else {
         // toggle — count if selected and not "none"
-        return total + (ingredients[ingredient.key] === ingredient.value && ingredient.value !== "none" ? 1 : 0);
+        return (
+          total +
+          (ingredients[ingredient.key] === ingredient.value &&
+          ingredient.value !== "none"
+            ? 1
+            : 0)
+        );
       }
     }, 0);
   };
@@ -36,9 +41,7 @@ const IngredientTabs = ({ activeCategory, onChange, ingredients }: Props) => {
           >
             {category.label}
             {/* ── Active count badge ── */}
-            {count > 0 && (
-              <span className={styles.badge}>{count}</span>
-            )}
+            {count > 0 && <span className={styles.badge}>{count}</span>}
           </button>
         );
       })}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Nutrition } from "../data/builderData";
+import { Nutrition } from "../../global/data/builderData";
 import styles from "./NutritionPanel.module.scss";
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
 const NutritionPanel = ({ nutrition }: Props) => {
   return (
     <div className={styles.panel}>
-
       {/* ── Header ── */}
       <div className={styles.header}>
         <h3 className={styles.title}>Nutrition Facts</h3>
@@ -21,7 +20,9 @@ const NutritionPanel = ({ nutrition }: Props) => {
       {/* ── Calories row ── */}
       <div className={styles.caloriesRow}>
         <span className={styles.caloriesLabel}>Calories</span>
-        <span className={styles.caloriesValue}>{Math.round(nutrition.calories)}</span>
+        <span className={styles.caloriesValue}>
+          {Math.round(nutrition.calories)}
+        </span>
       </div>
 
       <div className={styles.thick} />
@@ -41,9 +42,10 @@ const NutritionPanel = ({ nutrition }: Props) => {
 
       <div className={styles.row}>
         <span className={styles.rowLabel}>Protein</span>
-        <span className={styles.rowValue}>{Math.round(nutrition.protein)}g</span>
+        <span className={styles.rowValue}>
+          {Math.round(nutrition.protein)}g
+        </span>
       </div>
-
     </div>
   );
 };

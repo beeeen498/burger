@@ -1,7 +1,7 @@
 "use client";
 
 import { BurgerIngredients } from "@/lib/burgerUtils";
-import { CATEGORIES } from "../data/builderData";
+import { CATEGORIES } from "../../global/data/builderData";
 import styles from "./IngredientSummary.module.scss";
 
 interface Props {
@@ -12,17 +12,28 @@ const IngredientSummary = ({ ingredients }: Props) => {
   // ── Build list of active ingredients with emoji and quantity ────────
   const activeItems: { emoji: string; label: string; quantity: number }[] = [];
 
-  Object.values(CATEGORIES).forEach(category => {
-    category.ingredients.forEach(ingredient => {
+  Object.values(CATEGORIES).forEach((category) => {
+    category.ingredients.forEach((ingredient) => {
       if (ingredient.type === "counter") {
         const qty = (ingredients[ingredient.key] as number) ?? 0;
         if (qty > 0) {
-          activeItems.push({ emoji: ingredient.emoji, label: ingredient.label, quantity: qty });
+          activeItems.push({
+            emoji: ingredient.emoji,
+            label: ingredient.label,
+            quantity: qty,
+          });
         }
       } else {
         // toggle — show if selected and not "none"
-        if (ingredients[ingredient.key] === ingredient.value && ingredient.value !== "none") {
-          activeItems.push({ emoji: ingredient.emoji, label: ingredient.label, quantity: 1 });
+        if (
+          ingredients[ingredient.key] === ingredient.value &&
+          ingredient.value !== "none"
+        ) {
+          activeItems.push({
+            emoji: ingredient.emoji,
+            label: ingredient.label,
+            quantity: 1,
+          });
         }
       }
     });

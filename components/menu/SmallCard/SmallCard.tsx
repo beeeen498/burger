@@ -64,7 +64,11 @@ export default function SmallCard({ item }: SmallCardProps) {
       {/* ── 3D model — only renders when card is in viewport ── */}
       <div className={styles.canvas}>
         {isVisible && item.model_path && (
-          <SimpleModelCanvas modelPath={item.model_path} scale={1} />
+          <SimpleModelCanvas
+            modelPath={item.model_path}
+            scale={1}
+            rotation={item.category === "sauces" ? [0.5, 0, 0] : undefined}
+          />
         )}
       </div>
 
