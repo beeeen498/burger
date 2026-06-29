@@ -1,17 +1,14 @@
 .page {
   min-height: 100vh;
   background: var(--white);
-  // no padding here — header needs to be full width
 
   // ── Header wrapper ─────────────────────────────────
   .headerWrapper {
     background: var(--pink);
     padding: 20px 0;
-
     border-bottom: var(--border);
     isolation: isolate;
 
-    // remove header's own border since wrapper handles it
     & > * {
       border-bottom: none;
     }
@@ -26,10 +23,9 @@
     max-width: 1400px;
     margin: 0 auto;
 
-    // ── Left panel — sticky 3D burger ─────────────────
     .burgerPanel {
       flex: 1;
-      min-width: 0; // ← add this: stop content from forcing the panel wider
+      min-width: 0;
       position: relative;
       display: flex;
       align-items: center;
@@ -37,28 +33,23 @@
       border-right: var(--border);
     }
 
-    // ── Right panel — item info + toppings ────────────
     .selectorPanel {
       flex: 1;
       display: flex;
       flex-direction: column;
-      // no overflow here — scrolling handled by .scrollArea
 
-      // ── Scrollable area ─────────────────────────────
       .scrollArea {
         flex: 1;
         overflow-y: auto;
         overflow-x: visible;
         padding: 24px 24px 0;
 
-        // ── Item name ──────────────────────────────
         .itemName {
           font-family: var(--header-font);
           font-size: 36px;
           color: var(--black);
         }
 
-        // ── Item description ───────────────────────
         .itemDescription {
           font-family: var(--body-font);
           font-size: 16px;
@@ -67,7 +58,6 @@
         }
       }
 
-      // ── Topping list ─────────────────────────────────
       .ingredientList {
         display: flex;
         flex-direction: column;
@@ -75,7 +65,6 @@
         padding: 10px;
       }
 
-      // ── Bottom area — nutrition + cart ──────────────
       .bottomArea {
         padding: 16px 24px;
         border-top: var(--border);
@@ -83,7 +72,6 @@
         flex-direction: column;
         gap: 12px;
 
-        // ── Price and Add to Cart row ──────────────
         .cartRow {
           display: flex;
           align-items: center;
@@ -97,6 +85,38 @@
           }
         }
       }
+    }
+  }
+}
+
+// ── Loading / error / not-found full-page states ──────
+// Sibling to .page, not nested inside it — these states
+// render on their own, without the .page wrapper around them.
+.statusPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue);
+  padding: 24px;
+
+  .statusBox {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-family: var(--body-font);
+      font-size: 16px;
+      margin-bottom: 20px;
     }
   }
 }

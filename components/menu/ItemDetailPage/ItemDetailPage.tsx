@@ -46,7 +46,7 @@ const ItemDetailPage = ({ slug }: Props) => {
         .from("menu_items")
         .select("*")
         .eq("slug", slug)
-        .single();
+        .maybeSingle();
 
       if (error) {
         setError(error.message);
@@ -106,9 +106,38 @@ const ItemDetailPage = ({ slug }: Props) => {
   };
 
   // ── Loading / error / not-found states ──────────────
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!item || !ingredients || !defaults) return <p>Item not found.</p>;
+  if (loading) {
+    return (
+      <div className={styles.statusPage}>
+        <div className={styles.statusBox}>
+          <h1>Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.statusPage}>
+        <div className={styles.statusBox}>
+          <h1>Something Went Wrong</h1>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!item || !ingredients || !defaults) {
+    return (
+      <div className={styles.statusPage}>
+        <div className={styles.statusBox}>
+          <h1>Item Not Found</h1>
+          <p>We couldn&apos;t find that burger.</p>
+          <Cta label="Back to Menu" href="/menu" variant="pink" />
+        </div>
+      </div>
+    );
+  }
 
   const nutrition = calculateNutrition(ingredients);
   const price = calculateItemPrice();
