@@ -54,48 +54,55 @@ export default function LoadingScreen() {
 
   return (
     <div className={styles.loadingScreen}>
-      {/* ---------- burger ---------- */}
-      <svg
-        className={styles.burger}
-        viewBox="0 0 200 160"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* top bun */}
-        <g className={styles.topBun}>
-          <path
-            d="M 30 60 Q 30 20 100 20 Q 170 20 170 60 Z"
-            fill="var(--white)"
-            stroke="var(--black)"
-            strokeWidth="5"
-            strokeLinejoin="round"
-          />
-        </g>
+      {/* ---------- burger wrapped in rotating ring ---------- */}
+      <div className={styles.burgerWrapper}>
 
-        {/* patty */}
-        <g className={styles.patty}>
-          <rect
-            x="30"
-            y="62"
-            width="140"
-            height="22"
-            rx="10"
-            fill="var(--white)"
-            stroke="var(--black)"
-            strokeWidth="5"
-          />
-        </g>
+        {/* ---------- rotating ring (sits behind the burger) ---------- */}
+        <div className={styles.ring} />
 
-        {/* bottom bun (top bun shape, flipped vertically) */}
-        <g className={styles.bottomBun}>
-          <path
-            d="M 30 86 Q 30 126 100 126 Q 170 126 170 86 Z"
-            fill="var(--white)"
-            stroke="var(--black)"
-            strokeWidth="5"
-            strokeLinejoin="round"
-          />
-        </g>
-      </svg>
+        {/* ---------- static burger ---------- */}
+        <svg
+          className={styles.burger}
+          viewBox="0 0 200 160"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* top bun */}
+          <g className={styles.topBun}>
+            <path
+              d="M 30 60 Q 30 20 100 20 Q 170 20 170 60 Z"
+              fill="var(--white)"
+              stroke="var(--black)"
+              strokeWidth="5"
+              strokeLinejoin="round"
+            />
+          </g>
+
+          {/* patty */}
+          <g className={styles.patty}>
+            <rect
+              x="30"
+              y="66"
+              width="140"
+              height="22"
+              rx="10"
+              fill="var(--white)"
+              stroke="var(--black)"
+              strokeWidth="5"
+            />
+          </g>
+
+          {/* bottom bun (top bun shape, flipped vertically) */}
+          <g className={styles.bottomBun}>
+            <path
+              d="M 30 94 Q 30 132 100 132 Q 170 132 170 94 Z"
+              fill="var(--white)"
+              stroke="var(--black)"
+              strokeWidth="5"
+              strokeLinejoin="round"
+            />
+          </g>
+        </svg>
+      </div>
 
       {/* ---------- text ---------- */}
       <p className={styles.text}>

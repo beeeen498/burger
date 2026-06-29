@@ -8,36 +8,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: .5rem;
 
   background-color: var(--pink);
 
-  // ---------- burger svg ----------
-  .burger {
+  // ---------- wrapper holding the ring + burger together ----------
+  .burgerWrapper {
+    position: relative;
     width: clamp(180px, 40vw, 320px);
+    height: clamp(180px, 40vw, 320px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // ---------- rotating border ring ----------
+  .ring {
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 6px dashed var(--white); // dashed reads more clearly as "spinning" than solid
+    animation: spin 20s linear infinite;
+  }
+
+  // ---------- static burger svg ----------
+  .burger {
+    position: relative;
+    width: 65%; // sits inside the ring with some breathing room
     height: auto;
-    overflow: visible;
-
-    // shared setup for every ingredient group
-    .topBun,
-    .patty,
-    .bottomBun {
-      transform-box: fill-box;
-      transform-origin: 50% 50%;
-      opacity: 0;
-      animation: drop 0.6s ease-in-out forwards;
-      will-change: transform, opacity;
-    }
-
-    .bottomBun {
-      animation-delay: 0s;
-    }
-    .patty {
-      animation-delay: 0.3s;
-    }
-    .topBun {
-      animation-delay: 0.6s;
-    }
   }
 
   // ---------- placeholder text ----------
@@ -45,7 +44,7 @@
     font-family: var(--header-font), sans-serif;
     text-transform: uppercase;
     color: var(--white);
-    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-size: clamp(1.8rem, 6vw, 3rem);
 
     // ---------- animated dots ----------
     .dots {
@@ -56,23 +55,12 @@
   }
 }
 
-// ---------- drop + squish keyframes ----------
-@keyframes drop {
-  0% {
-    opacity: 0;
-    transform: translateY(-50px);
+// ---------- ring rotation ----------
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  40% {
-    opacity: 1;
-  }
-  65% {
-    transform: translateY(0) scale(1.12, 0.78); // squish on landing
-  }
-  82% {
-    transform: translateY(0) scale(0.96, 1.06); // rebound
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1, 1); // settle and stay
+  to {
+    transform: rotate(360deg);
   }
 }
