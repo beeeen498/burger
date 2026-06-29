@@ -1,92 +1,94 @@
 .page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100vh;
-  padding-top: var(--header-height);
-  width: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   background: #1a1a1a;
   position: relative;
 
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background-image: repeating-radial-gradient(
-            circle at 50% 50%,
-            transparent 0,
-            rgba(255,255,255,0.15) 1px
-        );
-        background-size: 3px 3px;
-    }
+  // ── Header wrapper ─────────────────────────────────
+  .headerWrapper {
+    background: var(--pink);
+    padding: 20px 0;
 
-  // ─── Left column — content ──────────────────────────────────────────────────
+    border-bottom: var(--border);
+    isolation: isolate;
 
-  .contentCol {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 2.5rem 3rem 2rem 2.5rem;
-    gap: 1.25rem;
-    overflow: hidden;
-    z-index: 1;
-
-    // force CTA to not stretch full width
-    a, button {
-      align-self: flex-start;
-    }
-
-    // ─── Heading ──────────────────────────────────────────────────────────────
-
-    .heading {
-      font-family: var(--header-font);
-      font-size: clamp(2.6rem, 4.5vw, 4.2rem);
-      line-height: 0.95;
-      color: #efefef;
-      text-transform: uppercase;
-      margin: 0;
-      letter-spacing: -0.01em;
-      z-index: 1;
-
-      .headingAccent {
-        color: #df2c8b;
-        -webkit-text-stroke: 1px #df2c8b;
-        text-shadow:
-          3px 3px 0 #f7e558,
-          6px 6px 0 rgba(247, 229, 88, 0.3);
-      }
-    }
-
-    // ─── Subheading ───────────────────────────────────────────────────────────
-
-    .subheading {
-      font-family: var(--header-font);
-      font-size: 1rem;
-      color: #efefef;
-      margin: 0;
-      opacity: 0.7;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    // ─── Fine print ───────────────────────────────────────────────────────────
-
-    .finePrint {
-      font-family: var(--body-font);
-      font-size: 0.75rem;
-      color: #efefef;
-      opacity: 0.45;
-      line-height: 1.6;
-      margin: 0;
+    // remove header's own border since wrapper handles it
+    & > * {
+      border-bottom: none;
     }
   }
 
-  // ─── Right column — 3D scene ────────────────────────────────────────────────
+  // ─── Layout — two columns ───────────────────────────────────────────────────
 
-  .sceneCol {
-    height: 100%;
-    z-index: 1;
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: calc(100vh - 103px);
+    width: 100%;
+    overflow: hidden;
+
+    // ─── Left column — content ────────────────────────────────────────────────
+
+    .contentCol {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2.5rem 3rem 2rem 2.5rem;
+      gap: 1.25rem;
+      overflow: hidden;
+
+      // force CTA to not stretch full width
+      a, button {
+        align-self: flex-start;
+      }
+
+      // ─── Heading ────────────────────────────────────────────────────────────
+
+      .heading {
+        font-family: var(--header-font);
+        font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+        line-height: 0.95;
+        color: #efefef;
+        text-transform: uppercase;
+        margin: 0;
+        letter-spacing: -0.01em;
+
+        .headingAccent {
+          color: #df2c8b;
+          -webkit-text-stroke: 1px #df2c8b;
+          text-shadow:
+            3px 3px 0 #f7e558,
+            6px 6px 0 rgba(247, 229, 88, 0.3);
+        }
+      }
+
+      // ─── Subheading ─────────────────────────────────────────────────────────
+
+      .subheading {
+        font-family: var(--header-font);
+        font-size: 1rem;
+        color: #efefef;
+        margin: 0;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      // ─── Fine print ─────────────────────────────────────────────────────────
+
+      .finePrint {
+        font-family: var(--body-font);
+        font-size: 0.75rem;
+        color: #efefef;
+        opacity: 0.45;
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    // ─── Right column — 3D scene ─────────────────────────────────────────────
+
+    .sceneCol {
+      height: 100%;
+    }
   }
 }
