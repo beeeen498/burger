@@ -1,0 +1,20 @@
+// ---------- loading screen panel ----------
+.loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--pink);
+
+  // ---------- placeholder text ----------
+  .text {
+    font-family: var(--header-font), sans-serif;
+    text-transform: uppercase;
+    color: var(--white);
+    font-size: clamp(1.2rem, 4vw, 2rem);
+  }
+}

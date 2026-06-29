@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Righteous, Inter } from "next/font/google";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Footer from "@/components/global/Footer/Footer";
+import LoadingScreen from "@/components/global/LoadingScreen/LoadingScreen";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -28,6 +29,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${righteous.variable} ${inter.variable}`}>
+        {/* loading screen sits on top of everything until page is ready */}
+        <LoadingScreen />
         <StickyHeader />
         {children}
         <Footer />
