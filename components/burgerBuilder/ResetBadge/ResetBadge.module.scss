@@ -14,7 +14,7 @@
 
   // ── Slight rotation for sticker feel ───────────────
   transform: rotate(15deg);
-  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:hover {
     transform: rotate(20deg) scale(1.1);
@@ -44,12 +44,28 @@
     gap: 2px;
   }
 
-  // ── Arrow icon ──────────────────────────────────────
+  // ── Icon — hidden on desktop, shown on mobile ───────
+  .icon {
+    display: none;
+    color: var(--white);
+    pointer-events: none;
+
+    @media (max-width: 1000px) {
+      display: block;
+      font-size: 24px;
+    }
+  }
+
+  // ── Arrow — shown on desktop, hidden on mobile ──────
   .arrow {
     font-size: 24px;
     color: var(--white);
     line-height: 1;
     pointer-events: none;
+
+    @media (max-width: 1000px) {
+      display: none;
+    }
   }
 
   // ── Label ───────────────────────────────────────────
@@ -60,5 +76,19 @@
     text-transform: uppercase;
     line-height: 1.1;
     pointer-events: none;
+
+    @media (max-width: 1000px) {
+      display: none;
+    }
+  }
+}
+
+// ── Smaller badge on mobile ─────────────────────────
+@media (max-width: 1000px) {
+  .badge {
+    width: 70px;
+    height: 70px;
+    left: 6%;
+    top: 60%;
   }
 }

@@ -1,5 +1,3 @@
-// components/menu/ItemDetailPage/ItemDetailPage.module.scss
-
 // ── Main page ──────────────────────────────────────────
 .page {
   min-height: 100vh;
@@ -26,15 +24,31 @@
     max-width: 1400px;
     margin: 0 auto;
 
-    // ── Left panel — sticky 3D burger ─────────────────
+    // ── Left panel — badges on top, burger below ───────
     .burgerPanel {
       flex: 1;
       min-width: 0;
       position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       border-right: var(--border);
+
+      // ── Badges sit at top, horizontal ─────────────
+      & > :last-child {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        right: 0;
+        z-index: 2;
+      }
+
+      // ── Canvas fills the full panel ───────────────
+      & > :first-child {
+        position: absolute;
+        inset: 0;
+      }
     }
 
     // ── Right panel — item info + toppings ────────────
@@ -110,16 +124,12 @@
       height: calc(100vh - 84px);
       max-width: 100%;
 
-      // ── Burger panel — burger fills full area ────────
-      // Badges are positioned absolutely so they don't
-      // push the canvas — they float over the burger
+      // ── Burger panel ──────────────────────────────────
       .burgerPanel {
         flex: none;
         height: 50vh;
         width: 100%;
         border-right: none;
-        align-items: center;
-        justify-content: center;
 
         // ── Canvas fills the full panel ──────────────
         & > :first-child {
@@ -127,25 +137,22 @@
           inset: 0;
         }
 
-        // ── Badges float over the burger, top-left ───
-        // position: absolute takes them out of flow
-        // so they don't push the canvas at all
+        // ── Badges stay top, horizontal ───────────────
         & > :last-child {
-          inset: 0;
           position: absolute;
-          top: -65%;
+          top: 8px;
+          left: 0;
+          right: 0;
           z-index: 2;
         }
       }
 
-      // ── Toppings take bottom half ────────────────────
+      // ── Toppings take remaining space ────────────────
       .selectorPanel {
         flex: 1;
         overflow: hidden;
         border-top: var(--border);
-        // padding-bottom: 64px;
 
-        // ── Item name + description centered ──────────
         .scrollArea {
           border-bottom: var(--border);
 
@@ -170,10 +177,8 @@
         border-top: var(--border);
         padding: 12px 20px;
         z-index: 10;
-        overflow: hidden;
         width: 100vw;
 
-        // ── Hide nutrition panel — too cramped on mobile
         & > :first-child:not(.cartRow) {
           display: none;
         }
@@ -187,7 +192,6 @@
 }
 
 // ── Loading / error / not-found full-page states ──────
-// Sibling to .page — these render without the .page wrapper
 .statusPage {
   min-height: 100vh;
   display: flex;

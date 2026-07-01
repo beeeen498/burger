@@ -6,11 +6,13 @@ import styles from "./IngredientSummary.module.scss";
 
 interface Props {
   ingredients: BurgerIngredients;
+  direction?: "row" | "column";
 }
 
-const IngredientSummary = ({ ingredients }: Props) => {
+const IngredientSummary = ({ ingredients, direction = "row" }: Props) => {
   // ── Build list of active ingredients with emoji and quantity ────────
   const activeItems: { emoji: string; label: string; quantity: number }[] = [];
+  
 
   Object.values(CATEGORIES).forEach((category) => {
     category.ingredients.forEach((ingredient) => {
@@ -48,7 +50,7 @@ const IngredientSummary = ({ ingredients }: Props) => {
   }
 
   return (
-    <div className={styles.summary}>
+    <div className={styles.summary} style={{ flexDirection: direction }}>
       {activeItems.map((item, i) => (
         <div key={i} className={styles.item}>
           <span className={styles.emoji}>{item.emoji}</span>

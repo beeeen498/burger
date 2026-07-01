@@ -68,6 +68,16 @@ const BuildPage = () => {
   const [activeCategory, setActiveCategory] = useState("bun");
   const [copied, setCopied] = useState(false);
 
+  // ── Detect window width for summary direction ───────
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize(); // set on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Saving the burger to local storage & parsing to url
   const [ingredients, setIngredients] = useState<BurgerIngredients>(() => {
     if (typeof window === "undefined") return DEFAULT_INGREDIENTS;
@@ -185,7 +195,12 @@ const BuildPage = () => {
           />
 
           {/* ── Ingredient summary ── */}
-          <IngredientSummary ingredients={ingredients} />
+          <div className={styles.ingredientDiv}>
+            <IngredientSummary
+              ingredients={ingredients}
+              direction={windowWidth > 1000 ? "row" : "column"}
+            />
+          </div>
 
           {/* ── Surprise Me badge — left ── */}
           <SurpriseBadge onClick={handleSurprise} />

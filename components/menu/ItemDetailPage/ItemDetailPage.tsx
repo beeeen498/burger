@@ -159,7 +159,7 @@ const ItemDetailPage = ({ slug }: Props) => {
           />
 
           {/* ── Ingredient summary ── */}
-          <IngredientSummary ingredients={ingredients} />
+          <IngredientSummary ingredients={ingredients} direction="row"/>
         </div>
 
         {/* ── Right panel — item info + toppings ── */}

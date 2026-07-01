@@ -8,7 +8,11 @@ interface Props {
 
 const ResetBadge = ({ onClick }: Props) => {
   return (
-    <button className={styles.badge} onClick={onClick} aria-label="Reset burger">
+    <button
+      className={styles.badge}
+      onClick={onClick}
+      aria-label="Reset burger"
+    >
       <svg
         className={styles.hexagon}
         viewBox="0 0 200 200"
@@ -34,6 +38,7 @@ const ResetBadge = ({ onClick }: Props) => {
       <div className={styles.textWrapper}>
         <span className={styles.arrow}>↺</span>
         <span className={styles.text}>Reset</span>
+        <span className={styles.icon}>↺</span>
       </div>
     </button>
   );
