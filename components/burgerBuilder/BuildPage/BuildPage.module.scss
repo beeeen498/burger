@@ -1,17 +1,14 @@
 .page {
   min-height: 100vh;
   background: var(--white);
-  // no padding here — header needs to be full width
 
   // ── Header wrapper ─────────────────────────────────
   .headerWrapper {
     background: var(--pink);
     padding: 20px 0;
-
     border-bottom: var(--border);
     isolation: isolate;
 
-    // remove header's own border since wrapper handles it
     & > * {
       border-bottom: none;
     }
@@ -29,7 +26,7 @@
     // ── Left panel — sticky 3D burger ─────────────────
     .burgerPanel {
       flex: 1;
-      min-width: 0; // ← add this: stop content from forcing the panel wider
+      min-width: 0;
       position: relative;
       display: flex;
       align-items: center;
@@ -37,14 +34,13 @@
       border-right: var(--border);
     }
 
-    // ── Right panel — ingredient selector ──
+    // ── Right panel — ingredient selector ─────────────
     .selectorPanel {
       flex: 1;
       display: flex;
       flex-direction: column;
-      // no overflow here — scrolling handled by .scrollArea
 
-      // ── Scrollable ingredient area ──────────────────────
+      // ── Scrollable ingredient area ───────────────────
       .scrollArea {
         flex: 1;
         overflow-y: auto;
@@ -52,7 +48,7 @@
         padding: 24px 24px 0;
       }
 
-      // ── Ingredient list ─────────────────────────────────
+      // ── Ingredient list ──────────────────────────────
       .ingredientList {
         display: flex;
         flex-direction: column;
@@ -60,7 +56,7 @@
         padding: 10px;
       }
 
-      // ── Bottom area — nutrition + cart ──────────────────
+      // ── Bottom area — nutrition + cart ───────────────
       .bottomArea {
         padding: 16px 24px;
         border-top: var(--border);
@@ -68,7 +64,7 @@
         flex-direction: column;
         gap: 12px;
 
-        // ── Price and Add to Cart row ──────────────────────
+        // ── Price and Add to Cart row ──────────────────
         .cartRow {
           display: flex;
           align-items: center;
@@ -81,6 +77,76 @@
             color: var(--black);
           }
         }
+      }
+    }
+  }
+
+  // ── Mobile ────────────────────────────────────────────
+  @media (max-width: 840px) {
+
+    .layout {
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      height: calc(100vh - 84px);
+      max-width: 100%;
+    }
+
+    // ── Burger takes top half ────────────────────────
+    .burgerPanel {
+      flex: none;
+      height: 50vh;
+      width: 100%;
+      border-right: none;
+      border-bottom: var(--border);
+      flex-direction: column;
+      justify-content: flex-end;
+      // ── Padding so badges don't sit on the header ──
+      padding-top: 12px;
+      padding-bottom: 8px;
+
+      // ── Canvas fills remaining space after badges ──
+      & > :last-child {
+        order: -1;
+        flex: 1;
+        width: 100%;
+      }
+    }
+
+    // ── Toppings take bottom half ────────────────────
+    .selectorPanel {
+      flex: none;
+      height: 50vh;
+      overflow: hidden;
+      padding-bottom: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      // ── Border indicates scrollable content below ──
+      .scrollArea {
+        border-bottom: var(--border);
+        width: 95%;
+      }
+    }
+
+    // ── Sticky cart button ───────────────────────────
+    .bottomArea {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: var(--border);
+      padding: 12px 20px;
+      z-index: 10;
+
+      & > :first-child:not(.cartRow) {
+        display: none;
+      }
+
+      .cartRow {
+        width: 100%;
       }
     }
   }

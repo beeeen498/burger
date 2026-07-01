@@ -1,3 +1,6 @@
+// components/menu/ItemDetailPage/ItemDetailPage.module.scss
+
+// ── Main page ──────────────────────────────────────────
 .page {
   min-height: 100vh;
   background: var(--white);
@@ -23,6 +26,7 @@
     max-width: 1400px;
     margin: 0 auto;
 
+    // ── Left panel — sticky 3D burger ─────────────────
     .burgerPanel {
       flex: 1;
       min-width: 0;
@@ -33,23 +37,27 @@
       border-right: var(--border);
     }
 
+    // ── Right panel — item info + toppings ────────────
     .selectorPanel {
       flex: 1;
       display: flex;
       flex-direction: column;
 
+      // ── Scrollable area ──────────────────────────────
       .scrollArea {
         flex: 1;
         overflow-y: auto;
         overflow-x: visible;
         padding: 24px 24px 0;
 
+        // ── Item name ────────────────────────────────
         .itemName {
           font-family: var(--header-font);
           font-size: 36px;
           color: var(--black);
         }
 
+        // ── Item description ─────────────────────────
         .itemDescription {
           font-family: var(--body-font);
           font-size: 16px;
@@ -58,6 +66,7 @@
         }
       }
 
+      // ── Topping list ──────────────────────────────────
       .ingredientList {
         display: flex;
         flex-direction: column;
@@ -65,6 +74,7 @@
         padding: 10px;
       }
 
+      // ── Bottom area — nutrition + cart ────────────────
       .bottomArea {
         padding: 16px 24px;
         border-top: var(--border);
@@ -72,6 +82,7 @@
         flex-direction: column;
         gap: 12px;
 
+        // ── Price and Add to Cart row ──────────────────
         .cartRow {
           display: flex;
           align-items: center;
@@ -89,9 +100,94 @@
   }
 }
 
+// ── Mobile ──────────────────────────────────────────────
+@media (max-width: 840px) {
+  .page {
+    .layout {
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      height: calc(100vh - 84px);
+      max-width: 100%;
+
+      // ── Burger panel — burger fills full area ────────
+      // Badges are positioned absolutely so they don't
+      // push the canvas — they float over the burger
+      .burgerPanel {
+        flex: none;
+        height: 50vh;
+        width: 100%;
+        border-right: none;
+        align-items: center;
+        justify-content: center;
+
+        // ── Canvas fills the full panel ──────────────
+        & > :first-child {
+          position: absolute;
+          inset: 0;
+        }
+
+        // ── Badges float over the burger, top-left ───
+        // position: absolute takes them out of flow
+        // so they don't push the canvas at all
+        & > :last-child {
+          inset: 0;
+          position: absolute;
+          top: -65%;
+          z-index: 2;
+        }
+      }
+
+      // ── Toppings take bottom half ────────────────────
+      .selectorPanel {
+        flex: 1;
+        overflow: hidden;
+        border-top: var(--border);
+        // padding-bottom: 64px;
+
+        // ── Item name + description centered ──────────
+        .scrollArea {
+          border-bottom: var(--border);
+
+          .itemName {
+            font-size: 24px;
+            text-align: center;
+          }
+
+          .itemDescription {
+            text-align: center;
+          }
+        }
+      }
+
+      // ── Sticky cart button ───────────────────────────
+      .bottomArea {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-top: var(--border);
+        padding: 12px 20px;
+        z-index: 10;
+        overflow: hidden;
+        width: 100vw;
+
+        // ── Hide nutrition panel — too cramped on mobile
+        & > :first-child:not(.cartRow) {
+          display: none;
+        }
+
+        .cartRow {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 // ── Loading / error / not-found full-page states ──────
-// Sibling to .page, not nested inside it — these states
-// render on their own, without the .page wrapper around them.
+// Sibling to .page — these render without the .page wrapper
 .statusPage {
   min-height: 100vh;
   display: flex;
