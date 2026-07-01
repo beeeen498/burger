@@ -200,6 +200,11 @@
       .col:nth-child(2) {
         align-items: center;
         text-align: center;
+
+        // tighten day/time gap when centered
+        .hoursRow {
+          justify-content: center;
+        }
       }
 
       // Explore column spans full width + centers
@@ -230,6 +235,11 @@
       .col {
         align-items: center;
         text-align: center;
+
+        // tighten day/time gap when centered
+        .hoursRow {
+          justify-content: center;
+        }
       }
     }
   }
@@ -247,5 +257,23 @@
     opacity: 0.7;
     max-width: 1100px;
     margin: 0 auto;
+  }
+
+  // ── Tablet — shrink padding + watermark ───────────────
+  @media (max-width: 730px) {
+    padding: 60px 40px 0;
+
+    .watermark {
+      font-size: clamp(100px, 20vw, 180px);
+    }
+  }
+
+  // ── Mobile — shrink padding + watermark ───────────────
+  @media (max-width: 520px) {
+    padding: 48px 24px 0;
+
+    .watermark {
+      font-size: clamp(70px, 22vw, 130px);
+    }
   }
 }
