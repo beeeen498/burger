@@ -6,6 +6,7 @@ import { useGLTF } from "@react-three/drei";
 import { FaChevronDown } from "react-icons/fa";
 import * as THREE from "three";
 import Header from "@/components/global/Header/Header";
+import CodeReveal from "./CodeReveal/CodeReveal";
 import BurgerErrorBoundary from "./BurgerErrorBoundary";
 import styles from "./Hero.module.scss";
 
@@ -231,6 +232,7 @@ const ScrollIndicator = () => {
 export default function Hero() {
   const [clickCount, setClickCount] = useState(0);
   const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+  const [showCodeReveal, setShowCodeReveal] = useState(false);
 
   // ── Check localStorage on mount ──
   useEffect(() => {
@@ -250,6 +252,11 @@ export default function Hero() {
     // ── After click 5, save to localStorage ──
     if (newCount === 5) {
       localStorage.setItem(LS_BURGER_CLICKED, "yes");
+
+      // ── Show code reveal after burger settles ──
+      setTimeout(() => {
+        setShowCodeReveal(true);
+      }, 3000);
     }
   }, [clickCount, alreadyCompleted]);
 
@@ -275,6 +282,9 @@ export default function Hero() {
             </Canvas>
           </BurgerErrorBoundary>
         </div>
+
+        {/* ── Secret code reveal — appears after click 5 ── */}
+        <CodeReveal show={showCodeReveal} />
 
         {/* ── CRT overlay ── */}
         <div className={styles.crtOverlay} />
