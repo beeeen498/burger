@@ -9,6 +9,7 @@ import { useLoadingStore } from "@/store/useLoadingStore";
 import Header from "@/components/global/Header/Header";
 import KitchenStatus from "../KitchenStatus/KitchenStatus";
 import MenuFilters from "../MenuFilters/MenuFilters";
+import SecretMenuBanner from "../SecretMenuBanner/SecretMenuBanner";
 import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay";
 import MenuCard from "../MenuCard/MenuCard";
 import SmallCard from "../SmallCard/SmallCard";
@@ -169,6 +170,9 @@ export default function MenuPage() {
 
       {/* ── Kitchen status ──  */}
       <KitchenStatus />
+
+      {/* ── Secret menu banner — shows when unlocked ── */}
+      <SecretMenuBanner />
 
       {/* ── Page layout — filters + cards ── */}
       <div className={styles.layout}>
