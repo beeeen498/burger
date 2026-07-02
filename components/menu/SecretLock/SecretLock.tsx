@@ -14,6 +14,7 @@ const SECRET_CODE = "SMASH"
 export default function SecretLock() {
   const [show, setShow] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [unlocked, setUnlocked] = useState(false)
   const [code, setCode] = useState("")
   const [shake, setShake] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -47,11 +48,15 @@ export default function SecretLock() {
   // ── Submit the code ──
   const handleSubmit = () => {
     if (code.toUpperCase().trim() === SECRET_CODE) {
-      // ── Correct — save unlock time and hide ──
+      // ── Correct — save unlock time and show success ──
       localStorage.setItem(LS_SECRET_UNLOCKED, "yes")
       localStorage.setItem(LS_UNLOCK_TIME, new Date().toISOString())
-      setShow(false)
-      // TODO: trigger secret menu reveal
+      setUnlocked(true)
+
+      // ── Auto-dismiss after 4 seconds ──
+      setTimeout(() => {
+        setShow(false)
+      }, 4000)
     } else {
       // ── Wrong — shake and clear ──
       setShake(true)
@@ -68,10 +73,15 @@ export default function SecretLock() {
   if (!show) return null
 
   return (
-    <div className={`${styles.lock} ${isOpen ? styles.expanded : ""} ${shake ? styles.shake : ""}`}>
+    <div className={`${styles.lock} ${isOpen ? styles.expanded : ""} ${shake ? styles.shake : ""} ${unlocked ? styles.unlocked : ""}`}>
 
-      {/* ── Closed state — lock icon ── */}
-      {!isOpen ? (
+      {/* ── Success state — unlocked ── */}
+      {unlocked ? (
+        <div className={styles.successMsg}>
+          🔓 Secret menu has been unlocked!
+        </div>
+      ) : !isOpen ? (
+        /* ── Closed state — lock icon ── */
         <button className={styles.lockBtn} onClick={handleLockClick} aria-label="Secret menu">
           🔒
         </button>
