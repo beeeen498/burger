@@ -1,0 +1,75 @@
+.popup {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  background-color: var(--yellow);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  padding: 20px 24px;
+  max-width: 280px;
+
+  // ── Slide-in animation ──
+  animation: slideIn 0.4s ease-out;
+
+  // ── Message text ──
+  .message {
+    font-family: var(--header-font), sans-serif;
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    color: var(--black);
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+  }
+
+  // ── Button row ──
+  .buttons {
+    display: flex;
+    gap: 10px;
+
+    // ── Shared button styles ──
+    button {
+      font-family: var(--header-font), sans-serif;
+      font-size: 0.8rem;
+      padding: 8px 14px;
+      border: var(--border);
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: var(--box-shadow);
+      }
+
+      &:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+    }
+  }
+
+  // ── "Yes" button — pink background ──
+  .yesBtn {
+    background-color: var(--pink);
+    color: var(--white);
+  }
+
+  // ── "Maybe later" button — transparent ──
+  .laterBtn {
+    background-color: transparent;
+    color: var(--black);
+  }
+}
+
+// ── Slide-in from bottom-right ──
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -5,12 +5,14 @@ import { supabase } from "@/lib/supabase";
 import { BurgerIngredients } from "@/lib/burgerUtils";
 import { useRouter } from "next/navigation";
 import { useLoadingStore } from "@/store/useLoadingStore";
+
 import Header from "@/components/global/Header/Header";
 import KitchenStatus from "../KitchenStatus/KitchenStatus";
 import MenuFilters from "../MenuFilters/MenuFilters";
 import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay";
 import MenuCard from "../MenuCard/MenuCard";
 import SmallCard from "../SmallCard/SmallCard";
+
 import styles from "./MenuPage.module.scss";
 
 export interface MenuItem {

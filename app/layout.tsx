@@ -3,6 +3,7 @@ import { Righteous, Inter } from "next/font/google";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Footer from "@/components/global/Footer/Footer";
 import LoadingScreen from "@/components/global/LoadingScreen/LoadingScreen";
+import WhisperPopup from "@/components/global/WhisperPopup/WhisperPopup";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default function RootLayout({
         {/* loading screen sits on top of everything until page is ready */}
         <LoadingScreen />
         <StickyHeader />
+        <WhisperPopup />
         {children}
         <Footer />
 
