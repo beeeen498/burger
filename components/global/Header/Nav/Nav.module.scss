@@ -27,7 +27,7 @@
       align-items: center;
       padding: 0 16px;
       text-transform: uppercase;
-      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
       &.active {
         transform: rotate(-4deg) scale(1.05);
@@ -45,7 +45,7 @@
       }
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         inset: 8px 0;
         background-color: var(--white);
@@ -65,5 +65,48 @@
         }
       }
     }
+
+    // ── Secret menu link — redacted classified look ──
+    // ── Secret menu link — terminal/hacker style ──
+    .secretLink {
+      a {
+        background-color: var(--black);
+        font-family: "Courier New", monospace;
+        color: var(--green);
+        font-weight: 700;
+        text-transform: lowercase;
+        letter-spacing: 1px;
+
+        // ── Blinking cursor after text ──
+        &::after {
+          content: "█";
+          margin-left: 2px;
+          animation: blink 1s step-end infinite;
+        }
+      }
+
+      // ── Override the default nav hover background ──
+      &::before {
+        display: none;
+      }
+
+      &:hover {
+        transform: none;
+
+        a {
+          color: var(--yellow);
+        }
+      }
+    }
+  }
+}
+
+// ── Blinking terminal cursor ──
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
   }
 }
