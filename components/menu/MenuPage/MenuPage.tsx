@@ -12,6 +12,7 @@ import MenuFilters from "../MenuFilters/MenuFilters";
 import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay";
 import MenuCard from "../MenuCard/MenuCard";
 import SmallCard from "../SmallCard/SmallCard";
+import SecretLock from "../SecretLock/SecretLock";
 
 import styles from "./MenuPage.module.scss";
 
@@ -220,6 +221,9 @@ export default function MenuPage() {
           })}
         </div>
       </div>
+
+      {/* ── Secret menu lock icon ── */}
+      <SecretLock />
     </main>
   );
 }
