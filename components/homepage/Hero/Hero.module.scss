@@ -19,6 +19,11 @@
     position: relative;
     z-index: 2;
 
+    .headerWrapper{
+      z-index: 4;
+      border-bottom: var(--border);
+    }
+
     .burger {
       width: 100%;
       flex: 1;

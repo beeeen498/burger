@@ -64,7 +64,8 @@ function BurgerModel({ clickCount }: { clickCount: number }) {
         obj.name === "top_toast" ||
         obj.name === "fried_egg" ||
         obj.name === "potato_chips" ||
-        obj.name === "fried_fish"
+        obj.name === "fried_fish" ||
+        obj.name === "shrimps"
       ) {
         obj.visible = false;
       }
@@ -263,7 +264,9 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContainer}>
-        <Header />
+        <div className={styles.headerWrapper}>
+          <Header />
+        </div>
 
         {/* ── Burger canvas — clickable for secret menu ── */}
         <div className={styles.burger} onClick={handleBurgerClick}>
