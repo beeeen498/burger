@@ -18,7 +18,7 @@ import SecretLock from "../SecretLock/SecretLock";
 import styles from "./MenuPage.module.scss";
 
 // ── DEV ONLY — force breakfast items to always show ──
-const FORCE_SHOW_ALL_TIMES = true
+const FORCE_SHOW_ALL_TIMES = true;
 
 export interface MenuItem {
   id: string;
@@ -100,7 +100,11 @@ export default function MenuPage() {
       if (error) {
         setError(error.message);
       } else {
-       setItems((data || []).filter(item => FORCE_SHOW_ALL_TIMES || isItemAvailableNow(item)))
+        setItems(
+          (data || []).filter(
+            (item) => FORCE_SHOW_ALL_TIMES || isItemAvailableNow(item),
+          ),
+        );
       }
       setLoading(false);
     }
