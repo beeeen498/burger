@@ -1,21 +1,41 @@
-"use client"
+"use client";
 
-import styles from "./SecretBurgerCard.module.scss"
+import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
+import { BurgerIngredients } from "@/lib/burgerUtils";
+import styles from "./SecretBurgerCard.module.scss";
 
 // ── Types ─────────────────────────────────────────────
 interface SecretBurgerCardProps {
-  name: string
-  description: string
-  ingredients: string[]
-  variant: "classified" | "vhs" | "corrupted"
+  name: string;
+  description: string;
+  ingredients: string[];
+  burgerIngredients: BurgerIngredients;
+  variant: "classified" | "vhs" | "corrupted";
+  scale?: number;
 }
 
-export default function SecretBurgerCard({ name, description, ingredients, variant }: SecretBurgerCardProps) {
+export default function SecretBurgerCard({
+  name,
+  description,
+  ingredients,
+  burgerIngredients,
+  variant,
+  scale = 0.2,
+}: SecretBurgerCardProps) {
   return (
     <div className={`${styles.card} ${styles[variant]}`}>
-
       {/* ── Stamp — top corner label ── */}
       <span className={styles.stamp}>CLASSIFIED</span>
+
+      {/* ── 3D burger model ── */}
+      <div className={styles.model}>
+        <BurgerCanvas
+          ingredients={burgerIngredients}
+          scale={scale}
+          cameraOffset={14}
+          spin
+        />
+      </div>
 
       {/* ── Burger name ── */}
       <h2 className={styles.name}>{name}</h2>
@@ -31,7 +51,6 @@ export default function SecretBurgerCard({ name, description, ingredients, varia
 
       {/* ── Description ── */}
       <p className={styles.description}>{description}</p>
-
     </div>
-  )
+  );
 }

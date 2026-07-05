@@ -26,9 +26,16 @@ export default function SecretMenuPage() {
         {/* ── Secret burger cards ── */}
         <div className={styles.cards}>
           <SecretBurgerCard
+            scale={0.22}
             name="The Land, Sea and Sky"
-            description="The ultimate surf and turf."
-            ingredients={["Beef Patty", "Shrimps", "Nuggets"]}
+            description="The ultimate surf and turf situation."
+            ingredients={["Beef Patty", "nuggets", "Shrimps"]}
+            burgerIngredients={{
+              sauce: "regular",
+              pattyCount: 1,
+              shrimps: 1,
+              nuggets: 1,
+            }}
             variant="classified"
           />
         </div>
