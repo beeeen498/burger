@@ -10,7 +10,7 @@ interface SecretBurgerCardProps {
   description: string;
   ingredients: string[];
   burgerIngredients: BurgerIngredients;
-  variant: "classified" | "vhs" | "corrupted" | "diner" | "receipt"
+  variant: "classified" | "vhs" | "corrupted" | "diner" | "receipt" | "kaiju" | "hazmat" | "wrestling" | "wanted";
   scale?: number;
 }
 
@@ -30,7 +30,12 @@ export default function SecretBurgerCard({
           : variant === "vhs" ? "PLAY ▶"
           : variant === "corrupted" ? "ERROR"
           : variant === "diner" ? "SPECIAL ★"
-          : "ORDER #047"}
+          : variant === "receipt" ? "ORDER #047"
+          : variant === "kaiju" ? "RATED XXXL"
+          : variant === "hazmat" ? "⚠ CAUTION"
+          : variant === "wrestling" ? "MAIN EVENT"
+          : variant === "wanted" ? "REWARD"
+          : ""}
       </span>
 
       {/* ── 3D burger model ── */}
@@ -39,7 +44,7 @@ export default function SecretBurgerCard({
           ingredients={burgerIngredients}
           scale={scale}
           cameraOffset={13.5}
-          // spin
+          spin
         />
       </div>
 

@@ -35,7 +35,6 @@ export default function SecretMenuPage() {
               pattyCount: 1,
               shrimps: 1,
               nuggets: 1,
-              lettuce: 1,
             }}
             variant="classified"
           />
@@ -53,37 +52,6 @@ export default function SecretMenuPage() {
             variant="vhs"
           />
 
-          {/* <SecretBurgerCard
-            scale={0.3}
-            name="Everything Everywhere All At Once"
-            description="Contains every ingredient from every timeline."
-            ingredients={[
-              "Poppy Bun",
-              "Double Patty",
-              "Cheese",
-              "Lettuce",
-              "Tomato",
-              "Pickles",
-              "Onions",
-              "Bacon",
-              "Nuggets",
-              "Sauce",
-            ]}
-            burgerIngredients={{
-              bunType: "poppy",
-              lettuce: 1,
-              pattyCount: 1,
-              cheeseCount: 1,
-              tomato: 1,
-              pickles: 1,
-              onions: 1,
-              bacon: 1,
-              nuggets: 1,
-              sauce: "regular",
-            }}
-            variant="corrupted"
-          /> */}
-
           <SecretBurgerCard
             scale={0.3}
             name="Chicken & Waffles"
@@ -94,6 +62,19 @@ export default function SecretMenuPage() {
               nuggets: 2,
             }}
             variant="receipt"
+          />
+
+          <SecretBurgerCard
+            scale={0.3}
+            name="The Nugzilla"
+            description="A giant nugget. Nothing more to say."
+            ingredients={["Giant Nugget", "Cheese", "Sauce"]}
+            burgerIngredients={{
+              giantNugget: 1,
+              cheeseCount: 1,
+              sauce: "regular",
+            }}
+            variant="kaiju"
           />
         </div>
       </div>

@@ -40,6 +40,8 @@ export const MAX_EGG = 1;
 export const MAX_ONION_RINGS = 1;
 export const MAX_FRIED_FISH = 3;
 export const MAX_CHIPS = 1;
+export const MAX_SHRIMPS = 1
+export const MAX_GIANT_NUGGET = 1;
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
 // Derived from geometry bounding box analysis of the burger.glb meshes.
@@ -68,6 +70,7 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   bottom_donut: 0,
   top_donut: 0,
   shrimps: 0,
+  giant_nugget: 10,
 };
 
 const PLACEMENT_NUDGE: { [key: string]: number } = {
@@ -87,6 +90,7 @@ const PLACEMENT_NUDGE: { [key: string]: number } = {
   bottom_donut: 0,
   top_donut: 0,
   shrimps: 0,
+  giant_nugget: -4,
 };
 
 interface StackResult {
@@ -111,6 +115,7 @@ export interface BurgerIngredients {
   onionRings?: number; // 0 or 1
   potatoChips?: number; // 0 or 1
   shrimps?: number; // 0 or 1
+  giantNugget?: number  // 0 or 1
 }
 
 /**
@@ -211,7 +216,6 @@ export function stackBurgerLayers(
     }
 
     // nuggets — exported as multiple pieces (nuggets_1, nuggets_2 etc)
-    // nuggets
     if (name === "nuggets") {
       const nuggetPieces = Object.keys(meshes)
         .filter((k) => k.startsWith("nuggets_"))
@@ -422,6 +426,10 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
     totalCheese - Math.min(totalCheese, pattyCount) - cheeseForFish,
     nuggetCount,
   );
+
+  // giant nugget — same position as patties
+  const giantNuggetCount = Math.min(ingredients.giantNugget ?? 0, MAX_GIANT_NUGGET)
+  for (let i = 0; i < giantNuggetCount; i++) layers.push("giant_nugget")
 
   // patties + cheese (one per patty)
   for (let i = 0; i < pattyCount; i++) {

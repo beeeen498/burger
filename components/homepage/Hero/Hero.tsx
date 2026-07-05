@@ -310,4 +310,4 @@ export default function Hero() {
   );
 }
 
-useGLTF.preload("/3d-models/burger.glb");
+useGLTF.preload("/3d-models/burger1.glb");

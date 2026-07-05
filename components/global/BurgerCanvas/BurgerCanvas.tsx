@@ -61,12 +61,14 @@ function BurgerScene({
   const meshes = useRef<{ [key: string]: THREE.Mesh }>({});
 
   // Load the shared GLB model that contains all ingredient meshes
-  const { scene } = useGLTF("/3d-models/burger.glb") as any;
+  const { scene } = useGLTF("/3d-models/burger1.glb") as any;
   const { camera } = useThree();
 
   useEffect(() => {
     // Walk through every object in the GLB scene and extract the meshes by name
     scene.traverse((obj: THREE.Object3D) => {
+      console.log("Object:", obj.name, obj.type);
+
       if ((obj as THREE.Mesh).isMesh) {
         // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
         // store each strip individually and also map bacon_1 as "bacon"
@@ -99,6 +101,8 @@ function BurgerScene({
         }
       }
     });
+
+    console.log("All meshes:", Object.keys(meshes.current));
 
     // Stack the layers and get the total bounding box of the assembled burger
     if (!groupRef.current) return;
