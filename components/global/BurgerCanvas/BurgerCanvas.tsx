@@ -108,10 +108,12 @@ function BurgerScene({
       buildBurgerSequence(ingredients),
     );
 
-    // moving the burgers on the x axis
-    const burgerWidth = totalBox.max.x - totalBox.min.x;
-    if (groupRef.current) {
-      groupRef.current.position.x = burgerWidth * 0; // centered
+    // ── Re-center the burger for clean spinning ──
+    if (spinRef.current) {
+      const box = new THREE.Box3().setFromObject(spinRef.current);
+      const center = box.getCenter(new THREE.Vector3());
+      groupRef.current.position.x -= center.x;
+      groupRef.current.position.z -= center.z;
     }
 
     // Point the camera at the bottom third of the burger stack

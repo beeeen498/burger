@@ -25,7 +25,13 @@ export default function SecretBurgerCard({
   return (
     <div className={`${styles.card} ${styles[variant]}`}>
       {/* ── Stamp — top corner label ── */}
-      <span className={styles.stamp}>CLASSIFIED</span>
+      <span className={styles.stamp}>
+        {variant === "classified"
+          ? "CLASSIFIED"
+          : variant === "vhs"
+            ? "PLAY ▶"
+            : "ERROR"}
+      </span>
 
       {/* ── 3D burger model ── */}
       <div className={styles.model}>

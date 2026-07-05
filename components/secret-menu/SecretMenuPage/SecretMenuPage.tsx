@@ -38,6 +38,20 @@ export default function SecretMenuPage() {
             }}
             variant="classified"
           />
+
+          <SecretBurgerCard
+            scale={0.22}
+            name="The Simpsons"
+            description="Don't tell your cardiologist."
+            ingredients={["Donut Bun", "Beef Patty", "Cheese", "sauce"]}
+            burgerIngredients={{
+              bunType: "donut",
+              pattyCount: 1,
+              cheeseCount: 1,
+              sauce: "regular",
+            }}
+            variant="vhs"
+          />
         </div>
       </div>
     </main>
