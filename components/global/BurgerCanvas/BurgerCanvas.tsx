@@ -61,7 +61,7 @@ function BurgerScene({
   const meshes = useRef<{ [key: string]: THREE.Mesh }>({});
 
   // Load the shared GLB model that contains all ingredient meshes
-  const { scene } = useGLTF("/3d-models/burger1.glb") as any;
+  const { scene } = useGLTF("/3d-models/burger.glb") as any;
   const { camera } = useThree();
 
   useEffect(() => {
@@ -192,6 +192,6 @@ export default function BurgerCanvas({
 }
 
 // Preload the GLB so it's ready before the component mounts
-useGLTF.preload("/3d-models/burger1.glb");
+useGLTF.preload("/3d-models/burger.glb");
 useGLTF.preload("/3d-models/french_fries.glb");
 useGLTF.preload("/3d-models/milkshake.glb");
