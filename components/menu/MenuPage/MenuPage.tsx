@@ -17,6 +17,9 @@ import SecretLock from "../SecretLock/SecretLock";
 
 import styles from "./MenuPage.module.scss";
 
+// ── DEV ONLY — force breakfast items to always show ──
+const FORCE_SHOW_ALL_TIMES = true
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -97,13 +100,29 @@ export default function MenuPage() {
       if (error) {
         setError(error.message);
       } else {
-        setItems(data || []);
+       setItems((data || []).filter(item => FORCE_SHOW_ALL_TIMES || isItemAvailableNow(item)))
       }
       setLoading(false);
     }
 
     fetchMenuItems();
   }, []);
+
+  // ── Check if an item is available at the current time ──
+  function isItemAvailableNow(item: MenuItem): boolean {
+    if (!item.available_from || !item.available_until) return true;
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const [fromHour, fromMin] = item.available_from.split(":").map(Number);
+    const [untilHour, untilMin] = item.available_until.split(":").map(Number);
+
+    const fromMinutes = fromHour * 60 + fromMin;
+    const untilMinutes = untilHour * 60 + untilMin;
+
+    return currentMinutes >= fromMinutes && currentMinutes < untilMinutes;
+  }
 
   // ---------- page is ready only once BOTH fetches are done ----------
   useEffect(() => {

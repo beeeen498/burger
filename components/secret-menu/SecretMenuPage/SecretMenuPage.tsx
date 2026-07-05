@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import MatrixRain from "../MatrixRain/MatrixRain";
 import Header from "@/components/global/Header/Header";
@@ -17,6 +17,19 @@ export default function SecretMenuPage() {
   const [expiryPhase, setExpiryPhase] = useState<
     "active" | "glitch" | "fadeout" | "message"
   >("active");
+
+  // ── Responsive burger scale ──
+  const [burgerScale, setBurgerScale] = useState(0.28);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBurgerScale(window.innerWidth < 350 ? 0.2 : 0.28);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // ── Expiry sequence — glitch → fade → message → redirect ──
   const handleExpire = useCallback(() => {
@@ -71,7 +84,7 @@ export default function SecretMenuPage() {
         {/* ── Secret burger cards ── */}
         <div className={styles.cards}>
           <SecretBurgerCard
-            scale={0.28}
+            scale={burgerScale}
             name="The Land, Sea and Sky"
             description="The ultimate surf and turf situation."
             ingredients={["Beef Patty", "nuggets", "Shrimps"]}
@@ -85,7 +98,7 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            scale={0.28}
+            scale={burgerScale}
             name="The Simpsons"
             description="Don't tell your cardiologist."
             ingredients={["Donut Bun", "Beef Patty", "Cheese"]}
@@ -98,7 +111,7 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            scale={0.28}
+            scale={burgerScale}
             name="Chicken & Waffles"
             description="Who said waffles are just for breakfast?"
             ingredients={["Waffle Bun", "Nuggets", "Maple Syrup"]}
@@ -110,7 +123,7 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            scale={0.28}
+            scale={burgerScale}
             name="The Nugzilla"
             description="A giant nugget. Nothing more to say."
             ingredients={["Giant Nugget", "Cheese", "Sauce"]}
