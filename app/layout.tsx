@@ -4,6 +4,8 @@ import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Footer from "@/components/global/Footer/Footer";
 import LoadingScreen from "@/components/global/LoadingScreen/LoadingScreen";
 import WhisperPopup from "@/components/global/WhisperPopup/WhisperPopup";
+import DevShortcut from "@/components/global/DevShortcut/DevShortcut";
+
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -15,7 +17,7 @@ const righteous = Righteous({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--header-font",
-})
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,9 +36,9 @@ export default function RootLayout({
         <LoadingScreen />
         <StickyHeader />
         <WhisperPopup />
+        <DevShortcut />
         {children}
         <Footer />
-
       </body>
     </html>
   );

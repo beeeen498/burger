@@ -65,7 +65,8 @@ function BurgerModel({ clickCount }: { clickCount: number }) {
         obj.name === "fried_egg" ||
         obj.name === "potato_chips" ||
         obj.name === "fried_fish" ||
-        obj.name === "shrimps"
+        obj.name === "shrimps" ||
+        obj.name === "giant_nugget"
       ) {
         obj.visible = false;
       }

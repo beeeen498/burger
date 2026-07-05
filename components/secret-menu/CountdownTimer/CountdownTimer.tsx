@@ -7,7 +7,7 @@ import styles from "./CountdownTimer.module.scss";
 const LS_UNLOCK_TIME = "secretMenu_unlockedAt";
 
 // ── 24 hours in milliseconds ──────────────────────────
-const ACCESS_DURATION = 5 * 1000;
+const ACCESS_DURATION = 24 * 60 * 60 * 1000;
 
 // ── Props ─────────────────────────────────────────────
 interface CountdownTimerProps {
