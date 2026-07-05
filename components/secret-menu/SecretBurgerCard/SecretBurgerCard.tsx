@@ -10,7 +10,7 @@ interface SecretBurgerCardProps {
   description: string;
   ingredients: string[];
   burgerIngredients: BurgerIngredients;
-  variant: "classified" | "vhs" | "corrupted";
+  variant: "classified" | "vhs" | "corrupted" | "diner" | "receipt"
   scale?: number;
 }
 
@@ -26,11 +26,11 @@ export default function SecretBurgerCard({
     <div className={`${styles.card} ${styles[variant]}`}>
       {/* ── Stamp — top corner label ── */}
       <span className={styles.stamp}>
-        {variant === "classified"
-          ? "CLASSIFIED"
-          : variant === "vhs"
-            ? "PLAY ▶"
-            : "ERROR"}
+        {variant === "classified" ? "CLASSIFIED"
+          : variant === "vhs" ? "PLAY ▶"
+          : variant === "corrupted" ? "ERROR"
+          : variant === "diner" ? "SPECIAL ★"
+          : "ORDER #047"}
       </span>
 
       {/* ── 3D burger model ── */}
@@ -38,8 +38,8 @@ export default function SecretBurgerCard({
         <BurgerCanvas
           ingredients={burgerIngredients}
           scale={scale}
-          cameraOffset={14}
-          spin
+          cameraOffset={13.5}
+          // spin
         />
       </div>
 

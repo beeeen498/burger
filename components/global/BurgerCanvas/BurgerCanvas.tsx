@@ -188,6 +188,6 @@ export default function BurgerCanvas({
 }
 
 // Preload the GLB so it's ready before the component mounts
-useGLTF.preload("/3d-models/burger.glb");
+useGLTF.preload("/3d-models/burger1.glb");
 useGLTF.preload("/3d-models/french_fries.glb");
 useGLTF.preload("/3d-models/milkshake.glb");

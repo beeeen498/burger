@@ -211,6 +211,7 @@ export function stackBurgerLayers(
     }
 
     // nuggets — exported as multiple pieces (nuggets_1, nuggets_2 etc)
+    // nuggets
     if (name === "nuggets") {
       const nuggetPieces = Object.keys(meshes)
         .filter((k) => k.startsWith("nuggets_"))
@@ -220,6 +221,14 @@ export function stackBurgerLayers(
       nuggetPieces.forEach((piece) => {
         const pieceClone = piece.clone(true);
         nuggetGroup.add(pieceClone);
+      });
+
+      // ── Center nugget pieces within their group ──
+      const nuggetWorldBox = new THREE.Box3().setFromObject(nuggetGroup);
+      const nuggetWorldCenter = nuggetWorldBox.getCenter(new THREE.Vector3());
+      nuggetGroup.children.forEach((child) => {
+        child.position.x -= nuggetWorldCenter.x;
+        child.position.z -= nuggetWorldCenter.z;
       });
 
       const nuggetGeo = meshes["nuggets_1"].geometry;
@@ -331,11 +340,20 @@ export function stackBurgerLayers(
       topBunClone = clone;
   }
 
-  // Center the stack horizontally
+  // ── Center the stack based on the bottom bun — the foundation everything sits on ──
+  if (bottomBunClone) {
+    const bunBox = new THREE.Box3().setFromObject(bottomBunClone);
+    const bunCenter = bunBox.getCenter(new THREE.Vector3());
+    group.position.x = -bunCenter.x;
+    group.position.z = -bunCenter.z;
+  } else {
+    const totalBox = new THREE.Box3().setFromObject(group);
+    const center = totalBox.getCenter(new THREE.Vector3());
+    group.position.x = -center.x;
+    group.position.z = -center.z;
+  }
+
   const totalBox = new THREE.Box3().setFromObject(group);
-  const center = totalBox.getCenter(new THREE.Vector3());
-  group.position.x = -center.x;
-  group.position.z = -center.z;
 
   return { bottomBunClone, topBunClone, totalBox };
 }
