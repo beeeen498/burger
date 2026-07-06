@@ -37,6 +37,7 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
 
   // ── Cart store ──
   const addItem = useCartStore((state) => state.addItem);
+  const setFlyFrom = useCartStore((state) => state.setFlyFrom);
 
   // ---------- fetch burger of the day from Supabase ----------
   useEffect(() => {
@@ -163,7 +164,12 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
 
   // ── Add burger of the day to cart ──
   // Uses the discount price if one exists, otherwise the regular price
-  const handleAddToCart = () => {
+  // Also grabs the button's position so the flying 🍔 knows
+  // where to start its arc from.
+  const handleAddToCart = (e: React.MouseEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
+
     addItem({
       id: data.id,
       name: data.name,

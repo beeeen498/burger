@@ -3,6 +3,7 @@ import { Righteous, Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import CartDrawer from "@/components/global/CartDrawer/CartDrawer";
+import FlyingItem from "@/components/global/FlyingItem/FlyingItem";
 import Footer from "@/components/global/Footer/Footer";
 import LoadingScreen from "@/components/global/LoadingScreen/LoadingScreen";
 import WhisperPopup from "@/components/global/WhisperPopup/WhisperPopup";
@@ -38,6 +39,8 @@ export default function RootLayout({
         <LoadingScreen />
         <StickyHeader />
         <CartDrawer />
+        {/* flying burger emoji — animates from button to bag icon */}
+        <FlyingItem />
         <WhisperPopup />
         <DevShortcut />
         <Toaster

@@ -99,6 +99,29 @@
           justify-content: center;
           border: 2px solid var(--pink);
         }
+
+        // ── Wobble animation — triggered when a flying item lands ──
+        &.wobble {
+          animation: wobble 0.4s ease;
+        }
+
+        @keyframes wobble {
+          0% {
+            transform: scale(1);
+          }
+          25% {
+            transform: scale(1.3) rotate(-8deg);
+          }
+          50% {
+            transform: scale(0.9) rotate(5deg);
+          }
+          75% {
+            transform: scale(1.1) rotate(-3deg);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
       }
 
       .menuToggle {

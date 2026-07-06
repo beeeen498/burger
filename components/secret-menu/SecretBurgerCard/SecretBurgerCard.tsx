@@ -30,9 +30,16 @@ export default function SecretBurgerCard({
 }: SecretBurgerCardProps) {
   // ── Cart store ──
   const addItem = useCartStore((state) => state.addItem);
+  const setFlyFrom = useCartStore((state) => state.setFlyFrom);
 
   // ── Add this secret burger to cart ──
-  const handleAddToCart = () => {
+  // Also grabs the button's position so the flying 🍔 knows
+  // where to start its arc from.
+  const handleAddToCart = (e: React.MouseEvent) => {
+    // ── Capture button position for flying animation ──
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
+
     addItem({
       id,
       name,

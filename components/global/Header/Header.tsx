@@ -19,17 +19,17 @@ const Header = () => {
 
   // ── Cart store ──
   const { items, toggleCart } = useCartStore();
+  const wobble = useCartStore((s) => s.wobble);
+  const setWobble = useCartStore((s) => s.setWobble);
 
   // ── Total number of items in the cart ──
-  // Adds up all quantities, not just unique items
-  // e.g. 2 burgers + 3 fries = 5
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // glitch effect to the logo
+  // ── Glitch effect on logo ──
   useEffect(() => {
     const triggerGlitch = () => {
       if (!logoRef.current) return;
@@ -38,7 +38,6 @@ const Header = () => {
         logoRef.current?.classList.remove(styles.glitch);
       }, 200);
 
-      // next trigger in 4-8 seconds
       const next = 4000 + Math.random() * 4000;
       setTimeout(triggerGlitch, next);
     };
@@ -48,7 +47,7 @@ const Header = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  // lock body scroll while mobile menu is open
+  // ── Lock body scroll while mobile menu is open ──
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -77,9 +76,11 @@ const Header = () => {
 
             {/* ── Bag icon — opens the cart drawer ── */}
             <button
-              className={styles.bagBtn}
+              className={`${styles.bagBtn} ${wobble ? styles.wobble : ""}`}
               onClick={toggleCart}
+              onAnimationEnd={() => setWobble(false)}
               aria-label="Open cart"
+              data-bag-icon
             >
               <HiOutlineShoppingBag size={23} />
 
@@ -101,8 +102,7 @@ const Header = () => {
             </button>
         </div>
 
-        {/* ── Mobile menu — rendered via portal so it sits above
-            any ancestor's stacking context ── */}
+        {/* ── Mobile menu portal ── */}
         {mounted && createPortal(
           <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />,
           document.body

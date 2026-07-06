@@ -14,6 +14,7 @@ interface SmallCardProps {
 export default function SmallCard({ item }: SmallCardProps) {
   // ── Cart store ──
   const addItem = useCartStore((state) => state.addItem);
+  const setFlyFrom = useCartStore((state) => state.setFlyFrom);
 
   // ── Visibility state for lazy loading the 3D canvas ──
   const [isVisible, setIsVisible] = useState(false);
@@ -57,8 +58,15 @@ export default function SmallCard({ item }: SmallCardProps) {
   };
 
   // ── Add the item to the cart store and reset quantity ──
+  // Also grabs the button's position so the flying 🍔 knows
+  // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // ── Capture button position for flying animation ──
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
+
     addItem({
       id: item.id,
       name: item.name,

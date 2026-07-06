@@ -3,10 +3,6 @@ import { persist } from "zustand/middleware"
 import { BurgerIngredients } from "./burgerUtils"
 
 // ── Cart item shape ─────────────────────────────────────────
-// Each item in the cart has an id (from Supabase), a name,
-// the price at the time of adding (includes any topping deltas),
-// a quantity, and optionally the full ingredient breakdown
-// for custom builds or items with topping customizations.
 export interface CartItem {
   id: string
   name: string
@@ -15,23 +11,30 @@ export interface CartItem {
   ingredients?: BurgerIngredients | null
 }
 
+// ── Flying animation coordinates ────────────────────────────
+// When an item is added, the button's screen position is stored
+// here so the FlyingItem component knows where to start from.
+interface FlyFromCoords {
+  x: number
+  y: number
+}
+
 // ── Store interface ─────────────────────────────────────────
 interface CartStore {
   items: CartItem[]
   isOpen: boolean
+  flyFrom: FlyFromCoords | null
+  wobble: boolean
   addItem: (item: CartItem) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   toggleCart: () => void
+  setFlyFrom: (coords: FlyFromCoords | null) => void
+  setWobble: (val: boolean) => void
 }
 
 // ── Store ───────────────────────────────────────────────────
-// persist() wraps the store so everything saves to localStorage
-// automatically under the key "smashd-cart".
-// partialize tells persist to only save the items array —
-// we don't want isOpen saved because the drawer should
-// always start closed on page load.
 const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
@@ -39,10 +42,10 @@ const useCartStore = create<CartStore>()(
       // ── State ──
       items: [],
       isOpen: false,
+      flyFrom: null,
+      wobble: false,
 
       // ── Add an item ──
-      // If the same item id already exists, bump its quantity.
-      // Otherwise push it as a new entry.
       addItem: (item) =>
         set((state) => {
           const existing = state.items.find((i) => i.id === item.id)
@@ -86,13 +89,19 @@ const useCartStore = create<CartStore>()(
 
       // ── Open or close the cart drawer ──
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+
+      // ── Set the starting position for the flying animation ──
+      setFlyFrom: (coords) => set({ flyFrom: coords }),
+
+      // ── Trigger or reset the bag icon wobble ──
+      setWobble: (val) => set({ wobble: val }),
     }),
     {
       // ── localStorage key ──
       name: "smashd-cart",
 
       // ── Only persist the items array ──
-      // isOpen should always start as false on page load
+      // Everything else resets on page load
       partialize: (state) => ({ items: state.items }),
     }
   )

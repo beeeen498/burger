@@ -22,20 +22,17 @@ const StickyHeader = () => {
 
   // ── Cart store ──
   const { items, toggleCart } = useCartStore();
+  const wobble = useCartStore((s) => s.wobble);
+  const setWobble = useCartStore((s) => s.setWobble);
 
   // ── Total number of items in the cart ──
-  // Adds up all quantities, not just unique items
-  // e.g. 2 burgers + 3 fries = 5
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  // ── Scroll visibility logic ──
   useEffect(() => {
     setVisible(false);
     scrolledIn.current = false;
@@ -59,7 +56,7 @@ const StickyHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
 
-  // adjust the height
+  // ── Set header height CSS variable ──
   useEffect(() => {
     const el = document.querySelector("header");
     if (!el) return;
@@ -69,7 +66,7 @@ const StickyHeader = () => {
     );
   }, []);
 
-  // glitch effect on logo — same as Header.tsx
+  // ── Glitch effect on logo ──
   useEffect(() => {
     const triggerGlitch = () => {
       if (!logoRef.current) return;
@@ -86,7 +83,7 @@ const StickyHeader = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  // lock body scroll while mobile menu is open
+  // ── Lock body scroll while mobile menu is open ──
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -103,33 +100,38 @@ const StickyHeader = () => {
     `}
     >
       <div className={styles.headerContent}>
-        {/* logo */}
+        {/* ── Logo ── */}
         <Link href="/" className={styles.logoLink}>
           <h2 ref={logoRef} className={styles.logo} data-text="Smash'd">
             Smash'd
           </h2>
         </Link>
 
-        {/* nav — hidden on mobile via CSS */}
+        {/* ── Nav — hidden on mobile via CSS ── */}
         <div className={styles.navWrapper}>
           <Nav />
         </div>
 
-        {/* icons */}
+        {/* ── Icons ── */}
         <div className={styles.icons}>
+
+          {/* ── Bag icon — opens the cart drawer ── */}
           <button
-            className={styles.bagBtn}
+            className={`${styles.bagBtn} ${wobble ? styles.wobble : ""}`}
             onClick={toggleCart}
+            onAnimationEnd={() => setWobble(false)}
             aria-label="Open cart"
+            data-bag-icon
           >
             <HiOutlineShoppingBag size={23} />
 
             {/* ── Count badge — only shows when there are items ── */}
             {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
           </button>
+
           <FaUser size={20} />
 
-          {/* burger toggle — mobile only via CSS */}
+          {/* ── Burger toggle — mobile only via CSS ── */}
           <button
             className={styles.menuToggle}
             onClick={() => setMenuOpen(true)}
@@ -140,7 +142,7 @@ const StickyHeader = () => {
         </div>
       </div>
 
-      {/* portal so it always escapes any stacking context above */}
+      {/* ── Mobile menu portal ── */}
       {mounted &&
         createPortal(
           <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />,
