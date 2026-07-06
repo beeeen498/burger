@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ import Nav from "@/components/global/Header/Nav/Nav";
 import MobileMenu from "@/components/global/Header/MobileMenu/MobileMenu";
 import styles from "./StickyHeader.module.scss";
 import { usePathname } from "next/navigation";
+import useCartStore from "@/lib/useCartStore";
 
 const StickyHeader = () => {
   const [visible, setVisible] = useState(false);
@@ -18,6 +19,18 @@ const StickyHeader = () => {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // ── Cart store ──
+  const { items, toggleCart } = useCartStore();
+
+  // ── Total number of items in the cart ──
+  // Adds up all quantities, not just unique items
+  // e.g. 2 burgers + 3 fries = 5
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -48,9 +61,12 @@ const StickyHeader = () => {
 
   // adjust the height
   useEffect(() => {
-    const el = document.querySelector('header');
+    const el = document.querySelector("header");
     if (!el) return;
-    document.documentElement.style.setProperty('--header-height', `${el.offsetHeight}px`);
+    document.documentElement.style.setProperty(
+      "--header-height",
+      `${el.offsetHeight}px`,
+    );
   }, []);
 
   // glitch effect on logo — same as Header.tsx
@@ -73,52 +89,62 @@ const StickyHeader = () => {
   // lock body scroll while mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
   return (
-    <header className={`
+    <header
+      className={`
       ${styles.stickyHeader} 
-      ${visible ? styles.visible : ''} 
-      ${scrolledIn.current ? styles.animated : ''}
-    `}>
-        <div className={styles.headerContent}>
-            {/* logo */}
-            <Link href="/" className={styles.logoLink}>
-                <h2
-                ref={logoRef}
-                className={styles.logo}
-                data-text="Smash'd"
-                >
-                Smash'd
-                </h2>
-            </Link>
+      ${visible ? styles.visible : ""} 
+      ${scrolledIn.current ? styles.animated : ""}
+    `}
+    >
+      <div className={styles.headerContent}>
+        {/* logo */}
+        <Link href="/" className={styles.logoLink}>
+          <h2 ref={logoRef} className={styles.logo} data-text="Smash'd">
+            Smash'd
+          </h2>
+        </Link>
 
-            {/* nav — hidden on mobile via CSS */}
-            <div className={styles.navWrapper}>
-              <Nav />
-            </div>
-
-            {/* icons */}
-            <div className={styles.icons}>
-                <HiOutlineShoppingBag size={23} />
-                <FaUser size={20} />
-
-                {/* burger toggle — mobile only via CSS */}
-                <button
-                  className={styles.menuToggle}
-                  onClick={() => setMenuOpen(true)}
-                  aria-label="Open menu"
-                >
-                  <HiOutlineMenu size={24} />
-                </button>
-            </div>
+        {/* nav — hidden on mobile via CSS */}
+        <div className={styles.navWrapper}>
+          <Nav />
         </div>
 
-        {/* portal so it always escapes any stacking context above */}
-        {mounted && createPortal(
+        {/* icons */}
+        <div className={styles.icons}>
+          <button
+            className={styles.bagBtn}
+            onClick={toggleCart}
+            aria-label="Open cart"
+          >
+            <HiOutlineShoppingBag size={23} />
+
+            {/* ── Count badge — only shows when there are items ── */}
+            {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
+          </button>
+          <FaUser size={20} />
+
+          {/* burger toggle — mobile only via CSS */}
+          <button
+            className={styles.menuToggle}
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+          >
+            <HiOutlineMenu size={24} />
+          </button>
+        </div>
+      </div>
+
+      {/* portal so it always escapes any stacking context above */}
+      {mounted &&
+        createPortal(
           <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />,
-          document.body
+          document.body,
         )}
     </header>
   );

@@ -7,10 +7,10 @@
   background-color: var(--pink);
   border-bottom: var(--border);
   z-index: 100;
-  padding: 18px 0;  
+  padding: 18px 0;
   transform: translateY(-100%);
 
-  .headerContent{
+  .headerContent {
     display: flex;
     align-items: stretch;
     justify-content: space-between;
@@ -19,78 +19,107 @@
 
     .logoLink,
     .icons {
-        display: flex;
-        align-items: center;
+      display: flex;
+      align-items: center;
     }
 
     .navWrapper {
-        display: flex;
-        align-items: stretch;
-        height: 100%;
+      display: flex;
+      align-items: stretch;
+      height: 100%;
     }
 
     .logoLink {
-        text-decoration: none;
-        color: inherit;
+      text-decoration: none;
+      color: inherit;
 
-        .logo {
-            position: relative;
-            font-family: var(--header-font);
-            font-weight: 700;
-            font-size: 24px;
-            color: var(--black);
-            text-transform: uppercase;
-            margin: 0;
-    
-            // glitch effect
-            &.glitch::before,
-            &.glitch::after {
-                content: attr(data-text);
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-    
-            &.glitch::before {
-                color: #ff0000;
-                transform: translateX(-3px);
-                opacity: 0.8;
-            }
-    
-            &.glitch::after {
-                color: #0000ff;
-                transform: translateX(3px);
-                opacity: 0.8;
-            }
+      .logo {
+        position: relative;
+        font-family: var(--header-font);
+        font-weight: 700;
+        font-size: 24px;
+        color: var(--black);
+        text-transform: uppercase;
+        margin: 0;
+
+        // glitch effect
+        &.glitch::before,
+        &.glitch::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
+
+        &.glitch::before {
+          color: #ff0000;
+          transform: translateX(-3px);
+          opacity: 0.8;
+        }
+
+        &.glitch::after {
+          color: #0000ff;
+          transform: translateX(3px);
+          opacity: 0.8;
+        }
+      }
     }
 
     .icons {
-        gap: 16px;
-        color: var(--black);
-        cursor: pointer;
+      gap: 16px;
+      color: var(--black);
+      cursor: pointer;
 
-        .menuToggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--black);
-            padding: 0;
-            align-items: center;
+      .bagBtn {
+        position: relative;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--black);
+        display: flex;
+        align-items: center;
+        padding: 0;
+
+        // ── Count badge — small circle on the bag icon ──
+        .badge {
+          position: absolute;
+          top: -6px;
+          right: -8px;
+          background: var(--black);
+          color: var(--yellow);
+          font-size: 0.6rem;
+          font-weight: 700;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid var(--pink);
         }
+      }
+
+      .menuToggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--black);
+        padding: 0;
+        align-items: center;
+      }
     }
 
     @media (max-width: 768px) {
-        .navWrapper {
-            display: none;
-        }
+      .navWrapper {
+        display: none;
+      }
 
-        .icons .menuToggle {
-            display: flex;
-        }
+      .icons .menuToggle {
+        display: flex;
+      }
     }
   }
 }
@@ -100,5 +129,7 @@
 }
 
 .stickyHeader.animated {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }

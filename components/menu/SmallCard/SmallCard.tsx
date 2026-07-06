@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import SimpleModelCanvas from "@/components/global/SimpleModelCanvas/SimpleModelCanvas";
+import useCartStore from "@/lib/useCartStore";
 import { MenuItem } from "../MenuPage/MenuPage";
 import styles from "./SmallCard.module.scss";
 
@@ -10,6 +11,9 @@ interface SmallCardProps {
 }
 
 export default function SmallCard({ item }: SmallCardProps) {
+  // ── Cart store ──
+  const addItem = useCartStore((state) => state.addItem);
+
   // ── Visibility state for lazy loading the 3D canvas ──
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLElement>(null);
@@ -51,9 +55,16 @@ export default function SmallCard({ item }: SmallCardProps) {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
 
+  // ── Add the item to the cart store and reset quantity ──
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("add to cart", { item, quantity });
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity,
+    });
+    setQuantity(1);
   };
 
   return (
@@ -64,11 +75,7 @@ export default function SmallCard({ item }: SmallCardProps) {
       {/* ── 3D model — only renders when card is in viewport ── */}
       <div className={styles.canvas}>
         {isVisible && item.model_path && (
-          <SimpleModelCanvas
-            modelPath={item.model_path}
-            scale={1}
-            rotation={item.category === "sauces" ? [0.5, 0, 0] : undefined}
-          />
+          <SimpleModelCanvas modelPath={item.model_path} scale={1} rotation={item.category === "sauces" ? [0.5, 0, 0] : undefined}/>
         )}
       </div>
 

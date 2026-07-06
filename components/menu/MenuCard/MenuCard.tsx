@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
+import useCartStore from "@/lib/useCartStore";
 import { MenuItem } from "../MenuPage/MenuPage";
 import styles from "./MenuCard.module.scss";
 
@@ -12,6 +13,9 @@ interface MenuCardProps {
 
 export default function MenuCard({ item }: MenuCardProps) {
   const router = useRouter();
+
+  // ── Cart store ──
+  const addItem = useCartStore((state) => state.addItem);
 
   // ── Visibility state for lazy loading the 3D canvas ──
   const [isVisible, setIsVisible] = useState(false);
@@ -55,9 +59,17 @@ export default function MenuCard({ item }: MenuCardProps) {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
 
+  // ── Add the item to the cart store and reset quantity ──
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("add to cart", { item, quantity });
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity,
+      ingredients: item.ingredients ?? null,
+    });
+    setQuantity(1);
   };
 
   // ── Clicking the card navigates to the item detail page ──

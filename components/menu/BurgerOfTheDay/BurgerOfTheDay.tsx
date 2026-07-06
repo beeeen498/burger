@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
+import useCartStore from "@/lib/useCartStore";
 import { BurgerIngredients } from "@/lib/burgerUtils";
 import styles from "./BurgerOfTheDay.module.scss";
 
@@ -16,6 +17,7 @@ interface RestaurantSettings {
 }
 
 interface BurgerOfTheDayData {
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -31,6 +33,9 @@ interface BurgerOfTheDayProps {
 export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
   const [data, setData] = useState<BurgerOfTheDayData | null>(null);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+
+  // ── Cart store ──
+  const addItem = useCartStore((state) => state.addItem);
 
   // ---------- fetch burger of the day from Supabase ----------
   useEffect(() => {
@@ -64,6 +69,7 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
         }
 
         setData({
+          id: settings.burger_of_the_day_item_id,
           name: item.name,
           description: item.description,
           price: item.price,
@@ -99,6 +105,7 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
         };
 
         setData({
+          id: "burger-of-the-day",
           name: "Burger of the Day",
           description: "Today's special creation.",
           price: 0,
@@ -153,6 +160,18 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
 
   const pad = (n: number) => String(n).padStart(2, "0");
 
+  // ── Add burger of the day to cart ──
+  // Uses the discount price if one exists, otherwise the regular price
+  const handleAddToCart = () => {
+    addItem({
+      id: data.id,
+      name: data.name,
+      price: data.discountPrice ?? data.price,
+      quantity: 1,
+      ingredients: data.ingredients,
+    });
+  };
+
   return (
     <div className={styles.banner}>
       <span className={styles.badge}>Burger of the Day</span>
@@ -201,7 +220,7 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
           </div>
         </div>
 
-        <button className={styles.addBtn}>Add to Cart</button>
+        <button className={styles.addBtn} onClick={handleAddToCart}>Add to Cart</button>
       </div>
     </div>
   );
