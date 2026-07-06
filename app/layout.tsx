@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Righteous, Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import CartDrawer from "@/components/global/CartDrawer/CartDrawer";
 import Footer from "@/components/global/Footer/Footer";
@@ -39,6 +40,19 @@ export default function RootLayout({
         <CartDrawer />
         <WhisperPopup />
         <DevShortcut />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--black)",
+              color: "var(--yellow)",
+              border: "3px solid var(--black)",
+              fontWeight: 700,
+              borderRadius: "8px",
+              boxShadow: "4px 4px 0 var(--pink)",
+            },
+          }}
+        />
         {children}
         <Footer />
       </body>

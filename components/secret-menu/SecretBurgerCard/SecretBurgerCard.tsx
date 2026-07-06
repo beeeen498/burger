@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import useCartStore from "@/lib/useCartStore";
 import { BurgerIngredients } from "@/lib/burgerUtils";
@@ -39,6 +40,7 @@ export default function SecretBurgerCard({
       quantity: 1,
       ingredients: burgerIngredients,
     });
+    toast(`Added ${name} to bag! 🍔`);
   };
 
   return (

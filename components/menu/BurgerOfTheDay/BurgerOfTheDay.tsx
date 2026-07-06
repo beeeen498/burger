@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import useCartStore from "@/lib/useCartStore";
@@ -170,6 +171,7 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
       quantity: 1,
       ingredients: data.ingredients,
     });
+    toast(`Added ${data.name} to bag! 🍔`);
   };
 
   return (

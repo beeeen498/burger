@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import SimpleModelCanvas from "@/components/global/SimpleModelCanvas/SimpleModelCanvas";
 import useCartStore from "@/lib/useCartStore";
 import { MenuItem } from "../MenuPage/MenuPage";
@@ -64,6 +65,7 @@ export default function SmallCard({ item }: SmallCardProps) {
       price: item.price,
       quantity,
     });
+    toast(`Added ${item.name} to bag! 🍔`);
     setQuantity(1);
   };
 

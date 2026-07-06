@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import useCartStore from "@/lib/useCartStore";
@@ -69,6 +70,7 @@ export default function MenuCard({ item }: MenuCardProps) {
       quantity,
       ingredients: item.ingredients ?? null,
     });
+    toast(`Added ${item.name} to bag! 🍔`);
     setQuantity(1);
   };
 
