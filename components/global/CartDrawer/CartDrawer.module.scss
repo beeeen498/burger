@@ -194,11 +194,49 @@
     }
   }
 
-  // ── Footer — total price + clear cart ───────────────────
+  // ── Footer — delivery bar + total + clear cart ──────────
   .footer {
     padding: 16px 20px;
     border-top: var(--border);
 
+    // ── Free delivery progress bar ──
+    .deliveryBar {
+      margin-bottom: 14px;
+
+      // ── Text above the bar ──
+      .deliveryText {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--black);
+        margin: 0 0 6px 0;
+        text-align: center;
+      }
+
+      // ── Track — the gray background bar ──
+      .progressTrack {
+        width: 100%;
+        height: 10px;
+        background: var(--white);
+        border: var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+
+        // ── Fill — the colored part that grows ──
+        .progressFill {
+          height: 100%;
+          background: var(--pink);
+          border-radius: 4px;
+          transition: width 0.3s ease;
+
+          // ── Turns yellow when threshold is hit ──
+          &.complete {
+            background: var(--yellow);
+          }
+        }
+      }
+    }
+
+    // ── Total row ──
     .totalRow {
       display: flex;
       justify-content: space-between;
@@ -223,6 +261,7 @@
       }
     }
 
+    // ── Clear cart button ──
     .clearBtn {
       width: 100%;
       padding: 10px;

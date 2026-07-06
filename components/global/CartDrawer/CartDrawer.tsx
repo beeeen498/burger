@@ -3,11 +3,18 @@
 import useCartStore from "@/lib/useCartStore"
 import styles from "./CartDrawer.module.scss"
 
+// ── Free delivery threshold ──
+const FREE_DELIVERY_MIN = 30
+
 const CartDrawer = () => {
   const { items, isOpen, toggleCart, removeItem, updateQuantity, clearCart } = useCartStore()
 
   // ── Calculate the total price across all items ──
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  // ── How much more the user needs to spend for free delivery ──
+  const remaining = Math.max(0, FREE_DELIVERY_MIN - total)
+  const progress = Math.min(100, (total / FREE_DELIVERY_MIN) * 100)
 
   // ── Don't render anything if the drawer is closed ──
   if (!isOpen) return null
@@ -138,13 +145,33 @@ const CartDrawer = () => {
           )}
         </div>
 
-        {/* ── Footer — total + clear cart ── */}
+        {/* ── Footer — delivery bar + total + clear cart ── */}
         {items.length > 0 && (
           <div className={styles.footer}>
+
+            {/* ── Minimum order / free delivery progress bar ── */}
+            <div className={styles.deliveryBar}>
+              <p className={styles.deliveryText}>
+                {remaining > 0
+                  ? `Add $${remaining.toFixed(2)} more for free delivery! 🚗`
+                  : "You've got free delivery! 🎉"
+                }
+              </p>
+              <div className={styles.progressTrack}>
+                <div
+                  className={`${styles.progressFill} ${progress >= 100 ? styles.complete : ""}`}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* ── Total row ── */}
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>Total</span>
               <span className={styles.totalPrice}>${total.toFixed(2)}</span>
             </div>
+
+            {/* ── Clear cart ── */}
             <button className={styles.clearBtn} onClick={clearCart}>
               Clear Cart
             </button>
