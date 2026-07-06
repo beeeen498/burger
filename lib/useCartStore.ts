@@ -18,21 +18,27 @@ export interface CartItem {
 // ── Store interface ─────────────────────────────────────────
 interface CartStore {
   items: CartItem[]
+  isOpen: boolean
   addItem: (item: CartItem) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
+  toggleCart: () => void
 }
 
 // ── Store ───────────────────────────────────────────────────
 // persist() wraps the store so everything saves to localStorage
 // automatically under the key "smashd-cart".
+// partialize tells persist to only save the items array —
+// we don't want isOpen saved because the drawer should
+// always start closed on page load.
 const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
 
       // ── State ──
       items: [],
+      isOpen: false,
 
       // ── Add an item ──
       // If the same item id already exists, bump its quantity.
@@ -77,10 +83,17 @@ const useCartStore = create<CartStore>()(
 
       // ── Empty the whole cart ──
       clearCart: () => set({ items: [] }),
+
+      // ── Open or close the cart drawer ──
+      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
     }),
     {
       // ── localStorage key ──
       name: "smashd-cart",
+
+      // ── Only persist the items array ──
+      // isOpen should always start as false on page load
+      partialize: (state) => ({ items: state.items }),
     }
   )
 )

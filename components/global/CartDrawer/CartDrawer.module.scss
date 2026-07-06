@@ -1,0 +1,223 @@
+// ── Dark overlay behind the drawer ──────────────────────────
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  cursor: pointer;
+}
+
+// ── Drawer panel — slides in from the right ─────────────────
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: 100%;
+  background: var(--white);
+  border-left: var(--border);
+  box-shadow: -6px 0 0 var(--black);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+
+  // ── Header — title + close button ───────────────────────
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: var(--border);
+
+    .title {
+      font-family: var(--header-font);
+      font-size: 1.4rem;
+      color: var(--black);
+      margin: 0;
+    }
+
+    .closeBtn {
+      width: 36px;
+      height: 36px;
+      background: var(--black);
+      color: var(--yellow);
+      border: var(--border);
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0 var(--yellow);
+
+      &:hover {
+        background: var(--pink);
+        color: var(--white);
+        box-shadow: 2px 2px 0 var(--black);
+      }
+    }
+  }
+
+  // ── Cart items list — scrollable middle section ─────────
+  .itemsList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+
+    // ── Empty state message ──
+    .emptyMessage {
+      text-align: center;
+      font-family: var(--header-font);
+      font-size: 1rem;
+      color: var(--black);
+      margin-top: 60px;
+    }
+
+    // ── Individual cart item ──
+    .cartItem {
+      padding: 14px 0;
+      border-bottom: 2px dashed var(--black);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      // ── Name and price row ──
+      .itemInfo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .itemName {
+          font-weight: 700;
+          font-size: 0.95rem;
+          color: var(--black);
+        }
+
+        .itemPrice {
+          font-weight: 700;
+          font-size: 0.95rem;
+          background: var(--yellow);
+          border: var(--border);
+          border-radius: 4px;
+          padding: 2px 8px;
+          box-shadow: 2px 2px 0 var(--black);
+        }
+      }
+
+      // ── Quantity controls + remove ──
+      .itemActions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .quantity {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .qtyBtn {
+            width: 28px;
+            height: 28px;
+            background: var(--black);
+            color: var(--yellow);
+            border: var(--border);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 1px 1px 0 var(--yellow);
+
+            &:first-child {
+              background: var(--white);
+              color: var(--black);
+              box-shadow: 1px 1px 0 var(--black);
+            }
+          }
+
+          .qtyNum {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--black);
+            min-width: 20px;
+            text-align: center;
+          }
+        }
+
+        .removeBtn {
+          background: none;
+          border: none;
+          color: var(--pink);
+          font-weight: 700;
+          font-size: 0.8rem;
+          cursor: pointer;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  // ── Footer — total price + clear cart ───────────────────
+  .footer {
+    padding: 16px 20px;
+    border-top: var(--border);
+
+    .totalRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .totalLabel {
+        font-family: var(--header-font);
+        font-size: 1.1rem;
+        color: var(--black);
+      }
+
+      .totalPrice {
+        font-family: var(--header-font);
+        font-size: 1.3rem;
+        color: var(--black);
+        background: var(--yellow);
+        border: var(--border);
+        border-radius: 6px;
+        padding: 4px 12px;
+        box-shadow: 3px 3px 0 var(--black);
+      }
+    }
+
+    .clearBtn {
+      width: 100%;
+      padding: 10px;
+      background: var(--white);
+      color: var(--pink);
+      border: var(--border);
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 3px 3px 0 var(--black);
+
+      &:hover {
+        background: var(--pink);
+        color: var(--white);
+      }
+    }
+  }
+}

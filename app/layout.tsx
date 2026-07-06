@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Righteous, Inter } from "next/font/google";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
+import CartDrawer from "@/components/global/CartDrawer/CartDrawer";
 import Footer from "@/components/global/Footer/Footer";
 import LoadingScreen from "@/components/global/LoadingScreen/LoadingScreen";
 import WhisperPopup from "@/components/global/WhisperPopup/WhisperPopup";
@@ -35,6 +36,7 @@ export default function RootLayout({
         {/* loading screen sits on top of everything until page is ready */}
         <LoadingScreen />
         <StickyHeader />
+        <CartDrawer />
         <WhisperPopup />
         <DevShortcut />
         {children}
