@@ -1,12 +1,15 @@
 "use client";
 
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
+import useCartStore from "@/lib/useCartStore";
 import { BurgerIngredients } from "@/lib/burgerUtils";
 import styles from "./SecretBurgerCard.module.scss";
 
 // ── Types ─────────────────────────────────────────────
 interface SecretBurgerCardProps {
+  id: string;
   name: string;
+  price: number;
   description: string;
   ingredients: string[];
   burgerIngredients: BurgerIngredients;
@@ -15,13 +18,29 @@ interface SecretBurgerCardProps {
 }
 
 export default function SecretBurgerCard({
+  id,
   name,
+  price,
   description,
   ingredients,
   burgerIngredients,
   variant,
   scale = 0.2,
 }: SecretBurgerCardProps) {
+  // ── Cart store ──
+  const addItem = useCartStore((state) => state.addItem);
+
+  // ── Add this secret burger to cart ──
+  const handleAddToCart = () => {
+    addItem({
+      id,
+      name,
+      price,
+      quantity: 1,
+      ingredients: burgerIngredients,
+    });
+  };
+
   return (
     <div className={`${styles.card} ${styles[variant]}`}>
       {/* ── Stamp — top corner label ── */}
@@ -51,6 +70,9 @@ export default function SecretBurgerCard({
       {/* ── Burger name ── */}
       <h2 className={styles.name}>{name}</h2>
 
+      {/* ── Price ── */}
+      <span className={styles.price}>${price.toFixed(2)}</span>
+
       {/* ── Ingredients list — dossier style ── */}
       <ul className={styles.ingredients}>
         {ingredients.map((item, i) => (
@@ -62,6 +84,11 @@ export default function SecretBurgerCard({
 
       {/* ── Description ── */}
       <p className={styles.description}>{description}</p>
+
+      {/* ── Add to cart button ── */}
+      <button className={styles.addBtn} onClick={handleAddToCart}>
+        Add to Cart
+      </button>
     </div>
   );
 }

@@ -84,6 +84,8 @@ export default function SecretMenuPage() {
         {/* ── Secret burger cards ── */}
         <div className={styles.cards}>
           <SecretBurgerCard
+            id="secret-land-sea-sky"
+            price={12.99}
             scale={burgerScale}
             name="The Land, Sea and Sky"
             description="The ultimate surf and turf situation."
@@ -98,6 +100,8 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
+            id="secret-simpsons"
+            price={12.99}
             scale={burgerScale}
             name="The Simpsons"
             description="Don't tell your cardiologist."
@@ -111,6 +115,8 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
+            id="secret-chicken-waffles"
+            price={12.99}
             scale={burgerScale}
             name="Chicken & Waffles"
             description="Who said waffles are just for breakfast?"
@@ -123,6 +129,8 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
+            id="secret-nugzilla"
+            price={12.99}
             scale={burgerScale}
             name="The Nugzilla"
             description="A giant nugget. Nothing more to say."
