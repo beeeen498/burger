@@ -14,7 +14,16 @@ interface SecretBurgerCardProps {
   description: string;
   ingredients: string[];
   burgerIngredients: BurgerIngredients;
-  variant: "classified" | "vhs" | "corrupted" | "diner" | "receipt" | "kaiju" | "hazmat" | "wrestling" | "wanted";
+  variant:
+    | "classified"
+    | "vhs"
+    | "corrupted"
+    | "diner"
+    | "receipt"
+    | "kaiju"
+    | "hazmat"
+    | "wrestling"
+    | "wanted";
   scale?: number;
 }
 
@@ -36,6 +45,9 @@ export default function SecretBurgerCard({
   // Also grabs the button's position so the flying 🍔 knows
   // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
+    // ── Haptic feedback ──
+    navigator.vibrate?.(50);
+
     // ── Capture button position for flying animation ──
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
@@ -54,16 +66,25 @@ export default function SecretBurgerCard({
     <div className={`${styles.card} ${styles[variant]}`}>
       {/* ── Stamp — top corner label ── */}
       <span className={styles.stamp}>
-        {variant === "classified" ? "CLASSIFIED"
-          : variant === "vhs" ? "PLAY ▶"
-          : variant === "corrupted" ? "ERROR"
-          : variant === "diner" ? "SPECIAL ★"
-          : variant === "receipt" ? "ORDER #047"
-          : variant === "kaiju" ? "RATED XXXL"
-          : variant === "hazmat" ? "⚠ CAUTION"
-          : variant === "wrestling" ? "MAIN EVENT"
-          : variant === "wanted" ? "REWARD"
-          : ""}
+        {variant === "classified"
+          ? "CLASSIFIED"
+          : variant === "vhs"
+            ? "PLAY ▶"
+            : variant === "corrupted"
+              ? "ERROR"
+              : variant === "diner"
+                ? "SPECIAL ★"
+                : variant === "receipt"
+                  ? "ORDER #047"
+                  : variant === "kaiju"
+                    ? "RATED XXXL"
+                    : variant === "hazmat"
+                      ? "⚠ CAUTION"
+                      : variant === "wrestling"
+                        ? "MAIN EVENT"
+                        : variant === "wanted"
+                          ? "REWARD"
+                          : ""}
       </span>
 
       {/* ── 3D burger model ── */}

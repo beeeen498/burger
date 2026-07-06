@@ -61,6 +61,9 @@ export default function SmallCard({ item }: SmallCardProps) {
   // Also grabs the button's position so the flying 🍔 knows
   // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
+    // ── Haptic feedback ──
+    navigator.vibrate?.(50);
+    
     e.stopPropagation();
 
     // ── Capture button position for flying animation ──

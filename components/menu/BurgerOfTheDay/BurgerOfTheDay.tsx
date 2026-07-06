@@ -33,7 +33,11 @@ interface BurgerOfTheDayProps {
 // ---------- component ----------
 export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
   const [data, setData] = useState<BurgerOfTheDayData | null>(null);
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   // ── Cart store ──
   const addItem = useCartStore((state) => state.addItem);
@@ -88,9 +92,13 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
         settings.burger_of_the_day_type === "custom" &&
         settings.burger_of_the_day_build_url
       ) {
-        const params = new URLSearchParams(settings.burger_of_the_day_build_url);
+        const params = new URLSearchParams(
+          settings.burger_of_the_day_build_url,
+        );
         const ingredients: BurgerIngredients = {
-          bunType: (params.get("bunType") as BurgerIngredients["bunType"]) ?? "regular",
+          bunType:
+            (params.get("bunType") as BurgerIngredients["bunType"]) ??
+            "regular",
           sauce: (params.get("sauce") as BurgerIngredients["sauce"]) ?? "none",
           pattyCount: parseInt(params.get("pattyCount") ?? "0"),
           cheeseCount: parseInt(params.get("cheeseCount") ?? "0"),
@@ -130,11 +138,15 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "restaurant_settings" },
-        () => { fetchData(); },
+        () => {
+          fetchData();
+        },
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // ---------- countdown timer ----------
@@ -167,6 +179,9 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
   // Also grabs the button's position so the flying 🍔 knows
   // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
+    // ── Haptic feedback ──
+    navigator.vibrate?.(50);
+
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
 
@@ -201,7 +216,9 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
           {data.discountPrice ? (
             <>
               <span className={styles.oldPrice}>${data.price.toFixed(2)}</span>
-              <span className={styles.newPrice}>${data.discountPrice.toFixed(2)}</span>
+              <span className={styles.newPrice}>
+                ${data.discountPrice.toFixed(2)}
+              </span>
             </>
           ) : (
             <span className={styles.newPrice}>${data.price.toFixed(2)}</span>
@@ -228,7 +245,9 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
           </div>
         </div>
 
-        <button className={styles.addBtn} onClick={handleAddToCart}>Add to Cart</button>
+        <button className={styles.addBtn} onClick={handleAddToCart}>
+          Add to Cart
+        </button>
       </div>
     </div>
   );
