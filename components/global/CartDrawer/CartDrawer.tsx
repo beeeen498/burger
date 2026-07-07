@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import useCartStore from "@/lib/useCartStore";
 import { useEffect, useState } from "react";
 import styles from "./CartDrawer.module.scss";
@@ -8,6 +9,7 @@ import styles from "./CartDrawer.module.scss";
 const FREE_DELIVERY_MIN = 30;
 
 const CartDrawer = () => {
+  const router = useRouter();
   const { items, isOpen, toggleCart, removeItem, updateQuantity, clearCart } =
     useCartStore();
 
@@ -227,8 +229,16 @@ const CartDrawer = () => {
               <span className={styles.totalPrice}>${total.toFixed(2)}</span>
             </div>
 
-            {/* ── Checkout button — primary action ── */}
-            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
+            {/* ── Checkout button — closes drawer and navigates to /checkout ── */}
+            <button
+              className={styles.checkoutBtn}
+              onClick={() => {
+                toggleCart();
+                router.push("/checkout");
+              }}
+            >
+              Proceed to Checkout
+            </button>
 
             {/* ── Clear cart — text link with confirmation ── */}
             {!confirmClear ? (
@@ -240,9 +250,7 @@ const CartDrawer = () => {
               </button>
             ) : (
               <div className={styles.confirmClear}>
-                <p className={styles.confirmText}>
-                  Are you sure?
-                </p>
+                <p className={styles.confirmText}>Are you sure?</p>
                 <div className={styles.confirmBtns}>
                   <button
                     className={styles.confirmYes}
