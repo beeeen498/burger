@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, Suspense } from "react";
-import BackgroundCanvas from "@/components/homepage/BackgroundCanvas";
+import BackgroundCanvas from "@/components/global/BackgroundCanvas/BackgroundCanvas";
 import StickyHeader from "@/components/global/StickyHeader/StickyHeader";
 import Hero from "@/components/homepage/Hero/Hero";
 import FeaturedItems from "@/components/homepage/FeaturedItems/FeaturedItems";

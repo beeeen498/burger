@@ -39,7 +39,7 @@ const StickyHeader = () => {
 
     const handleScroll = () => {
       scrolledIn.current = true;
-      setVisible(window.scrollY > 130);
+      setVisible(window.scrollY > 99);
     };
 
     requestAnimationFrame(() => {

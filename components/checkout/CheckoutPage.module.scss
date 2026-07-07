@@ -1,3 +1,507 @@
+// ── Page wrapper ─────────────────────────────────────────
 .page {
-  padding: 40px 20px;
+  .headerWrap {
+    background: var(--pink);
+    padding: 18px 0;
+    border-bottom: var(--border);
+    isolation: isolate;
+    position: relative;
+    z-index: 1000;
+
+    & > * {
+      border-bottom: none;
+    }
+  }
+
+  .pageContent {
+    padding: 40px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+
+    // ── Page title ──
+    h1 {
+      font-size: 2.5rem;
+      color: var(--black);
+      margin-bottom: 30px;
+      text-shadow:
+        3px 3px 0 var(--pink),
+        -1px -1px 0 var(--black);
+    }
+
+    // ── Mobile — center title ──
+    @media (max-width: 768px) {
+      h1 {
+        text-align: center;
+      }
+    }
+
+    // ── Two-column layout ─────────────────────────────────
+    .columns {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+
+      // ── Left column — order summary ───────────────────
+      .summary {
+        flex: 1;
+        background: var(--white);
+        border: var(--border);
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+        padding: 24px;
+        position: sticky;
+        top: calc(var(--header-height) + 20px);
+
+        // ── Section title ──
+        h2 {
+          font-size: 1.3rem;
+          color: var(--black);
+          margin-bottom: 16px;
+          padding-bottom: 10px;
+          border-bottom: var(--border);
+        }
+
+        // ── Each cart item row ──
+        > div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 0;
+          border-bottom: 2px dashed var(--black);
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: var(--black);
+
+          // ── Last row (subtotal) has thicker border ──
+          &:last-child {
+            border-bottom: none;
+            padding-top: 14px;
+            margin-top: 6px;
+            border-top: var(--border);
+            font-size: 1.1rem;
+            font-weight: 800;
+          }
+
+          // ── Remove dashed border on the item right before subtotal ──
+          &:nth-last-child(2) {
+            border-bottom: none;
+          }
+        }
+      }
+
+      // ── Right column — checkout form ─────────────────
+      .form {
+        flex: 1.5;
+        background: var(--white);
+        border: var(--border);
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        // ── Section title ──
+        h2 {
+          font-size: 1.3rem;
+          color: var(--black);
+          margin-bottom: 0;
+          padding-bottom: 10px;
+          border-bottom: var(--border);
+        }
+
+        // ── Sub-section titles ──
+        h3 {
+          font-size: 1rem;
+          color: var(--black);
+          margin-bottom: 4px;
+        }
+
+        // ── Shared input styles ──────────────────────
+        .input {
+          width: 100%;
+          padding: 12px 14px;
+          font-size: 0.9rem;
+          font-family: var(--body-font), sans-serif;
+          background: var(--white);
+          border: var(--border);
+          border-radius: 8px;
+          outline: none;
+          color: var(--black);
+
+          &:focus {
+            border-color: var(--pink);
+            box-shadow: 4px 4px 0 var(--pink);
+          }
+
+          &::placeholder {
+            color: #999;
+          }
+        }
+
+        // ── Shared textarea styles ──────────────────
+        .textarea {
+          width: 100%;
+          padding: 12px 14px;
+          font-size: 0.9rem;
+          font-family: var(--body-font), sans-serif;
+          background: var(--white);
+          border: var(--border);
+          border-radius: 8px;
+          outline: none;
+          color: var(--black);
+          resize: vertical;
+
+          &:focus {
+            border-color: var(--pink);
+            box-shadow: 4px 4px 0 var(--pink);
+          }
+
+          &::placeholder {
+            color: #999;
+          }
+        }
+
+        // ── Delivery vs Pickup toggle ───────────────
+        .orderTypeToggle {
+          display: flex;
+          gap: 0;
+          border: var(--border);
+          border-radius: 8px;
+          overflow: hidden;
+
+          .toggleBtn {
+            flex: 1;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--header-font), sans-serif;
+            text-transform: uppercase;
+            border: none;
+            background: var(--white);
+            color: var(--black);
+            cursor: pointer;
+            transition:
+              background 0.15s,
+              color 0.15s;
+
+            // ── Divider between the two buttons ──
+            &:first-child {
+              border-right: var(--border);
+            }
+
+            // ── Active / selected state ──
+            &.active {
+              background: var(--black);
+              color: var(--yellow);
+            }
+          }
+        }
+
+        // ── Address fields ──────────────────────────
+        .addressFields {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        // ── Order notes ─────────────────────────────
+        .notesField {
+          position: relative;
+
+          .charCount {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #999;
+          }
+        }
+
+        // ── Tip section ─────────────────────────────
+        .tipSection {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .tipButtons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+
+            .tipBtn {
+              flex: 1;
+              padding: 10px;
+              font-size: 0.9rem;
+              font-weight: 700;
+              font-family: var(--header-font), sans-serif;
+              background: var(--white);
+              border: var(--border);
+              border-radius: 8px;
+              cursor: pointer;
+              box-shadow: 3px 3px 0 var(--black);
+              transition:
+                background 0.15s,
+                color 0.15s,
+                transform 0.15s,
+                box-shadow 0.15s;
+
+              &:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 5px 5px 0 var(--black);
+              }
+
+              // ── Active / selected state ──
+              &.active {
+                background: var(--yellow);
+                color: var(--black);
+              }
+            }
+          }
+
+          .tipPreview {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--pink);
+          }
+        }
+
+        // ── Field group — input + error ───────────────
+        .fieldGroup {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        // ── Validation error message ──────────────────
+        .error {
+          font-family: var(--header-font), sans-serif;
+          font-size: 0.75rem;
+          color: var(--pink);
+          font-weight: 700;
+        }
+
+        // ── Promo code ──────────────────────────────
+        .promoSection {
+          .promoRow {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+
+            // ── Input takes remaining space ──
+            .input {
+              flex: 1;
+            }
+
+            .applyBtn {
+              padding: 12px 20px;
+              font-size: 0.9rem;
+              font-weight: 700;
+              font-family: var(--header-font), sans-serif;
+              text-transform: uppercase;
+              background: var(--black);
+              color: var(--yellow);
+              border: var(--border);
+              border-radius: 8px;
+              cursor: pointer;
+              box-shadow: 3px 3px 0 var(--yellow);
+            }
+          }
+
+          .promoValid {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: green;
+          }
+
+          .promoInvalid {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--pink);
+          }
+        }
+
+        // ── Total breakdown ─────────────────────────
+        .totalBreakdown {
+          padding: 16px 0;
+          border-top: var(--border);
+
+          .breakdownRow {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--black);
+
+            // ── Final total row — bigger and bolder ──
+            &.totalRow {
+              border-top: var(--border);
+              padding-top: 12px;
+              margin-top: 8px;
+              font-size: 1.2rem;
+              font-weight: 800;
+            }
+          }
+        }
+
+        // ── Proceed to Payment button ───────────────
+        .paymentBtn {
+          width: 100%;
+          padding: 16px;
+          font-size: 1.1rem;
+          font-weight: 700;
+          font-family: var(--header-font), sans-serif;
+          text-transform: uppercase;
+          background: var(--pink);
+          color: var(--white);
+          border: var(--border);
+          border-radius: 10px;
+          cursor: pointer;
+          box-shadow: var(--box-shadow);
+          transition:
+            transform 0.15s,
+            box-shadow 0.15s;
+
+          &:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0 var(--black);
+          }
+        }
+
+        // ── Payment section ─────────────────────────
+        .paymentSection {
+          padding-top: 20px;
+          border-top: var(--border);
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          // ── Wallet buttons row ──
+          .walletButtons {
+            display: flex;
+            gap: 8px;
+
+            .walletBtn {
+              flex: 1;
+              padding: 14px;
+              font-size: 0.85rem;
+              font-weight: 700;
+              font-family: var(--header-font), sans-serif;
+              text-transform: uppercase;
+              background: var(--white);
+              border: var(--border);
+              border-radius: 8px;
+              cursor: pointer;
+              box-shadow: 3px 3px 0 var(--black);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              transition:
+                transform 0.15s,
+                box-shadow 0.15s;
+
+              &:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 5px 5px 0 var(--black);
+              }
+            }
+          }
+
+          // ── "or pay with card" divider ──
+          .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            &::before,
+            &::after {
+              content: "";
+              flex: 1;
+              height: 3px;
+              background: var(--black);
+            }
+
+            span {
+              font-size: 0.85rem;
+              font-weight: 700;
+              color: var(--black);
+              white-space: nowrap;
+            }
+          }
+
+          // ── Card form ──
+          .cardForm {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            // ── Card number with brand label ──
+            .cardNumberRow {
+              position: relative;
+
+              .cardBrand {
+                position: absolute;
+                right: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 0.8rem;
+                font-weight: 800;
+                color: var(--pink);
+                font-family: var(--header-font), sans-serif;
+                text-transform: uppercase;
+              }
+            }
+
+            // ── Expiry + CVV side by side ──
+            .cardDetails {
+              display: flex;
+              gap: 10px;
+            }
+          }
+
+          // ── Place Order button ──
+          .placeOrderBtn {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: var(--header-font), sans-serif;
+            text-transform: uppercase;
+            background: var(--yellow);
+            color: var(--black);
+            border: var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+            transition:
+              transform 0.15s,
+              box-shadow 0.15s;
+
+            &:hover {
+              transform: translate(-3px, -3px);
+              box-shadow: 9px 9px 0 var(--black);
+            }
+          }
+        }
+      }
+
+      // ── Mobile — single column ─────────────────────
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+
+        .summary {
+          position: static;
+        }
+      }
+    }
+  }
 }
