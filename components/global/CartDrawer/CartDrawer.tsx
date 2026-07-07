@@ -1,23 +1,36 @@
-"use client"
+"use client";
 
-import useCartStore from "@/lib/useCartStore"
-import styles from "./CartDrawer.module.scss"
+import useCartStore from "@/lib/useCartStore";
+import { useEffect } from "react";
+import styles from "./CartDrawer.module.scss";
 
 // ── Free delivery threshold ──
-const FREE_DELIVERY_MIN = 30
+const FREE_DELIVERY_MIN = 30;
 
 const CartDrawer = () => {
-  const { items, isOpen, toggleCart, removeItem, updateQuantity, clearCart } = useCartStore()
+  const { items, isOpen, toggleCart, removeItem, updateQuantity, clearCart } =
+    useCartStore();
 
   // ── Calculate the total price across all items ──
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   // ── How much more the user needs to spend for free delivery ──
-  const remaining = Math.max(0, FREE_DELIVERY_MIN - total)
-  const progress = Math.min(100, (total / FREE_DELIVERY_MIN) * 100)
+  const remaining = Math.max(0, FREE_DELIVERY_MIN - total);
+  const progress = Math.min(100, (total / FREE_DELIVERY_MIN) * 100);
+
+  // ── Lock body scroll while cart drawer is open ──
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   // ── Don't render anything if the drawer is closed ──
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <>
@@ -26,7 +39,6 @@ const CartDrawer = () => {
 
       {/* ── Drawer panel ── */}
       <div className={styles.drawer}>
-
         {/* ── Header — title + close button ── */}
         <div className={styles.header}>
           <h2 className={styles.title}>Your Bag</h2>
@@ -38,7 +50,6 @@ const CartDrawer = () => {
         {/* ── Cart items list ── */}
         <div className={styles.itemsList}>
           {items.length === 0 ? (
-
             /* ── Empty state — sad burger illustration ── */
             <div className={styles.emptyState}>
               <svg
@@ -56,17 +67,54 @@ const CartDrawer = () => {
                 />
 
                 {/* ── Sesame seeds ── */}
-                <ellipse cx="45" cy="38" rx="4" ry="2.5" fill="#F5E6C8" transform="rotate(-15 45 38)" />
-                <ellipse cx="65" cy="35" rx="4" ry="2.5" fill="#F5E6C8" transform="rotate(10 65 35)" />
-                <ellipse cx="80" cy="42" rx="3.5" ry="2" fill="#F5E6C8" transform="rotate(-5 80 42)" />
+                <ellipse
+                  cx="45"
+                  cy="38"
+                  rx="4"
+                  ry="2.5"
+                  fill="#F5E6C8"
+                  transform="rotate(-15 45 38)"
+                />
+                <ellipse
+                  cx="65"
+                  cy="35"
+                  rx="4"
+                  ry="2.5"
+                  fill="#F5E6C8"
+                  transform="rotate(10 65 35)"
+                />
+                <ellipse
+                  cx="80"
+                  cy="42"
+                  rx="3.5"
+                  ry="2"
+                  fill="#F5E6C8"
+                  transform="rotate(-5 80 42)"
+                />
 
                 {/* ── Sad eyes ── */}
                 <circle cx="44" cy="55" r="4" fill="var(--black)" />
                 <circle cx="76" cy="55" r="4" fill="var(--black)" />
 
                 {/* ── Sad eyebrows — angled inward ── */}
-                <line x1="36" y1="46" x2="48" y2="48" stroke="var(--black)" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="84" y1="46" x2="72" y2="48" stroke="var(--black)" strokeWidth="2.5" strokeLinecap="round" />
+                <line
+                  x1="36"
+                  y1="46"
+                  x2="48"
+                  y2="48"
+                  stroke="var(--black)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="84"
+                  y1="46"
+                  x2="72"
+                  y2="48"
+                  stroke="var(--black)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
 
                 {/* ── Frown ── */}
                 <path
@@ -87,7 +135,16 @@ const CartDrawer = () => {
                 />
 
                 {/* ── Patty ── */}
-                <rect x="18" y="76" width="84" height="12" rx="3" fill="#4A2810" stroke="var(--black)" strokeWidth="2.5" />
+                <rect
+                  x="18"
+                  y="76"
+                  width="84"
+                  height="12"
+                  rx="3"
+                  fill="#4A2810"
+                  stroke="var(--black)"
+                  strokeWidth="2.5"
+                />
 
                 {/* ── Bottom bun ── */}
                 <path
@@ -101,11 +158,9 @@ const CartDrawer = () => {
               <p className={styles.emptyMessage}>Your cart is lonely 🍔</p>
               <p className={styles.emptySubtext}>Add something tasty!</p>
             </div>
-
           ) : (
             items.map((item) => (
               <div key={item.id} className={styles.cartItem}>
-
                 {/* ── Item name and price ── */}
                 <div className={styles.itemInfo}>
                   <span className={styles.itemName}>{item.name}</span>
@@ -148,14 +203,12 @@ const CartDrawer = () => {
         {/* ── Footer — delivery bar + total + clear cart ── */}
         {items.length > 0 && (
           <div className={styles.footer}>
-
             {/* ── Minimum order / free delivery progress bar ── */}
             <div className={styles.deliveryBar}>
               <p className={styles.deliveryText}>
                 {remaining > 0
                   ? `Add $${remaining.toFixed(2)} more for free delivery! 🚗`
-                  : "You've got free delivery! 🎉"
-                }
+                  : "You've got free delivery! 🎉"}
               </p>
               <div className={styles.progressTrack}>
                 <div
@@ -179,7 +232,7 @@ const CartDrawer = () => {
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default CartDrawer
+export default CartDrawer;
