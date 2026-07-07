@@ -194,10 +194,12 @@
     }
   }
 
-  // ── Footer — delivery bar + total + clear cart ──────────
+  // ── Footer — delivery bar + total + checkout + clear ──
   .footer {
     padding: 16px 20px;
     border-top: var(--border);
+    display: flex;
+    flex-direction: column;
 
     // ── Free delivery progress bar ──
     .deliveryBar {
@@ -261,24 +263,92 @@
       }
     }
 
-    // ── Clear cart button ──
-    .clearBtn {
+    // ── Checkout button — big primary action ──
+    .checkoutBtn {
       width: 100%;
-      padding: 10px;
-      background: var(--white);
-      color: var(--pink);
-      border: var(--border);
-      border-radius: 6px;
+      padding: 14px;
+      background: var(--pink);
+      color: var(--black);
+      font-family: var(--header-font);
+      font-size: 1.1rem;
       font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 3px 3px 0 var(--black);
+      border: var(--border);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 var(--black);
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      // ── Press-down effect ──
+      &:active {
+        box-shadow: 1px 1px 0 var(--black);
+        transform: translate(3px, 3px);
+      }
 
       &:hover {
-        background: var(--pink);
-        color: var(--white);
+        background: var(--white);
+        color: var(--pink);
+      }
+    }
+
+    // ── Clear cart — small text link below checkout ──
+    .clearLink {
+      background: none;
+      border: none;
+      color: var(--pink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      padding: 8px 0;
+      align-self: center;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    // ── Confirmation block — replaces the clear link ──
+    .confirmClear {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+
+      .confirmText {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--black);
+      }
+
+      // ── Yes / No buttons ──
+      .confirmBtns {
+        display: flex;
+        gap: 10px;
+
+        .confirmYes,
+        .confirmNo {
+          padding: 6px 14px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          border: 2px solid var(--black);
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .confirmYes {
+          background: var(--pink);
+          color: var(--white);
+        }
+
+        .confirmNo {
+          background: var(--white);
+          color: var(--black);
+        }
       }
     }
   }

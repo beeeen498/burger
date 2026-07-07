@@ -1,7 +1,7 @@
 "use client";
 
 import useCartStore from "@/lib/useCartStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./CartDrawer.module.scss";
 
 // ── Free delivery threshold ──
@@ -10,6 +10,9 @@ const FREE_DELIVERY_MIN = 30;
 const CartDrawer = () => {
   const { items, isOpen, toggleCart, removeItem, updateQuantity, clearCart } =
     useCartStore();
+
+  // ── Tracks whether the "are you sure?" confirmation is showing ──
+  const [confirmClear, setConfirmClear] = useState(false);
 
   // ── Calculate the total price across all items ──
   const total = items.reduce(
@@ -200,10 +203,10 @@ const CartDrawer = () => {
           )}
         </div>
 
-        {/* ── Footer — delivery bar + total + clear cart ── */}
+        {/* ── Footer — delivery bar + total + checkout + clear ── */}
         {items.length > 0 && (
           <div className={styles.footer}>
-            {/* ── Minimum order / free delivery progress bar ── */}
+            {/* ── Free delivery progress bar ── */}
             <div className={styles.deliveryBar}>
               <p className={styles.deliveryText}>
                 {remaining > 0
@@ -224,10 +227,41 @@ const CartDrawer = () => {
               <span className={styles.totalPrice}>${total.toFixed(2)}</span>
             </div>
 
-            {/* ── Clear cart ── */}
-            <button className={styles.clearBtn} onClick={clearCart}>
-              Clear Cart
-            </button>
+            {/* ── Checkout button — primary action ── */}
+            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
+
+            {/* ── Clear cart — text link with confirmation ── */}
+            {!confirmClear ? (
+              <button
+                className={styles.clearLink}
+                onClick={() => setConfirmClear(true)}
+              >
+                Clear Cart
+              </button>
+            ) : (
+              <div className={styles.confirmClear}>
+                <p className={styles.confirmText}>
+                  Are you sure?
+                </p>
+                <div className={styles.confirmBtns}>
+                  <button
+                    className={styles.confirmYes}
+                    onClick={() => {
+                      clearCart();
+                      setConfirmClear(false);
+                    }}
+                  >
+                    Yes, clear it
+                  </button>
+                  <button
+                    className={styles.confirmNo}
+                    onClick={() => setConfirmClear(false)}
+                  >
+                    Never mind
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
