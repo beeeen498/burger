@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Header from "../global/Header/Header";
 import useCartStore from "@/lib/useCartStore";
 import BackgroundCanvas from "../global/BackgroundCanvas/BackgroundCanvas";
@@ -66,6 +67,33 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // ── Validate card fields before placing order ──
+  const validateCard = () => {
+    const newErrors: Record<string, string> = {};
+    const digits = cardNumber.replace(/\s/g, "");
+
+    if (!digits) {
+      newErrors.card = "We need your card number 💳";
+    } else if (digits.length < 16) {
+      newErrors.card = "Card number needs 16 digits 🔢";
+    }
+
+    if (!expiry) {
+      newErrors.expiry = "When does it expire? 📅";
+    } else if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+      newErrors.expiry = "Use MM/YY format 📅";
+    }
+
+    if (!cvv) {
+      newErrors.cvv = "We need the CVV 🔒";
+    } else if (cvv.length < 3) {
+      newErrors.cvv = "CVV needs 3 digits 🔒";
+    }
+
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+    return !newErrors.card && !newErrors.expiry && !newErrors.cvv;
+  };
+
   // ── Calculate tip from subtotal ──
   const tipAmount =
     tipPercent !== null
@@ -123,391 +151,441 @@ const CheckoutPage = () => {
       <BackgroundCanvas />
 
       <div className={styles.pageContent}>
-        <h1>Checkout</h1>
-
-        <div className={styles.columns}>
-          {/* ── Left column — order summary ── */}
-          <div className={styles.summary}>
-            <h2>Your Order</h2>
-
-            {items.map((item) => (
-              <div key={item.id}>
-                <span>
-                  {item.name} x{item.quantity}
-                </span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
-              </div>
-            ))}
-
-            <div>
-              <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
+        {items.length === 0 ? (
+          <div className={styles.emptyCheckout}>
+            <h1>Nothing to Checkout</h1>
+            <p>Your bag is empty — add something tasty first!</p>
+            <Link href="/menu" className={styles.backToMenu}>
+              Back to Menu 🍔
+            </Link>
           </div>
+        ) : (
+          <>
+            <h1>Checkout</h1>
+            <div className={styles.columns}>
+              {/* ── Left column — order summary ── */}
+              <div className={styles.summary}>
+                <h2>Your Order</h2>
 
-          {/* ── Right column — checkout form ── */}
-          <div className={styles.form}>
-            <h2>Delivery Details</h2>
-
-            {/* ── Delivery vs Pickup toggle ── */}
-            <div className={styles.orderTypeToggle}>
-              <button
-                className={`${styles.toggleBtn} ${orderType === "delivery" ? styles.active : ""}`}
-                onClick={() => setOrderType("delivery")}
-              >
-                Delivery
-              </button>
-              <button
-                className={`${styles.toggleBtn} ${orderType === "pickup" ? styles.active : ""}`}
-                onClick={() => setOrderType("pickup")}
-              >
-                Pickup
-              </button>
-            </div>
-
-            {/* ── Address fields — only visible for delivery ── */}
-            {orderType === "delivery" && (
-              <div className={styles.addressFields}>
-                <div className={styles.fieldGroup}>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    placeholder="Full Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  {errors.name && (
-                    <span className={styles.error}>{errors.name}</span>
-                  )}
-                </div>
-                <div className={styles.fieldGroup}>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    placeholder="Street Address"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                  />
-                  {errors.street && (
-                    <span className={styles.error}>{errors.street}</span>
-                  )}
-                </div>
-                <div className={styles.fieldGroup}>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
-                  {errors.city && (
-                    <span className={styles.error}>{errors.city}</span>
-                  )}
-                </div>
-                <div className={styles.fieldGroup}>
-                  <input
-                    className={styles.input}
-                    type="tel"
-                    placeholder="Phone Number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                  {errors.phone && (
-                    <span className={styles.error}>{errors.phone}</span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* ── Guest info — always visible ── */}
-            <div className={styles.fieldGroup}>
-              <input
-                className={styles.input}
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && (
-                <span className={styles.error}>{errors.email}</span>
-              )}
-            </div>
-
-            {/* ── Order notes — special requests ── */}
-            <div className={styles.notesField}>
-              <textarea
-                className={styles.textarea}
-                placeholder="Any special requests? 🍔"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value.slice(0, MAX_NOTES))}
-                rows={3}
-              />
-              <span className={styles.charCount}>
-                {notes.length}/{MAX_NOTES}
-              </span>
-            </div>
-
-            {/* ── Tip selection ── */}
-            <div className={styles.tipSection}>
-              <h3>Add a Tip</h3>
-
-              {/* ── Preset tip buttons ── */}
-              <div className={styles.tipButtons}>
-                {[10, 15, 20].map((pct) => (
-                  <button
-                    key={pct}
-                    className={`${styles.tipBtn} ${tipPercent === pct ? styles.active : ""}`}
-                    onClick={() => {
-                      setTipPercent(pct);
-                      setCustomTip("");
-                    }}
-                  >
-                    {pct}%
-                  </button>
+                {items.map((item) => (
+                  <div key={item.id}>
+                    <span>
+                      {item.name} x{item.quantity}
+                    </span>
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
                 ))}
 
-                {/* ── Custom tip button ── */}
-                <button
-                  className={`${styles.tipBtn} ${tipPercent === null && customTip ? styles.active : ""}`}
-                  onClick={() => setTipPercent(null)}
-                >
-                  Custom
-                </button>
+                <div>
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
               </div>
 
-              {/* ── Custom tip input — only shows when "Custom" is selected ── */}
-              {tipPercent === null && (
-                <input
-                  className={styles.input}
-                  type="number"
-                  placeholder="Enter tip amount ($)"
-                  value={customTip}
-                  onChange={(e) => setCustomTip(e.target.value)}
-                />
-              )}
+              {/* ── Right column — checkout form ── */}
+              <div className={styles.form}>
+                <h2>Delivery Details</h2>
 
-              {/* ── Tip amount preview ── */}
-              {tipAmount > 0 && (
-                <p className={styles.tipPreview}>
-                  Tip: ${tipAmount.toFixed(2)}
-                </p>
-              )}
-            </div>
+                {/* ── Delivery vs Pickup toggle ── */}
+                <div className={styles.orderTypeToggle}>
+                  <button
+                    className={`${styles.toggleBtn} ${orderType === "delivery" ? styles.active : ""}`}
+                    onClick={() => setOrderType("delivery")}
+                  >
+                    Delivery
+                  </button>
+                  <button
+                    className={`${styles.toggleBtn} ${orderType === "pickup" ? styles.active : ""}`}
+                    onClick={() => setOrderType("pickup")}
+                  >
+                    Pickup
+                  </button>
+                </div>
 
-            {/* ── Promo code ── */}
-            <div className={styles.promoSection}>
-              <h3>Promo Code</h3>
+                {/* ── Address fields — only visible for delivery ── */}
+                {orderType === "delivery" && (
+                  <div className={styles.addressFields}>
+                    <div className={styles.fieldGroup}>
+                      <input
+                        className={styles.input}
+                        type="text"
+                        placeholder="Full Name"
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          setErrors((prev) => ({ ...prev, name: "" }));
+                        }}
+                      />
+                      {errors.name && (
+                        <span className={styles.error}>{errors.name}</span>
+                      )}
+                    </div>
+                    <div className={styles.fieldGroup}>
+                      <input
+                        className={styles.input}
+                        type="text"
+                        placeholder="Street Address"
+                        value={street}
+                        onChange={(e) => {
+                          setStreet(e.target.value);
+                          setErrors((prev) => ({ ...prev, street: "" }));
+                        }}
+                      />
+                      {errors.street && (
+                        <span className={styles.error}>{errors.street}</span>
+                      )}
+                    </div>
+                    <div className={styles.fieldGroup}>
+                      <input
+                        className={styles.input}
+                        type="text"
+                        placeholder="City"
+                        value={city}
+                        onChange={(e) => {
+                          setCity(e.target.value);
+                          setErrors((prev) => ({ ...prev, city: "" }));
+                        }}
+                      />
+                      {errors.city && (
+                        <span className={styles.error}>{errors.city}</span>
+                      )}
+                    </div>
+                    <div className={styles.fieldGroup}>
+                      <input
+                        className={styles.input}
+                        type="tel"
+                        placeholder="Phone Number"
+                        value={phone}
+                        onChange={(e) => {
+                          setPhone(e.target.value.replace(/\D/g, ""));
+                          setErrors((prev) => ({ ...prev, phone: "" }));
+                        }}
+                      />
+                      {errors.phone && (
+                        <span className={styles.error}>{errors.phone}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
 
-              {/* ── Input + apply button row ── */}
-              <div className={styles.promoRow}>
-                <input
-                  className={styles.input}
-                  type="text"
-                  placeholder="Enter code"
-                  value={promoCode}
-                  onChange={(e) => {
-                    setPromoCode(e.target.value.toUpperCase());
-                    setPromoStatus("idle");
-                  }}
-                />
-                <button
-                  className={styles.applyBtn}
-                  onClick={() => {
-                    if (promoCode === "BURGERLORD50") {
-                      setPromoStatus("valid");
-                      setDiscount(50);
-                    } else {
-                      setPromoStatus("invalid");
-                      setDiscount(0);
+                {/* ── Guest info — always visible ── */}
+                <div className={styles.fieldGroup}>
+                  <input
+                    className={styles.input}
+                    type="email"
+                    placeholder="Email Address"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setErrors((prev) => ({ ...prev, email: "" }));
+                    }}
+                  />
+                  {errors.email && (
+                    <span className={styles.error}>{errors.email}</span>
+                  )}
+                </div>
+
+                {/* ── Order notes — special requests ── */}
+                <div className={styles.notesField}>
+                  <textarea
+                    className={styles.textarea}
+                    placeholder="Any special requests? 🍔"
+                    value={notes}
+                    onChange={(e) =>
+                      setNotes(e.target.value.slice(0, MAX_NOTES))
                     }
-                  }}
-                >
-                  Apply
-                </button>
-              </div>
-
-              {/* ── Feedback message ── */}
-              {promoStatus === "valid" && (
-                <p className={styles.promoValid}>50% off applied! 🎉</p>
-              )}
-              {promoStatus === "invalid" && (
-                <p className={styles.promoInvalid}>Invalid code 😢</p>
-              )}
-            </div>
-
-            {/* ── Order total breakdown ── */}
-            <div className={styles.totalBreakdown}>
-              <div className={styles.breakdownRow}>
-                <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
-              </div>
-
-              {deliveryFee > 0 && (
-                <div className={styles.breakdownRow}>
-                  <span>Delivery Fee</span>
-                  <span>${deliveryFee.toFixed(2)}</span>
+                    rows={3}
+                  />
+                  <span className={styles.charCount}>
+                    {notes.length}/{MAX_NOTES}
+                  </span>
                 </div>
-              )}
 
-              {tipAmount > 0 && (
-                <div className={styles.breakdownRow}>
-                  <span>Tip</span>
-                  <span>${tipAmount.toFixed(2)}</span>
-                </div>
-              )}
+                {/* ── Tip selection ── */}
+                <div className={styles.tipSection}>
+                  <h3>Add a Tip</h3>
 
-              {discountAmount > 0 && (
-                <div className={styles.breakdownRow}>
-                  <span>Discount</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
-                </div>
-              )}
+                  {/* ── Preset tip buttons ── */}
+                  <div className={styles.tipButtons}>
+                    {[10, 15, 20].map((pct) => (
+                      <button
+                        key={pct}
+                        className={`${styles.tipBtn} ${tipPercent === pct ? styles.active : ""}`}
+                        onClick={() => {
+                          setTipPercent(pct);
+                          setCustomTip("");
+                        }}
+                      >
+                        {pct}%
+                      </button>
+                    ))}
 
-              <div className={`${styles.breakdownRow} ${styles.totalRow}`}>
-                <span>Total</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-            </div>
-
-            {/* ── Proceed to Payment button ── */}
-            {!showPayment && (
-              <button
-                className={styles.paymentBtn}
-                onClick={() => {
-                  if (validateForm()) setShowPayment(true);
-                }}
-              >
-                Proceed to Payment
-              </button>
-            )}
-
-            {/* ── Payment section — appears after clicking Proceed to Payment ── */}
-            {showPayment && (
-              <div className={styles.paymentSection}>
-                <h3>Payment</h3>
-
-                {/* ── Wallet buttons ── */}
-                <div className={styles.walletButtons}>
-                  <button
-                    className={styles.walletBtn}
-                    onClick={() => alert("Demo only — Google Pay")}
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="20"
-                      height="20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                    {/* ── Custom tip button ── */}
+                    <button
+                      className={`${styles.tipBtn} ${tipPercent === null && customTip ? styles.active : ""}`}
+                      onClick={() => setTipPercent(null)}
                     >
-                      <path
-                        d="M12.24 10.28V14.4h5.6c-.24 1.52-1.76 4.44-5.6 4.44-3.36 0-6.12-2.8-6.12-6.24s2.76-6.24 6.12-6.24c1.92 0 3.2.8 3.92 1.52l2.68-2.56C16.96 3.56 14.8 2.4 12.24 2.4 6.48 2.4 1.84 7.04 1.84 12.8s4.64 10.4 10.4 10.4c6 0 10-4.24 10-10.2 0-.68-.08-1.2-.16-1.72h-9.84z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Google Pay
-                  </button>
-
-                  <button
-                    className={styles.walletBtn}
-                    onClick={() => alert("Demo only — Apple Pay")}
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.52-3.24 0-1.44.64-2.2.46-3.06-.4C3.79 16.17 4.36 9.53 8.87 9.26c1.28.07 2.17.72 2.92.76.93-.19 1.82-.87 3.12-.78 1.54.12 2.72.72 3.44 1.84-3.16 1.96-2.4 6.28.7 7.48-.56 1.32-1.28 2.64-2 3.72zM12.04 9.2c-.12-2.56 1.96-4.72 4.36-4.8.36 2.72-2.4 4.92-4.36 4.8z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Apple Pay
-                  </button>
-
-                  <button
-                    className={styles.walletBtn}
-                    onClick={() => alert("Demo only — PayPal")}
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="20"
-                      height="20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.08 21.6l.36-2.28.8-4.08h2.08c3.28 0 5.88-2.12 6.56-5.48.28-1.36.16-2.52-.28-3.4.6-.04 1.16 0 1.64.12.4.12.76.28 1.08.52.68.96.8 2.36.44 4.08-.68 3.36-3.28 5.48-6.56 5.48H11.6l-.8 4.08-.36 2.28H7.08z"
-                        fill="currentColor"
-                        opacity="0.7"
-                      />
-                      <path
-                        d="M6.24 21.6l.36-2.28.8-4.08h2.08c3.28 0 5.88-2.12 6.56-5.48.28-1.36.16-2.52-.28-3.4-.48-.96-1.4-1.6-2.72-1.8-.4-.08-.84-.12-1.32-.12H7.04L4.8 19.32l-.36 2.28h1.8z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    PayPal
-                  </button>
-                </div>
-
-                {/* ── Or divider ── */}
-                <div className={styles.divider}>
-                  <span>or pay with card</span>
-                </div>
-
-                {/* ── Card form ── */}
-                <div className={styles.cardForm}>
-                  {/* ── Card number + brand detection ── */}
-                  <div className={styles.cardNumberRow}>
-                    <input
-                      className={styles.input}
-                      type="text"
-                      placeholder="Card Number"
-                      value={cardNumber}
-                      onChange={(e) =>
-                        setCardNumber(formatCardNumber(e.target.value))
-                      }
-                    />
-                    {getCardBrand(cardNumber) && (
-                      <span className={styles.cardBrand}>
-                        {getCardBrand(cardNumber)}
-                      </span>
-                    )}
+                      Custom
+                    </button>
                   </div>
 
-                  {/* ── Expiry + CVV side by side ── */}
-                  <div className={styles.cardDetails}>
+                  {/* ── Custom tip input — only shows when "Custom" is selected ── */}
+                  {tipPercent === null && (
+                    <input
+                      className={styles.input}
+                      type="number"
+                      placeholder="Enter tip amount ($)"
+                      value={customTip}
+                      onChange={(e) => setCustomTip(e.target.value)}
+                    />
+                  )}
+
+                  {/* ── Tip amount preview ── */}
+                  {tipAmount > 0 && (
+                    <p className={styles.tipPreview}>
+                      Tip: ${tipAmount.toFixed(2)}
+                    </p>
+                  )}
+                </div>
+
+                {/* ── Promo code ── */}
+                <div className={styles.promoSection}>
+                  <h3>Promo Code</h3>
+
+                  {/* ── Input + apply button row ── */}
+                  <div className={styles.promoRow}>
                     <input
                       className={styles.input}
                       type="text"
-                      placeholder="MM/YY"
-                      value={expiry}
-                      onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                      placeholder="Enter code"
+                      value={promoCode}
+                      onChange={(e) => {
+                        setPromoCode(e.target.value.toUpperCase());
+                        setPromoStatus("idle");
+                      }}
                     />
-                    <input
-                      className={styles.input}
-                      type="text"
-                      placeholder="CVV"
-                      value={cvv}
-                      onChange={(e) =>
-                        setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))
-                      }
-                    />
+                    <button
+                      className={styles.applyBtn}
+                      onClick={() => {
+                        if (promoCode === "BURGERLORD50") {
+                          setPromoStatus("valid");
+                          setDiscount(50);
+                        } else {
+                          setPromoStatus("invalid");
+                          setDiscount(0);
+                        }
+                      }}
+                    >
+                      Apply
+                    </button>
+                  </div>
+
+                  {/* ── Feedback message ── */}
+                  {promoStatus === "valid" && (
+                    <p className={styles.promoValid}>50% off applied! 🎉</p>
+                  )}
+                  {promoStatus === "invalid" && (
+                    <p className={styles.promoInvalid}>Invalid code 😢</p>
+                  )}
+                </div>
+
+                {/* ── Order total breakdown ── */}
+                <div className={styles.totalBreakdown}>
+                  <div className={styles.breakdownRow}>
+                    <span>Subtotal</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+
+                  {deliveryFee > 0 && (
+                    <div className={styles.breakdownRow}>
+                      <span>Delivery Fee</span>
+                      <span>${deliveryFee.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  {tipAmount > 0 && (
+                    <div className={styles.breakdownRow}>
+                      <span>Tip</span>
+                      <span>${tipAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  {discountAmount > 0 && (
+                    <div className={styles.breakdownRow}>
+                      <span>Discount</span>
+                      <span>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  <div className={`${styles.breakdownRow} ${styles.totalRow}`}>
+                    <span>Total</span>
+                    <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
 
-                {/* ── Place Order button ── */}
-                <button
-                  className={styles.placeOrderBtn}
-                  onClick={() => alert("Order placed! 🍔 (Demo)")}
-                >
-                  Place Order — ${total.toFixed(2)}
-                </button>
+                {/* ── Proceed to Payment button ── */}
+                {!showPayment && (
+                  <button
+                    className={styles.paymentBtn}
+                    onClick={() => {
+                      if (validateForm()) setShowPayment(true);
+                    }}
+                  >
+                    Proceed to Payment
+                  </button>
+                )}
+
+                {/* ── Payment section — appears after clicking Proceed to Payment ── */}
+                {showPayment && (
+                  <div className={styles.paymentSection}>
+                    <h3>Payment</h3>
+
+                    {/* ── Wallet buttons ── */}
+                    <div className={styles.walletButtons}>
+                      <button
+                        className={styles.walletBtn}
+                        onClick={() => alert("Demo only — Google Pay")}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12.24 10.28V14.4h5.6c-.24 1.52-1.76 4.44-5.6 4.44-3.36 0-6.12-2.8-6.12-6.24s2.76-6.24 6.12-6.24c1.92 0 3.2.8 3.92 1.52l2.68-2.56C16.96 3.56 14.8 2.4 12.24 2.4 6.48 2.4 1.84 7.04 1.84 12.8s4.64 10.4 10.4 10.4c6 0 10-4.24 10-10.2 0-.68-.08-1.2-.16-1.72h-9.84z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Google Pay
+                      </button>
+
+                      <button
+                        className={styles.walletBtn}
+                        onClick={() => alert("Demo only — Apple Pay")}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.52-3.24 0-1.44.64-2.2.46-3.06-.4C3.79 16.17 4.36 9.53 8.87 9.26c1.28.07 2.17.72 2.92.76.93-.19 1.82-.87 3.12-.78 1.54.12 2.72.72 3.44 1.84-3.16 1.96-2.4 6.28.7 7.48-.56 1.32-1.28 2.64-2 3.72zM12.04 9.2c-.12-2.56 1.96-4.72 4.36-4.8.36 2.72-2.4 4.92-4.36 4.8z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Apple Pay
+                      </button>
+
+                      <button
+                        className={styles.walletBtn}
+                        onClick={() => alert("Demo only — PayPal")}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M7.08 21.6l.36-2.28.8-4.08h2.08c3.28 0 5.88-2.12 6.56-5.48.28-1.36.16-2.52-.28-3.4.6-.04 1.16 0 1.64.12.4.12.76.28 1.08.52.68.96.8 2.36.44 4.08-.68 3.36-3.28 5.48-6.56 5.48H11.6l-.8 4.08-.36 2.28H7.08z"
+                            fill="currentColor"
+                            opacity="0.7"
+                          />
+                          <path
+                            d="M6.24 21.6l.36-2.28.8-4.08h2.08c3.28 0 5.88-2.12 6.56-5.48.28-1.36.16-2.52-.28-3.4-.48-.96-1.4-1.6-2.72-1.8-.4-.08-.84-.12-1.32-.12H7.04L4.8 19.32l-.36 2.28h1.8z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        PayPal
+                      </button>
+                    </div>
+
+                    {/* ── Or divider ── */}
+                    <div className={styles.divider}>
+                      <span>or pay with card</span>
+                    </div>
+
+                    {/* ── Card form ── */}
+                    {/* ── Card number + brand detection ── */}
+                    <div className={styles.fieldGroup}>
+                      <div className={styles.cardNumberRow}>
+                        <input
+                          className={styles.input}
+                          type="text"
+                          placeholder="Card Number"
+                          value={cardNumber}
+                          onChange={(e) => {
+                            setCardNumber(formatCardNumber(e.target.value));
+                            setErrors((prev) => ({ ...prev, card: "" }));
+                          }}
+                        />
+                        {getCardBrand(cardNumber) && (
+                          <span className={styles.cardBrand}>
+                            {getCardBrand(cardNumber)}
+                          </span>
+                        )}
+                      </div>
+                      {errors.card && (
+                        <span className={styles.error}>{errors.card}</span>
+                      )}
+                    </div>
+
+                    {/* ── Expiry + CVV side by side ── */}
+                    <div className={styles.cardDetails}>
+                      <div className={styles.fieldGroup}>
+                        <input
+                          className={styles.input}
+                          type="text"
+                          placeholder="MM/YY"
+                          value={expiry}
+                          onChange={(e) => {
+                            setExpiry(formatExpiry(e.target.value));
+                            setErrors((prev) => ({ ...prev, expiry: "" }));
+                          }}
+                        />
+                        {errors.expiry && (
+                          <span className={styles.error}>{errors.expiry}</span>
+                        )}
+                      </div>
+                      <div className={styles.fieldGroup}>
+                        <input
+                          className={styles.input}
+                          type="text"
+                          placeholder="CVV"
+                          value={cvv}
+                          onChange={(e) => {
+                            setCvv(
+                              e.target.value.replace(/\D/g, "").slice(0, 3),
+                            );
+                            setErrors((prev) => ({ ...prev, cvv: "" }));
+                          }}
+                        />
+                        {errors.cvv && (
+                          <span className={styles.error}>{errors.cvv}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ── Place Order button ── */}
+                    <button
+                      className={styles.placeOrderBtn}
+                      onClick={() => {
+                        if (validateCard()) alert("Order placed! 🍔 (Demo)");
+                      }}
+                    >
+                      Place Order — ${total.toFixed(2)}
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </main>
   );
