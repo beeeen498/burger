@@ -542,6 +542,38 @@
 
         .summary {
           position: static;
+          width: 100%;
+        }
+
+        .form {
+          width: 100%;
+        }
+      }
+
+      // ── Small mobile — tighter spacing ──────────
+      @media (max-width: 480px) {
+        padding: 24px 12px;
+
+        h1 {
+          font-size: 1.8rem;
+        }
+        
+        .form {
+          .paymentSection {
+            .walletButtons {
+              flex-direction: column;
+            }
+          }
+
+          .tipSection {
+            .tipButtons {
+              flex-wrap: wrap;
+
+              .tipBtn {
+                flex: 1 1 40%;
+              }
+            }
+          }
         }
       }
     }
