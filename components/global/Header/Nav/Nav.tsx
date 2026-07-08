@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { isSecretMenuActive } from "@/lib/secretMenuUtils";
 import styles from "./Nav.module.scss";
 
 // ── localStorage key ──────────────────────────────────
@@ -12,11 +13,22 @@ const Nav = () => {
   const pathname = usePathname();
   const [showSecret, setShowSecret] = useState(false);
 
-  // ── Check if secret menu is unlocked ──
   useEffect(() => {
-    const unlocked = localStorage.getItem(LS_SECRET_UNLOCKED) === "yes";
-    if (unlocked) setShowSecret(true);
-  }, []);
+    setShowSecret(isSecretMenuActive());
+
+    const handleExpired = () => setShowSecret(false);
+    window.addEventListener("secretMenuExpired", handleExpired);
+
+    // ── Re-check every 30 seconds in case timer expired ──
+    const interval = setInterval(() => {
+      if (!isSecretMenuActive()) setShowSecret(false);
+    }, 30000);
+
+    return () => {
+      window.removeEventListener("secretMenuExpired", handleExpired);
+      clearInterval(interval);
+    };
+  }, [pathname]);
 
   return (
     <nav className={styles.nav}>

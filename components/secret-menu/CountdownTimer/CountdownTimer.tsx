@@ -7,7 +7,7 @@ import styles from "./CountdownTimer.module.scss";
 const LS_UNLOCK_TIME = "secretMenu_unlockedAt";
 
 // ── 24 hours in milliseconds ──────────────────────────
-const ACCESS_DURATION = 24 * 60 * 60 * 1000;
+const ACCESS_DURATION = 1 * 1000;
 
 // ── Props ─────────────────────────────────────────────
 interface CountdownTimerProps {
@@ -30,6 +30,8 @@ export default function CountdownTimer({ onExpire }: CountdownTimerProps) {
     // ── Calculate remaining time ──
     const expiresAt = new Date(unlockedAt).getTime() + ACCESS_DURATION;
 
+    let intervalId: NodeJS.Timeout | null = null;
+
     const tick = () => {
       const remaining = expiresAt - Date.now();
 
@@ -37,18 +39,19 @@ export default function CountdownTimer({ onExpire }: CountdownTimerProps) {
         setTimeLeft(0);
         setExpired(true);
         onExpire?.();
-        clearInterval(interval); // ← stop ticking after expiry
+        if (intervalId) clearInterval(intervalId);
         return;
       }
 
       setTimeLeft(remaining);
     };
 
-    // ── Run immediately, then every second ──
     tick();
-    const interval = setInterval(tick, 1000);
+    intervalId = setInterval(tick, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [onExpire]);
 
   // ── Format milliseconds to HH:MM:SS ────────────────

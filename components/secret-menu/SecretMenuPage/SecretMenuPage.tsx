@@ -2,91 +2,77 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { isSecretMenuActive } from "@/lib/secretMenuUtils";
 import MatrixRain from "../MatrixRain/MatrixRain";
 import Header from "@/components/global/Header/Header";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import SecretBurgerCard from "../SecretBurgerCard/SecretBurgerCard";
 import styles from "./SecretMenuPage.module.scss";
 
-// ── localStorage keys ─────────────────────────────────
-const LS_SECRET_UNLOCKED = "secretMenu_unlocked";
-const LS_UNLOCK_TIME = "secretMenu_unlockedAt";
-
 export default function SecretMenuPage() {
   const router = useRouter();
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [expiryPhase, setExpiryPhase] = useState<
     "active" | "glitch" | "fadeout" | "message"
   >("active");
 
-  // ── Responsive burger scale ──
-  const [burgerScale, setBurgerScale] = useState(0.28);
-
+  // ── Check access on mount — block page if expired or never unlocked ──
   useEffect(() => {
-    const handleResize = () => {
-      setBurgerScale(window.innerWidth < 350 ? 0.2 : 0.28);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (!isSecretMenuActive()) {
+      router.push("/menu");
+      return;
+    }
+    setHasAccess(true);
+  }, [router]);
 
   // ── Expiry sequence — glitch → fade → message → redirect ──
   const handleExpire = useCallback(() => {
-    // ── Phase 1: glitch the cards ──
     setExpiryPhase("glitch");
 
-    // ── Phase 2: fade everything to black ──
     setTimeout(() => {
       setExpiryPhase("fadeout");
     }, 2000);
 
-    // ── Phase 3: show expired message ──
     setTimeout(() => {
       setExpiryPhase("message");
 
-      // ── Clean up localStorage ──
-      localStorage.removeItem(LS_SECRET_UNLOCKED);
-      localStorage.removeItem(LS_UNLOCK_TIME);
+      // ── Notify other components (Nav, Banner) ──
+      window.dispatchEvent(new Event("secretMenuExpired"));
     }, 3500);
 
-    // ── Phase 4: redirect to menu ──
     setTimeout(() => {
       router.push("/menu");
     }, 7000);
   }, [router]);
 
+  // ── Don't render anything until access is confirmed ──
+  if (hasAccess === null) return null;
+
   return (
     <main
       className={`${styles.page} ${expiryPhase !== "active" ? styles[expiryPhase] : ""}`}
     >
-      {/* ── Matrix rain background ── */}
       <MatrixRain />
 
       <div className={styles.headerWrapper}>
         <Header />
       </div>
 
-      {/* ── Expired message — only visible in message phase ── */}
       {expiryPhase === "message" && (
         <div className={styles.expiredOverlay}>
           <p className={styles.expiredText}>Your access has expired 🔒</p>
         </div>
       )}
 
-      {/* ── Page content ── */}
       <div className={styles.content}>
         <h1 className={styles.title}>Secret Menu</h1>
-
-        {/* ── Countdown timer ── */}
         <CountdownTimer onExpire={handleExpire} />
 
-        {/* ── Secret burger cards ── */}
         <div className={styles.cards}>
           <SecretBurgerCard
-            id="secret-land-sea-sky"
-            price={12.99}
-            scale={burgerScale}
+            id="land-sea-sky"
+            price={24.99}
+            scale={0.28}
             name="The Land, Sea and Sky"
             description="The ultimate surf and turf situation."
             ingredients={["Beef Patty", "nuggets", "Shrimps"]}
@@ -100,9 +86,9 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            id="secret-simpsons"
-            price={12.99}
-            scale={burgerScale}
+            id="the-simpsons"
+            price={19.99}
+            scale={0.28}
             name="The Simpsons"
             description="Don't tell your cardiologist."
             ingredients={["Donut Bun", "Beef Patty", "Cheese"]}
@@ -115,9 +101,9 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            id="secret-chicken-waffles"
-            price={12.99}
-            scale={burgerScale}
+            id="chicken-waffles"
+            price={18.99}
+            scale={0.28}
             name="Chicken & Waffles"
             description="Who said waffles are just for breakfast?"
             ingredients={["Waffle Bun", "Nuggets", "Maple Syrup"]}
@@ -129,9 +115,9 @@ export default function SecretMenuPage() {
           />
 
           <SecretBurgerCard
-            id="secret-nugzilla"
-            price={12.99}
-            scale={burgerScale}
+            id="the-nugzilla"
+            price={22.99}
+            scale={0.28}
             name="The Nugzilla"
             description="A giant nugget. Nothing more to say."
             ingredients={["Giant Nugget", "Cheese", "Sauce"]}

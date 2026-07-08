@@ -1,34 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { isSecretMenuActive } from "@/lib/secretMenuUtils";
 import Link from "next/link";
 import styles from "./SecretMenuBanner.module.scss";
 
-// ── localStorage key ──────────────────────────────────
-const LS_SECRET_UNLOCKED = "secretMenu_unlocked";
-
 export default function SecretMenuBanner() {
   const [show, setShow] = useState(false);
+  const pathname = usePathname();
 
-  // ── Only show if secret menu is unlocked ──
+  // ── Check if secret menu is unlocked, re-check on navigation ──
   useEffect(() => {
-    // ── Check on mount ──
-    const checkUnlocked = () => {
-      const unlocked = localStorage.getItem(LS_SECRET_UNLOCKED) === "yes";
-      if (unlocked) setShow(true);
+    setShow(isSecretMenuActive());
+
+    const handleExpired = () => setShow(false);
+    window.addEventListener("secretMenuExpired", handleExpired);
+
+    const interval = setInterval(() => {
+      if (!isSecretMenuActive()) setShow(false);
+    }, 30000);
+
+    return () => {
+      window.removeEventListener("secretMenuExpired", handleExpired);
+      clearInterval(interval);
     };
-
-    checkUnlocked();
-
-    // ── Re-check when user returns to this tab ──
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") checkUnlocked();
-    };
-
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibility);
-  }, []);
+  }, [pathname]);
 
   if (!show) return null;
 
