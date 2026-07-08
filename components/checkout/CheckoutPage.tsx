@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import useOrderStore from "@/lib/useOrderStore";
 import Link from "next/link";
 import Header from "../global/Header/Header";
 import useCartStore from "@/lib/useCartStore";
@@ -9,6 +11,11 @@ import styles from "./CheckoutPage.module.scss";
 
 const CheckoutPage = () => {
   const { items } = useCartStore();
+  const router = useRouter();
+  const { setOrderData } = useOrderStore();
+
+  // ── Track when user landed on checkout (for speed timer) ──
+  const checkoutStartedAt = useRef(Date.now());
 
   // ── Delivery or pickup selection ──
   const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery");
@@ -575,7 +582,33 @@ const CheckoutPage = () => {
                     <button
                       className={styles.placeOrderBtn}
                       onClick={() => {
-                        if (validateCard()) alert("Order placed! 🍔 (Demo)");
+                        if (validateCard()) {
+                          // ── Generate a random order number ──
+                          const orderNumber = `SMSHD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+                          // ── Save order data for the confirmation page ──
+                          setOrderData({
+                            orderNumber,
+                            items,
+                            subtotal,
+                            deliveryFee,
+                            tip: tipAmount,
+                            discount: discountAmount,
+                            total,
+                            method: orderType,
+                            name,
+                            email,
+                            address:
+                              orderType === "delivery"
+                                ? `${street}, ${city}`
+                                : undefined,
+                            checkoutStartedAt: checkoutStartedAt.current,
+                            placedAt: Date.now(),
+                          });
+
+                          // ── Navigate to confirmation page ──
+                          router.push("/order-confirmation");
+                        }
                       }}
                     >
                       Place Order — ${total.toFixed(2)}

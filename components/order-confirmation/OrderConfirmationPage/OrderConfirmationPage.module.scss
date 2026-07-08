@@ -1,0 +1,374 @@
+// ── Page wrapper ─────────────────────────────────────────
+.page {
+    background-color: var(--green);
+  .headerWrap {
+    background: var(--pink);
+    padding: 18px 0;
+    border-bottom: var(--border);
+    isolation: isolate;
+    position: relative;
+    z-index: 1000;
+
+    & > * {
+      border-bottom: none;
+    }
+  }
+
+  // ── Confetti burst ───────────────────────────────────────
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+
+    .piece {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall 3s ease-out forwards;
+
+      // ── Scatter pieces across the screen with random colors ──
+      @for $i from 1 through 80 {
+        &:nth-child(#{$i}) {
+          left: ($i * 2.5%) - 1%;
+          animation-delay: #{($i % 7) * 0.08}s;
+          animation-duration: #{4 + ($i % 5) * 0.8}s;
+          width: #{12 + ($i % 4) * 6}px;
+          height: #{12 + ($i % 4) * 6}px;
+
+          // ── Cycle through palette colors ──
+          @if $i % 5 == 1 {
+            background: var(--pink);
+          } @else if $i % 5 == 2 {
+            background: var(--yellow);
+          } @else if $i % 5 == 3 {
+            background: var(--blue);
+          } @else if $i % 5 == 4 {
+            background: var(--black);
+          } @else {
+            background: var(--white);
+            border: 2px solid var(--black);
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+
+    70% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(100vh) rotate(720deg) scale(0.3);
+      opacity: 0;
+    }
+  }
+
+  // ── Page content ─────────────────────────────────────────
+  .pageContent {
+    padding: 40px 20px;
+    max-width: 650px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+
+    // ── Hero heading ─────────────────────────────────────
+    .hero {
+      text-align: center;
+
+      h1 {
+        font-size: 2.8rem;
+        color: var(--black);
+        text-shadow:
+          3px 3px 0 var(--pink),
+          -1px -1px 0 var(--black);
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--black);
+      }
+    }
+
+    // ── Checkout speed badge ─────────────────────────────
+    .speedBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--yellow);
+      border: var(--border);
+      border-radius: 50px;
+      box-shadow: var(--box-shadow);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--black);
+
+      .speedIcon {
+        font-size: 1.2rem;
+      }
+    }
+
+    // ── Receipt card ─────────────────────────────────────
+    .receipt {
+      width: 100%;
+      background: var(--white);
+      border: var(--border);
+      border-radius: 12px;
+      box-shadow: var(--box-shadow);
+      padding: 28px 24px;
+      font-family: "Courier New", Courier, monospace;
+
+      // ── Receipt header ──
+      .receiptHeader {
+        text-align: center;
+        margin-bottom: 4px;
+
+        h2 {
+          font-size: 1.6rem;
+          font-family: var(--header-font), sans-serif;
+          color: var(--black);
+          margin-bottom: 4px;
+        }
+
+        p {
+          font-size: 0.8rem;
+          color: var(--black);
+          font-weight: 600;
+          line-height: 1.6;
+        }
+      }
+
+      // ── Dashed separator ──
+      .dashedLine {
+        border-bottom: 3px dashed var(--black);
+        margin: 14px 0;
+      }
+
+      // ── Items list ──
+      .receiptItems {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      // ── Shared row style for items and totals ──
+      .receiptRow {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--black);
+        padding: 3px 0;
+
+        // ── Bold total row ──
+        &.totalRow {
+          font-size: 1.1rem;
+          font-weight: 800;
+          padding-top: 10px;
+          margin-top: 6px;
+          border-top: 3px solid var(--black);
+        }
+      }
+
+      // ── Totals section ──
+      .receiptTotals {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      // ── Footer — delivery/pickup info ──
+      .receiptFooter {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--black);
+        font-weight: 600;
+        line-height: 1.8;
+
+        .eta {
+          margin-top: 4px;
+          color: var(--pink);
+          font-weight: 800;
+        }
+      }
+    }
+
+    // ── Action buttons ───────────────────────────────────
+    .actions {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+
+      // ── Shared button base ──
+      .menuBtn,
+      .trackBtn {
+        flex: 1;
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: 700;
+        font-family: var(--header-font), sans-serif;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        border: var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: var(--box-shadow);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+
+        &:hover {
+          transform: translate(-3px, -3px);
+          box-shadow: 9px 9px 0 var(--black);
+        }
+      }
+
+      // ── Back to Menu — yellow ──
+      .menuBtn {
+        background: var(--yellow);
+        color: var(--black);
+      }
+
+      // ── Track Order — pink ──
+      .trackBtn {
+        background: var(--pink);
+        color: var(--white);
+      }
+    }
+
+    // ── Referral section ─────────────────────────────────
+    .referral {
+      width: 100%;
+      background: var(--white);
+      border: var(--border);
+      border-radius: 12px;
+      box-shadow: var(--box-shadow);
+      padding: 24px;
+      text-align: center;
+
+      h3 {
+        font-size: 1.2rem;
+        color: var(--black);
+        margin-bottom: 6px;
+      }
+
+      p {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--black);
+        margin-bottom: 14px;
+      }
+
+      // ── Code + copy button row ──
+      .codeRow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        .code {
+          padding: 10px 18px;
+          font-size: 1rem;
+          font-weight: 800;
+          font-family: "Courier New", Courier, monospace;
+          background: var(--yellow);
+          color: var(--black);
+          border: var(--border);
+          border-radius: 8px;
+          letter-spacing: 1px;
+        }
+
+        .copyBtn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+          font-weight: 700;
+          font-family: var(--header-font), sans-serif;
+          text-transform: uppercase;
+          background: var(--black);
+          color: var(--yellow);
+          border: var(--border);
+          border-radius: 8px;
+          cursor: pointer;
+          box-shadow: 3px 3px 0 var(--yellow);
+          transition:
+            transform 0.15s,
+            box-shadow 0.15s;
+
+          &:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--yellow);
+          }
+        }
+      }
+    }
+  }
+
+  // ── Mobile ─────────────────────────────────────────────
+  @media (max-width: 768px) {
+    .pageContent {
+      .hero {
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
+  // ── Small mobile ───────────────────────────────────────
+  @media (max-width: 480px) {
+    .pageContent {
+      padding: 24px 12px;
+
+      .hero {
+        h1 {
+          font-size: 1.7rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+      }
+
+      .speedBadge {
+        font-size: 0.8rem;
+        padding: 8px 14px;
+      }
+
+      .receipt {
+        padding: 20px 16px;
+      }
+
+      // ── Stack buttons vertically ──
+      .actions {
+        flex-direction: column;
+      }
+
+      // ── Stack code + copy button ──
+      .referral {
+        .codeRow {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}
