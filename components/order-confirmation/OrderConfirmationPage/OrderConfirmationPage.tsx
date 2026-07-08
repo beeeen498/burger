@@ -13,6 +13,7 @@ import styles from "./OrderConfirmationPage.module.scss";
 const OrderConfirmationPage = () => {
   const router = useRouter();
   const { orderData } = useOrderStore();
+  const hasHydrated = useOrderStore.persist.hasHydrated();
   const { clearCart } = useCartStore();
 
   // ── Clear cart once on arrival (not the order data) ──
@@ -24,12 +25,12 @@ const OrderConfirmationPage = () => {
   // ── Referral code (fake, for demo) ──
   const referralCode = "SMASH-20";
 
-  // ── Redirect if no order data exists ──
+  // ── Redirect if no order data exists (only after hydration) ──
   useEffect(() => {
-    if (!orderData) {
+    if (hasHydrated && !orderData) {
       router.replace("/menu");
     }
-  }, [orderData, router]);
+  }, [hasHydrated, orderData, router]);
 
   // ── Clear cart once on arrival ──
   useEffect(() => {
@@ -39,8 +40,8 @@ const OrderConfirmationPage = () => {
     }
   }, [orderData, clearCart]);
 
-  // ── Don't render until we have data ──
-  if (!orderData) return null;
+  // ── Don't render until hydrated and data exists ──
+  if (!hasHydrated || !orderData) return null;
 
   // ── Calculate checkout speed ──
   const checkoutSeconds = Math.round(
@@ -100,7 +101,7 @@ const OrderConfirmationPage = () => {
       <div className={styles.pageContent}>
         {/* ── Hero heading ── */}
         <div className={styles.hero}>
-          <h1>ORDER SMASH&apos;D!</h1>
+          <h1>ORDER SMASH&apos;D! 🍔</h1>
           <p className={styles.subtitle}>
             Your burger is being prepared with love and extra cheese.
           </p>

@@ -1,6 +1,6 @@
 // ── Page wrapper ─────────────────────────────────────────
 .page {
-    background-color: var(--green);
+  background-color: var(--green);
   .headerWrap {
     background: var(--pink);
     padding: 18px 0;
@@ -102,9 +102,15 @@
       }
 
       .subtitle {
+        display: inline-block;
         font-size: 1.05rem;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--black);
+        background: var(--yellow);
+        padding: 8px 16px;
+        border: var(--border);
+        border-radius: 6px;
+        box-shadow: var(--box-shadow);
       }
     }
 
