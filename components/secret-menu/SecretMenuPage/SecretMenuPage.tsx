@@ -19,6 +19,7 @@ export default function SecretMenuPage() {
   // ── Check access on mount — block page if expired or never unlocked ──
   useEffect(() => {
     if (!isSecretMenuActive()) {
+      window.dispatchEvent(new Event("secretMenuExpired"));
       router.push("/menu");
       return;
     }

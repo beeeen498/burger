@@ -19,7 +19,7 @@ export default function SecretMenuBanner() {
 
     const interval = setInterval(() => {
       if (!isSecretMenuActive()) setShow(false);
-    }, 30000);
+    }, 3000);
 
     return () => {
       window.removeEventListener("secretMenuExpired", handleExpired);

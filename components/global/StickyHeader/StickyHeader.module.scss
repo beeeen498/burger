@@ -135,6 +135,16 @@
       }
     }
 
+    @media (max-width: 1050px) {
+      .navWrapper {
+        display: none;
+      }
+
+      .headerIcons .menuToggle {
+        display: flex;
+      }
+    }
+
     @media (max-width: 768px) {
       .navWrapper {
         display: none;

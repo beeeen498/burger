@@ -3,6 +3,7 @@
   min-height: 100vh;
   background-color: var(--pink);
   position: relative;
+  overflow-x: hidden;
 
   // ── Dot grid overlay ──
   &::before {
@@ -48,6 +49,25 @@
       flex-direction: column;
       gap: 0;
       padding: 16px 16px 60px;
+    }
+
+    @media (max-width: 444px) {
+      max-width: 100%;
+      min-width: 0;
+
+      .content {
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      .cardList {
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      .smallCardGrid {
+        grid-template-columns: 1fr;
+      }
     }
 
     // ── Cards area ──────────────────────────────────

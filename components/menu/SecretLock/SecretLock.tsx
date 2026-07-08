@@ -31,7 +31,7 @@ export default function SecretLock() {
     // ── Short delay so page loads first ──
     const timer = setTimeout(() => {
       setShow(true);
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);

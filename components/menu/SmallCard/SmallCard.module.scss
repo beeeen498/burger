@@ -123,4 +123,31 @@
       white-space: nowrap;
     }
   }
+
+  // ── Small screens — stack card vertically ──
+  @media (max-width: 444px) {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    .canvas {
+      width: 100%;
+      height: 140px;
+      flex-shrink: 1;
+    }
+
+    .content {
+      .name {
+        white-space: normal;
+      }
+    }
+
+    .actions {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
 }

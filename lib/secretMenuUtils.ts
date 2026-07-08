@@ -1,8 +1,7 @@
 // ── localStorage keys ─────────────────────────────────
 const LS_SECRET_UNLOCKED = "secretMenu_unlocked"
 const LS_UNLOCK_TIME = "secretMenu_unlockedAt"
-// const ACCESS_DURATION = 24 * 60 * 60 * 1000
-const ACCESS_DURATION = 1 * 1000
+export const ACCESS_DURATION = 4 * 60 * 60 * 1000 // 4 hours
 
 // ── Check if secret menu is currently active ──────────
 export function isSecretMenuActive(): boolean {

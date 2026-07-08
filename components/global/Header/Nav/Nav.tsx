@@ -22,7 +22,7 @@ const Nav = () => {
     // ── Re-check every 30 seconds in case timer expired ──
     const interval = setInterval(() => {
       if (!isSecretMenuActive()) setShowSecret(false);
-    }, 30000);
+    }, 3000);
 
     return () => {
       window.removeEventListener("secretMenuExpired", handleExpired);

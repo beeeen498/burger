@@ -67,7 +67,6 @@ function BurgerScene({
   useEffect(() => {
     // Walk through every object in the GLB scene and extract the meshes by name
     scene.traverse((obj: THREE.Object3D) => {
-      console.log("Object:", obj.name, obj.type);
 
       if ((obj as THREE.Mesh).isMesh) {
         // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
@@ -101,8 +100,6 @@ function BurgerScene({
         }
       }
     });
-
-    console.log("All meshes:", Object.keys(meshes.current));
 
     // Stack the layers and get the total bounding box of the assembled burger
     if (!groupRef.current) return;

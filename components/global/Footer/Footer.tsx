@@ -33,9 +33,7 @@ const HOURS = [
 const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" })
   const year = new Date().getFullYear();
-  console.log(year);
   
-
   return (
     <footer className={styles.footer}>
 

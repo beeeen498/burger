@@ -12,19 +12,19 @@
 
   // ── Mobile — horizontal row ──
   @media (max-width: 768px) {
-    width: calc(100% + 32px); // 32px = 16px padding × 2
+    width: calc(100% + 32px);
     margin: 0 -16px;
     transform: translateY(-40px);
     flex-direction: row;
     flex-wrap: nowrap;
     position: sticky;
-    top: 140px;
+    top: 138px;
     z-index: 10;
     background: var(--pink);
     overflow-x: auto;
     padding: 10px 16px; // add horizontal padding back so buttons aren't flush against edges
     scrollbar-width: none;
-    border-bottom: 1px solid var(--black);
+    border-bottom: var(--border);
 
     &::-webkit-scrollbar {
       display: none;

@@ -1,5 +1,7 @@
 // ── Page wrapper ─────────────────────────────────────────
 .page {
+  min-height: 100vh;
+
   .headerWrap {
     background: var(--pink);
     padding: 18px 0;

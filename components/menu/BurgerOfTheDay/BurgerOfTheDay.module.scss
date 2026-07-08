@@ -168,4 +168,87 @@
       }
     }
   }
+
+  // ── Mid-small — shrink canvas and text ──────────
+  @media (max-width: 510px) {
+    min-height: auto;
+
+    .left {
+      width: 140px;
+      height: 140px;
+      border: none;
+    }
+
+    .right {
+      padding: 16px;
+      gap: 8px;
+
+      .name {
+        font-size: 1.2rem;
+      }
+
+      .priceRow {
+        .newPrice {
+          font-size: 1.2rem;
+        }
+      }
+
+      .countdown {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+    }
+  }
+
+  // ── Very small — stack vertically ──────────────
+  @media (max-width: 444px) {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    .left {
+      width: 100%;
+      height: 180px;
+      margin-left: 0;
+      border-radius: 10px 10px 0 0;
+      border-bottom: var(--border);
+    }
+
+    .right {
+      padding: 16px;
+      gap: 8px;
+
+      .name {
+        font-size: 1.1rem;
+      }
+
+      .description {
+        font-size: 0.7rem;
+      }
+
+      .priceRow {
+        .newPrice {
+          font-size: 1.1rem;
+          padding: 3px 10px;
+        }
+
+        .oldPrice {
+          font-size: 0.85rem;
+        }
+      }
+
+      .countdown {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .addBtn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
 }
