@@ -134,6 +134,7 @@ export default function MenuCard({ item }: MenuCardProps) {
             ingredients={item.ingredients}
             cameraOffset={14}
             scale={0.2}
+            
           />
         )}
       </div>
