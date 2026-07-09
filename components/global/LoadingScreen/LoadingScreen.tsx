@@ -35,6 +35,17 @@ export default function LoadingScreen() {
     return () => clearTimeout(timer);
   }, [pathname]);
 
+  const prevPathname = useRef(pathname);
+
+  // ---------- catch route change immediately (no flash) ----------
+  if (!isFirstRender.current && pathname !== prevPathname.current) {
+    prevPathname.current = pathname;
+    if (isHidden) {
+      setIsHidden(false);
+      setNavMinTimePassed(false);
+    }
+  }
+
   // ---------- navigation: hide once page is ready AND min time passed ----------
   useEffect(() => {
     if (isFirstRender.current) return;
