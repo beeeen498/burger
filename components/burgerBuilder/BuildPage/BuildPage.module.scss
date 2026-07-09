@@ -99,6 +99,92 @@
   .mobileActions {
     display: none;
   }
+
+  // ── Naming popup overlay ──
+  .popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  // ── Popup card ──
+  .popup {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--black);
+    padding: 24px;
+    width: 90%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .popupTitle {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--black);
+      margin: 0;
+      text-align: center;
+    }
+
+    .nameInput {
+      width: 100%;
+      padding: 10px 14px;
+      border: var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      background: var(--off-white);
+      color: var(--black);
+      box-shadow: 2px 2px 0 var(--black);
+      box-sizing: border-box;
+      outline: none;
+
+      &::placeholder {
+        color: #999;
+        font-weight: 400;
+      }
+    }
+
+    .popupButtons {
+      display: flex;
+      gap: 10px;
+
+      .skipBtn {
+        flex: 1;
+        padding: 10px;
+        border: var(--border);
+        border-radius: 6px;
+        background: var(--white);
+        color: var(--black);
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 var(--black);
+      }
+
+      .confirmBtn {
+        flex: 2;
+        padding: 10px;
+        border: var(--border);
+        border-radius: 6px;
+        background: var(--yellow);
+        color: var(--black);
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 var(--black);
+      }
+    }
+  }
 }
 
 // ── Mobile ──────────────────────────────────────────────
@@ -126,7 +212,7 @@
       }
 
       // ── Ingredient labels div ────────────────────────────────
-      .ingredientDiv{
+      .ingredientDiv {
         position: absolute;
         right: 5%;
       }
@@ -187,7 +273,9 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        transition: transform 0.1s ease, box-shadow 0.1s ease;
+        transition:
+          transform 0.1s ease,
+          box-shadow 0.1s ease;
 
         &:active {
           transform: translate(3px, 3px);

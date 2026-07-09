@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import useCartStore from "@/lib/useCartStore";
 import Header from "@/components/global/Header/Header";
 import IngredientTabs from "../../global/IngredientTabs/IngredientTabs";
 import IngredientCard from "../../global/IngredientCard/IngredientCard";
@@ -39,7 +41,7 @@ const DEFAULT_INGREDIENTS: BurgerIngredients = {
   potatoChips: 0,
 };
 
-// Parsing URL params into BurgerIngredients:
+// ── Parse URL params into BurgerIngredients ─────────
 function parseIngredientsFromParams(
   params: URLSearchParams,
 ): BurgerIngredients | null {
@@ -68,21 +70,28 @@ const BuildPage = () => {
   const [activeCategory, setActiveCategory] = useState("bun");
   const [copied, setCopied] = useState(false);
 
+  // ── Naming popup state ──────────────────────────
+  const [showNamePopup, setShowNamePopup] = useState(false);
+  const [burgerName, setBurgerName] = useState("");
+
+  // ── Cart store ──────────────────────────────────
+  const addItem = useCartStore((state) => state.addItem);
+  const setFlyFrom = useCartStore((state) => state.setFlyFrom);
+
   // ── Detect window width for summary direction ───────
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    handleResize(); // set on mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Saving the burger to local storage & parsing to url
+  // ── Saving the burger to local storage & parsing to url ──
   const [ingredients, setIngredients] = useState<BurgerIngredients>(() => {
     if (typeof window === "undefined") return DEFAULT_INGREDIENTS;
 
-    // URL params take priority over localStorage
     const fromParams = parseIngredientsFromParams(searchParams);
     if (fromParams) return fromParams;
     try {
@@ -136,9 +145,8 @@ const BuildPage = () => {
     setIngredients(randomized);
     playAdd();
 
-    // ── Switch to first non-bun category with active ingredients ──
     const firstActive = Object.keys(CATEGORIES)
-      .filter((key) => key !== "bun") // bun is always active, skip it
+      .filter((key) => key !== "bun")
       .find((categoryKey) =>
         CATEGORIES[categoryKey].ingredients.some((ingredient) => {
           if (ingredient.type === "counter") {
@@ -177,6 +185,28 @@ const BuildPage = () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [ingredients]);
+
+  // ── Open the naming popup ───────────────────────
+  const handleCartClick = () => {
+    setShowNamePopup(true);
+  };
+
+  // ── Confirm and add to cart ─────────────────────
+  const handleConfirmAdd = () => {
+    navigator.vibrate?.(50);
+
+    addItem({
+      id: `custom-burger-${Date.now()}`,
+      name: burgerName.trim() || "Custom Burger",
+      price: price,
+      quantity: 1,
+      ingredients: ingredients,
+    });
+
+    toast(`Added ${burgerName.trim() || "Custom Burger"} to bag! 🍔`);
+    setBurgerName("");
+    setShowNamePopup(false);
+  };
 
   return (
     <main className={styles.page}>
@@ -255,20 +285,38 @@ const BuildPage = () => {
             {/* ── Price and Add to Cart ── */}
             <div className={styles.cartRow}>
               <span className={styles.price}>${price.toFixed(2)}</span>
-              <Cta
-                label={copied ? "Copied! 🔗" : "Share"}
-                variant="pink"
-                onClick={handleShare}
-              />
-              <Cta
-                label="Add to Cart"
-                variant="yellow"
-                onClick={() => console.log("add to cart", ingredients)}
-              />
+              <Cta label="Add to Cart" variant="yellow" onClick={handleCartClick} />
             </div>
           </div>
         </div>
       </div>
+
+      {/* ── Name your burger popup ── */}
+      {showNamePopup && (
+        <div className={styles.popupOverlay} onClick={() => setShowNamePopup(false)}>
+          <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.popupTitle}>Name Your Burger</h3>
+            <input
+              className={styles.nameInput}
+              type="text"
+              value={burgerName}
+              onChange={(e) => setBurgerName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleConfirmAdd()}
+              placeholder="e.g. Ben's Monster..."
+              maxLength={30}
+              autoFocus
+            />
+            <div className={styles.popupButtons}>
+              <button className={styles.skipBtn} onClick={handleConfirmAdd}>
+                Skip
+              </button>
+              <button className={styles.confirmBtn} onClick={handleConfirmAdd}>
+                Add to Cart 🍔
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
