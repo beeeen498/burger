@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isSecretMenuActive } from "@/lib/secretMenuUtils";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import MatrixRain from "../MatrixRain/MatrixRain";
 import Header from "@/components/global/Header/Header";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
@@ -16,15 +17,24 @@ export default function SecretMenuPage() {
     "active" | "glitch" | "fadeout" | "message"
   >("active");
 
+  // ── Tell loading screen to wait for us ──
+  const setPageReady = useLoadingStore((state) => state.setPageReady);
+
+  useEffect(() => {
+    setPageReady(false);
+  }, []);
+
   // ── Check access on mount — block page if expired or never unlocked ──
   useEffect(() => {
     if (!isSecretMenuActive()) {
       window.dispatchEvent(new Event("secretMenuExpired"));
+      setPageReady(true);
       router.push("/menu");
       return;
     }
     setHasAccess(true);
-  }, [router]);
+    setPageReady(true);
+  }, [router, setPageReady]);
 
   // ── Expiry sequence — glitch → fade → message → redirect ──
   const handleExpire = useCallback(() => {
