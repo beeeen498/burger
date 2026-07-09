@@ -1,7 +1,9 @@
-// ── localStorage keys ─────────────────────────────────
 const LS_SECRET_UNLOCKED = "secretMenu_unlocked"
 const LS_UNLOCK_TIME = "secretMenu_unlockedAt"
-export const ACCESS_DURATION = 4 * 60 * 60 * 1000 // 4 hours
+const LS_BURGER_CLICKED = "secretMenu_burgerClicked"
+const LS_WHISPER_DONE = "secretMenu_whisperDone"
+const LS_DISMISS_COUNT = "secretMenu_dismissCount"
+export const ACCESS_DURATION = 1 * 1000 // 4 hours
 
 // ── Check if secret menu is currently active ──────────
 export function isSecretMenuActive(): boolean {
@@ -12,9 +14,12 @@ export function isSecretMenuActive(): boolean {
 
   const expiresAt = new Date(unlockedAt).getTime() + ACCESS_DURATION
   if (Date.now() >= expiresAt) {
-    // ── Timer expired — clean up ──
+    // ── Timer expired — clean up everything ──
     localStorage.removeItem(LS_SECRET_UNLOCKED)
     localStorage.removeItem(LS_UNLOCK_TIME)
+    localStorage.removeItem(LS_BURGER_CLICKED)
+    localStorage.removeItem(LS_WHISPER_DONE)
+    localStorage.removeItem(LS_DISMISS_COUNT)
     return false
   }
 
