@@ -229,16 +229,8 @@ const CartDrawer = () => {
               <span className={styles.totalPrice}>${total.toFixed(2)}</span>
             </div>
 
-            {/* ── Checkout button — closes drawer and navigates to /checkout ── */}
-            <button
-              className={styles.checkoutBtn}
-              onClick={() => {
-                toggleCart();
-                router.push("/checkout");
-              }}
-            >
-              Proceed to Checkout
-            </button>
+            {/* ── Checkout button — primary action ── */}
+            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
 
             {/* ── Clear cart — text link with confirmation ── */}
             {!confirmClear ? (
@@ -250,7 +242,9 @@ const CartDrawer = () => {
               </button>
             ) : (
               <div className={styles.confirmClear}>
-                <p className={styles.confirmText}>Are you sure?</p>
+                <p className={styles.confirmText}>
+                  Are you sure?
+                </p>
                 <div className={styles.confirmBtns}>
                   <button
                     className={styles.confirmYes}

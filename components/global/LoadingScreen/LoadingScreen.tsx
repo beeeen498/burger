@@ -46,27 +46,13 @@ export default function LoadingScreen() {
     }
   }, [minTimePassed, pageLoaded]);
 
-  // ---------- navigation: show again on every route change ----------
+  // ---------- first-load: mark first render done after min time passes ----------
   useEffect(() => {
-    if (isFirstRender.current) {
+    const timer = setTimeout(() => {
       isFirstRender.current = false;
-      return;
-    }
-
-    setIsHidden(false); // show the screen for this navigation
-    setNavMinTimePassed(false); // reset the minimum-time gate
-
-    const timer = setTimeout(() => setNavMinTimePassed(true), MIN_NAV_TIME);
+    }, MIN_DISPLAY_TIME);
     return () => clearTimeout(timer);
-  }, [pathname]);
-
-  // ---------- navigation: hide once page is ready AND min time passed ----------
-  useEffect(() => {
-    if (isFirstRender.current) return; // nothing to hide yet on first mount
-    if (isPageReady && navMinTimePassed) {
-      setIsHidden(true);
-    }
-  }, [isPageReady, navMinTimePassed]);
+  }, []);
 
   // ---------- cycle the dots: 1 -> 2 -> 3 -> 1 ... ----------
   useEffect(() => {
