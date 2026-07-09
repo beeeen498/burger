@@ -89,8 +89,23 @@
   }
 }
 
+// ── Very small — left side of burger ────────────────
+@media (max-width: 550px) {
+  .badge {
+    width: 60px;
+    height: 60px;
+    left: 4%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+  }
+}
+
 // ── 360 continuous Y rotation ───────────────────────
 @keyframes spin3d {
-  0%   { transform: rotate(-15deg) rotateY(0deg); }
-  100% { transform: rotate(-15deg) rotateY(360deg); }
+  0% {
+    transform: rotate(-15deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotate(-15deg) rotateY(360deg);
+  }
 }

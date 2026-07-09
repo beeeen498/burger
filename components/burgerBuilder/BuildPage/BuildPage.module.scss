@@ -285,3 +285,24 @@
     }
   }
 }
+
+// ── Small mobile — rearrange burger panel ────────────
+@media (max-width: 550px) {
+  .page {
+    .layout {
+      .burgerPanel {
+        height: 50vh;
+      }
+
+      .ingredientDiv {
+        right: auto;
+        order: -1;
+        width: 100%;
+        top: 0;
+        padding: 8px 12px;
+        box-sizing: border-box;
+        align-self: stretch;
+      }
+    }
+  }
+}

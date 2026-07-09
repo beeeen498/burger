@@ -190,23 +190,66 @@ export function calculatePrice(ingredients: BurgerIngredients): number {
   return Math.round(total * 100) / 100
 }
 
-// ── Randomize ingredients within their max limits ───────────────────
+// ── Randomize ingredients with realistic constraints ────────────────
 export function randomizeIngredients(): BurgerIngredients {
-  const rand = (max: number) => Math.floor(Math.random() * (max + 1))
+  const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+
+  // ── Step 1: Pick one main protein ──
+  const proteinType = pick(["patty", "nuggets", "friedFish"])
+  let pattyCount = 0
+  let nuggets = 0
+  let friedFish = 0
+
+  if (proteinType === "patty") {
+    pattyCount = pick([1, 1, 1, 2, 2, 3]) // weighted — 1-2 more common
+  } else if (proteinType === "nuggets") {
+    nuggets = pick([1, 1, 2])
+  } else {
+    friedFish = pick([1, 1, 2])
+  }
+
+  // ── Step 2: Optionally add 1 bacon (only if main protein is 1-2) ──
+  const mainCount = pattyCount || nuggets || friedFish
+  const bacon = mainCount <= 2 && Math.random() > 0.5 ? 1 : 0
+
+  // ── Step 3: Cheese matches patty count (50% chance of cheese) ──
+  const cheeseCount = pattyCount > 0 && Math.random() > 0.4 ? pattyCount : 0
+
+  // ── Step 4: Pick 1-3 random toppings ──
+  const toppingOptions = ["lettuce", "tomato", "pickles", "onions"]
+  const shuffled = toppingOptions.sort(() => Math.random() - 0.5)
+  const toppingCount = pick([1, 2, 2, 3])
+  const activeToppings = shuffled.slice(0, toppingCount)
+
+  const lettuce = activeToppings.includes("lettuce") ? pick([1, 1, 2]) : 0
+  const tomato = activeToppings.includes("tomato") ? pick([1, 1, 2]) : 0
+  const pickles = activeToppings.includes("pickles") ? pick([1, 1, 2]) : 0
+  const onions = activeToppings.includes("onions") ? pick([1, 1, 2]) : 0
+
+  // ── Step 5: Rare extras — low chance ──
+  const friedEgg = Math.random() > 0.8 ? 1 : 0
+  const onionRings = Math.random() > 0.85 ? 1 : 0
+
+  // ── Step 6: Always a sauce ──
+  const sauce = pick(["regular", "regular", "extra"]) as "regular" | "extra"
+
+  // ── Step 7: Bun ──
+  const bunType = pick(["regular", "regular", "poppy"]) as "regular" | "poppy"
 
   return {
-    bunType:     Math.random() > 0.5 ? "poppy" : "regular",
-    sauce:       ["none", "regular", "extra"][Math.floor(Math.random() * 3)] as "none" | "regular" | "extra",
-    pattyCount:  rand(MAX_PATTIES),
-    cheeseCount: rand(MAX_CHEESE),
-    lettuce:     rand(MAX_LETTUCE),
-    tomato:      rand(MAX_TOMATO),
-    pickles:     rand(MAX_PICKLES),
-    onions:      rand(MAX_ONIONS),
-    bacon:       rand(MAX_BACON),
-    nuggets:     rand(MAX_NUGGETS),
-    friedEgg:    rand(MAX_EGG),
-    friedFish:   rand(MAX_FRIED_FISH),
-    onionRings:  rand(MAX_ONION_RINGS),
+    bunType,
+    sauce,
+    pattyCount,
+    cheeseCount,
+    lettuce,
+    tomato,
+    pickles,
+    onions,
+    bacon,
+    nuggets,
+    friedEgg,
+    friedFish,
+    onionRings,
+    potatoChips: 0,
   }
 }

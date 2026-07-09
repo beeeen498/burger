@@ -228,7 +228,13 @@ const BuildPage = () => {
           <div className={styles.ingredientDiv}>
             <IngredientSummary
               ingredients={ingredients}
-              direction={windowWidth > 1000 ? "row" : "column"}
+              direction={
+                windowWidth > 1000
+                  ? "row"
+                  : windowWidth <= 550
+                    ? "row"
+                    : "column"
+              }
             />
           </div>
 
@@ -285,7 +291,11 @@ const BuildPage = () => {
             {/* ── Price and Add to Cart ── */}
             <div className={styles.cartRow}>
               <span className={styles.price}>${price.toFixed(2)}</span>
-              <Cta label="Add to Cart" variant="yellow" onClick={handleCartClick} />
+              <Cta
+                label="Add to Cart"
+                variant="yellow"
+                onClick={handleCartClick}
+              />
             </div>
           </div>
         </div>
@@ -293,7 +303,10 @@ const BuildPage = () => {
 
       {/* ── Name your burger popup ── */}
       {showNamePopup && (
-        <div className={styles.popupOverlay} onClick={() => setShowNamePopup(false)}>
+        <div
+          className={styles.popupOverlay}
+          onClick={() => setShowNamePopup(false)}
+        >
           <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
             <h3 className={styles.popupTitle}>Name Your Burger</h3>
             <input

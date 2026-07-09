@@ -40,7 +40,7 @@ export const MAX_EGG = 1;
 export const MAX_ONION_RINGS = 1;
 export const MAX_FRIED_FISH = 3;
 export const MAX_CHIPS = 1;
-export const MAX_SHRIMPS = 1
+export const MAX_SHRIMPS = 1;
 export const MAX_GIANT_NUGGET = 1;
 
 // How many units to subtract from each mesh's maxY to find the true visible top.
@@ -61,7 +61,7 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   bacon: 0,
   fried_egg: 0,
   onion_rings: 0,
-  fried_fish: -12,
+  fried_fish: -3,
   potato_chips: 0,
   top_bun: 0,
   poppy_bun: -4,
@@ -115,7 +115,7 @@ export interface BurgerIngredients {
   onionRings?: number; // 0 or 1
   potatoChips?: number; // 0 or 1
   shrimps?: number; // 0 or 1
-  giantNugget?: number  // 0 or 1
+  giantNugget?: number; // 0 or 1
 }
 
 /**
@@ -416,20 +416,21 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
   const baconCount = Math.min(ingredients.bacon ?? 0, MAX_BACON);
   const totalCheese = Math.min(ingredients.cheeseCount ?? 0, MAX_CHEESE);
 
-  // split cheese — patties get first pick, fish get second, nuggets get the rest
-  let cheeseForPatties = totalCheese; // all cheese goes to patties first, extras pile on top
-  let cheeseForFish = Math.min(
-    totalCheese - Math.min(totalCheese, pattyCount),
-    friedFishCount,
-  );
-  let cheeseForNuggets = Math.min(
-    totalCheese - Math.min(totalCheese, pattyCount) - cheeseForFish,
-    nuggetCount,
-  );
+  // ── Split cheese across proteins — patties first, then fish, then nuggets ──
+  let cheeseForPatties = Math.min(totalCheese, pattyCount);
+  let cheeseRemaining = totalCheese - cheeseForPatties;
+  let cheeseForFish = Math.min(cheeseRemaining, friedFishCount);
+  cheeseRemaining -= cheeseForFish;
+  let cheeseForNuggets = Math.min(cheeseRemaining, nuggetCount);
+  cheeseRemaining -= cheeseForNuggets;
+  let extraCheese = cheeseRemaining;
 
   // giant nugget — same position as patties
-  const giantNuggetCount = Math.min(ingredients.giantNugget ?? 0, MAX_GIANT_NUGGET)
-  for (let i = 0; i < giantNuggetCount; i++) layers.push("giant_nugget")
+  const giantNuggetCount = Math.min(
+    ingredients.giantNugget ?? 0,
+    MAX_GIANT_NUGGET,
+  );
+  for (let i = 0; i < giantNuggetCount; i++) layers.push("giant_nugget");
 
   // patties + cheese (one per patty)
   for (let i = 0; i < pattyCount; i++) {
@@ -440,10 +441,10 @@ export function buildBurgerSequence(ingredients: BurgerIngredients): string[] {
     }
   }
 
-  // extra cheese piles on top of the last patty
-  while (cheeseForPatties > 0) {
+  // leftover cheese piles on top of the last protein
+  while (extraCheese > 0) {
     layers.push("cheese");
-    cheeseForPatties--;
+    extraCheese--;
   }
 
   // fried fish + cheese
