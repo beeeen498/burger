@@ -186,13 +186,14 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
     setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
 
     addItem({
-      id: data.id,
-      name: data.name,
+      id: `botd-${data.id}`,
+      name: `${data.name} (Burger of the Day)`,
       price: data.discountPrice ?? data.price,
       quantity: 1,
+      maxQuantity: 1,
       ingredients: data.ingredients,
     });
-    toast(`Added ${data.name} to bag! 🍔`);
+    toast(`Added ${data.name} (Burger of the Day) to bag! 🍔`);
   };
 
   return (

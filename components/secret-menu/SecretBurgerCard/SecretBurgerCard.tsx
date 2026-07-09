@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { toast } from "sonner";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import useCartStore from "@/lib/useCartStore";
@@ -41,14 +42,16 @@ export default function SecretBurgerCard({
   const addItem = useCartStore((state) => state.addItem);
   const setFlyFrom = useCartStore((state) => state.setFlyFrom);
 
+  // ── How many the user wants to add ──
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAdd = () => setQuantity((prev) => prev + 1);
+  const handleRemove = () => setQuantity((prev) => Math.max(1, prev - 1));
+
   // ── Add this secret burger to cart ──
-  // Also grabs the button's position so the flying 🍔 knows
-  // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
-    // ── Haptic feedback ──
     navigator.vibrate?.(50);
 
-    // ── Capture button position for flying animation ──
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
 
@@ -56,10 +59,11 @@ export default function SecretBurgerCard({
       id,
       name,
       price,
-      quantity: 1,
+      quantity,
       ingredients: burgerIngredients,
     });
     toast(`Added ${name} to bag! 🍔`);
+    setQuantity(1);
   };
 
   return (
@@ -101,7 +105,7 @@ export default function SecretBurgerCard({
       <h2 className={styles.name}>{name}</h2>
 
       {/* ── Price ── */}
-      <span className={styles.price}>${price.toFixed(2)}</span>
+      <span className={styles.price}>${(price * quantity).toFixed(2)}</span>
 
       {/* ── Ingredients list — dossier style ── */}
       <ul className={styles.ingredients}>
@@ -115,10 +119,17 @@ export default function SecretBurgerCard({
       {/* ── Description ── */}
       <p className={styles.description}>{description}</p>
 
-      {/* ── Add to cart button ── */}
-      <button className={styles.addBtn} onClick={handleAddToCart}>
-        Add to Cart
-      </button>
+      {/* ── Quantity controls + add to cart ── */}
+      <div className={styles.actions}>
+        <div className={styles.quantity}>
+          <button className={styles.qtyBtn} onClick={handleRemove}>−</button>
+          <span className={styles.qtyNum}>{quantity}</span>
+          <button className={styles.qtyBtn} onClick={handleAdd}>+</button>
+        </div>
+        <button className={styles.addBtn} onClick={handleAddToCart}>
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 }

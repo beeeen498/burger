@@ -176,21 +176,29 @@ const CartDrawer = () => {
 
                 {/* ── Quantity controls ── */}
                 <div className={styles.itemActions}>
-                  <div className={styles.quantity}>
-                    <button
-                      className={styles.qtyBtn}
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    >
-                      −
-                    </button>
-                    <span className={styles.qtyNum}>{item.quantity}</span>
-                    <button
-                      className={styles.qtyBtn}
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
+                  {item.maxQuantity === 1 ? (
+                    <span className={styles.limitedQty}>Limit 1 per order</span>
+                  ) : (
+                    <div className={styles.quantity}>
+                      <button
+                        className={styles.qtyBtn}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
+                      >
+                        −
+                      </button>
+                      <span className={styles.qtyNum}>{item.quantity}</span>
+                      <button
+                        className={styles.qtyBtn}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  )}
 
                   {/* ── Remove button ── */}
                   <button
@@ -242,9 +250,7 @@ const CartDrawer = () => {
               </button>
             ) : (
               <div className={styles.confirmClear}>
-                <p className={styles.confirmText}>
-                  Are you sure?
-                </p>
+                <p className={styles.confirmText}>Are you sure?</p>
                 <div className={styles.confirmBtns}>
                   <button
                     className={styles.confirmYes}
