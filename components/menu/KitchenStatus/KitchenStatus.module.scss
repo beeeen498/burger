@@ -27,6 +27,18 @@
     }
   }
 
+  // ── Closing soon state ──────────────────────────────────
+  &.closingSoon{
+    background: #1a1a1a;
+    color: #d67900;
+    border-color: #d67900;
+    box-shadow: 3px 3px 0 #d67900;
+
+    .dot {
+      background: #d67900;
+    }
+  }
+
   // ── Closed state ────────────────────────────────
   &.closed {
     background: #1a1a1a;

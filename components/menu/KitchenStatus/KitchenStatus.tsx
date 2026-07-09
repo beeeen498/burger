@@ -10,8 +10,11 @@ interface Settings {
   is_manually_closed: boolean
 }
 
+// ── Status type ──
+type KitchenStatus = "open" | "closingSoon" | "closed" | null
+
 export default function KitchenStatus() {
-  const [isOpen, setIsOpen] = useState<boolean | null>(null)
+  const [status, setStatus] = useState<KitchenStatus>(null)
 
   useEffect(() => {
     async function fetchSettings() {
@@ -21,7 +24,7 @@ export default function KitchenStatus() {
         .single()
 
       if (!data) return
-      setIsOpen(checkIfOpen(data))
+      setStatus(getKitchenStatus(data))
     }
 
     fetchSettings()
@@ -32,14 +35,11 @@ export default function KitchenStatus() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "restaurant_settings" },
-        (payload) => {
-          console.log("kitchen status update", payload)
-          fetchSettings()
-        }
+        () => fetchSettings()
       )
       .subscribe()
 
-    // ── Re-check every minute in case opening/closing time passes ──
+    // ── Re-check every minute in case status changes ──
     const interval = setInterval(fetchSettings, 60000)
 
     return () => {
@@ -49,21 +49,28 @@ export default function KitchenStatus() {
   }, [])
 
   // ── Don't render until we have data ──
-  if (isOpen === null) return null
+  if (status === null) return null
+
+  // ── Status config ──
+  const config = {
+    open:        { label: "Kitchen is open",         className: styles.open },
+    closingSoon: { label: "Kitchen is closing soon", className: styles.closingSoon },
+    closed:      { label: "Kitchen is closed",       className: styles.closed },
+  }
+
+  const { label, className } = config[status]
 
   return (
-    <div className={`${styles.banner} ${isOpen ? styles.open : styles.closed}`}>
+    <div className={`${styles.banner} ${className}`}>
       <span className={styles.dot} />
-      <span className={styles.text}>
-        {isOpen ? "Kitchen is open" : "Kitchen is closed"}
-      </span>
+      <span className={styles.text}>{label}</span>
     </div>
   )
 }
 
-// ── Check if kitchen is open based on current time ──
-function checkIfOpen(settings: Settings): boolean {
-  if (settings.is_manually_closed) return false
+// ── Get kitchen status based on current time ──
+function getKitchenStatus(settings: Settings): KitchenStatus {
+  if (settings.is_manually_closed) return "closed"
 
   const now = new Date()
   const currentMinutes = now.getHours() * 60 + now.getMinutes()
@@ -72,7 +79,13 @@ function checkIfOpen(settings: Settings): boolean {
   const [closeHour, closeMin] = settings.closing_time.split(":").map(Number)
 
   const openMinutes = openHour * 60 + openMin
-  const closeMinutes = closeHour * 60 + closeMin
 
-  return currentMinutes >= openMinutes && currentMinutes < closeMinutes
+  // ── Treat 00:00 as midnight (end of day = 1440 minutes) ──
+  const closeMinutes = (closeHour === 0 && closeMin === 0)
+    ? 24 * 60
+    : closeHour * 60 + closeMin
+
+  if (currentMinutes < openMinutes || currentMinutes >= closeMinutes) return "closed"
+  if (currentMinutes >= closeMinutes - 60) return "closingSoon"
+  return "open"
 }
