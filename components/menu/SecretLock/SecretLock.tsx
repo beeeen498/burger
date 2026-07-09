@@ -19,9 +19,6 @@ export default function SecretLock() {
   const [shake, setShake] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ── Notify other components ──
-  window.dispatchEvent(new Event("secretMenuUnlocked"));
-
   // ── Only show if burger interaction is complete and not already unlocked ──
   useEffect(() => {
     const completed = localStorage.getItem(LS_BURGER_CLICKED) === "yes";
@@ -51,16 +48,23 @@ export default function SecretLock() {
   // ── Submit the code ──
   const handleSubmit = () => {
     if (code.toUpperCase().trim() === SECRET_CODE) {
-      // ── Correct — save unlock time and show success ──
       localStorage.setItem(LS_SECRET_UNLOCKED, "yes");
       localStorage.setItem(LS_UNLOCK_TIME, new Date().toISOString());
       setUnlocked(true);
+
+      // ── Notify other components ──
+      window.dispatchEvent(new Event("secretMenuUnlocked"));
     } else {
-      // ── Wrong — shake and clear ──
       setShake(true);
       setCode("");
       setTimeout(() => setShake(false), 500);
     }
+  };
+
+  // ── Close the lock input ──
+  const handleClose = () => {
+    setIsOpen(false);
+    setCode("");
   };
 
   // ── Handle enter key ──
@@ -104,6 +108,9 @@ export default function SecretLock() {
           />
           <button className={styles.submitBtn} onClick={handleSubmit}>
             →
+          </button>
+          <button className={styles.closeBtn} onClick={handleClose}>
+            ✕
           </button>
         </div>
       )}
