@@ -34,6 +34,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#df2c8b" />
+      </head>
+      
       <body className={`${righteous.variable} ${inter.variable}`}>
         {/* loading screen sits on top of everything until page is ready */}
         <LoadingScreen />

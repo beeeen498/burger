@@ -6,87 +6,67 @@ import { useLoadingStore } from "@/store/useLoadingStore";
 import styles from "./LoadingScreen.module.scss";
 
 // ---------- config ----------
-const MIN_DISPLAY_TIME = 1500; // minimum time on first page load, in ms
-const MIN_NAV_TIME = 600; // minimum time on route changes, in ms
-const DOT_INTERVAL = 400; // how fast the dots cycle, in ms
+const MIN_DISPLAY_TIME = 1500;
+const MIN_NAV_TIME = 600;
+const DOT_INTERVAL = 400;
 
 export default function LoadingScreen() {
-  // ---------- state ----------
-  const [minTimePassed, setMinTimePassed] = useState(false); // first-load minimum timer done?
-  const [pageLoaded, setPageLoaded] = useState(false); // window 'load' event fired?
-  const [isHidden, setIsHidden] = useState(false); // should we remove the screen?
-  const [dotCount, setDotCount] = useState(1); // 1, 2, or 3 dots
-  const [navMinTimePassed, setNavMinTimePassed] = useState(true); // min time passed for THIS navigation
+  const [visible, setVisible] = useState(true);
+  const [dotCount, setDotCount] = useState(1);
 
   const pathname = usePathname();
-  const isPageReady = useLoadingStore((state) => state.isPageReady); // shared "is the new page ready" flag
-  const isFirstRender = useRef(true); // distinguishes first mount from real navigation
+  const isPageReady = useLoadingStore((state) => state.isPageReady);
 
-  // ---------- navigation: show again on every route change ----------
+  // ── tracks whether first load has completed ──
+  const firstLoadDone = useRef(false);
+  const prevPathname = useRef(pathname);
+
+  // ---------- first load: hide after min time ----------
   useEffect(() => {
-    if (isFirstRender.current) {
-      return;
-    }
+    const timer = setTimeout(() => {
+      setVisible(false);
+      firstLoadDone.current = true;
+    }, MIN_DISPLAY_TIME);
 
-    setIsHidden(false);
-    setNavMinTimePassed(false);
+    return () => clearTimeout(timer);
+  }, []);
 
-    const timer = setTimeout(() => setNavMinTimePassed(true), MIN_NAV_TIME);
+  // ---------- route changes: show loading, then hide ----------
+  useEffect(() => {
+    if (!firstLoadDone.current) return;
+
+    // ── Scroll to top on every route change ──
+    window.scrollTo(0, 0);
+
+    setVisible(true);
+
+    // ── Only hide after min time AND page is ready ──
+    const timer = setTimeout(() => {
+      if (useLoadingStore.getState().isPageReady) {
+        setVisible(false);
+      }
+    }, MIN_NAV_TIME);
+
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  const prevPathname = useRef(pathname);
+  // ---------- page ready after nav min time ----------
+  useEffect(() => {
+    if (!firstLoadDone.current) return;
+    if (isPageReady) {
+      setVisible(false);
+    }
+  }, [isPageReady]);
 
   // ---------- catch route change immediately (no flash) ----------
-  if (!isFirstRender.current && pathname !== prevPathname.current) {
+  if (firstLoadDone.current && pathname !== prevPathname.current) {
     prevPathname.current = pathname;
-    if (isHidden) {
-      setIsHidden(false);
-      setNavMinTimePassed(false);
+    if (!visible) {
+      setVisible(true);
     }
   }
 
-  // ---------- navigation: hide once page is ready AND min time passed ----------
-  useEffect(() => {
-    if (isFirstRender.current) return;
-    if (isPageReady && navMinTimePassed) {
-      setIsHidden(true);
-    }
-  }, [isPageReady, navMinTimePassed]);
-
-  // ---------- first-load: minimum display timer ----------
-  useEffect(() => {
-    const timer = setTimeout(() => setMinTimePassed(true), MIN_DISPLAY_TIME);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // ---------- first-load: window load listener ----------
-  useEffect(() => {
-    if (document.readyState === "complete") {
-      setPageLoaded(true);
-      return;
-    }
-    const onLoad = () => setPageLoaded(true);
-    window.addEventListener("load", onLoad);
-    return () => window.removeEventListener("load", onLoad);
-  }, []);
-
-  // ---------- first-load: hide once both conditions are met ----------
-  useEffect(() => {
-    if (minTimePassed && pageLoaded) {
-      setIsHidden(true);
-    }
-  }, [minTimePassed, pageLoaded]);
-
-  // ---------- first-load: mark first render done after min time passes ----------
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      isFirstRender.current = false;
-    }, MIN_DISPLAY_TIME);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // ---------- cycle the dots: 1 -> 2 -> 3 -> 1 ... ----------
+  // ---------- dots animation ----------
   useEffect(() => {
     const interval = setInterval(() => {
       setDotCount((prev) => (prev === 3 ? 1 : prev + 1));
@@ -94,23 +74,25 @@ export default function LoadingScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  // ---------- render ----------
-  if (isHidden) return null;
+  // ---------- block scroll while visible ----------
+  useEffect(() => {
+    document.body.style.overflow = visible ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [visible]);
+
+  if (!visible) return null;
 
   return (
     <div className={styles.loadingScreen}>
-      {/* ---------- burger wrapped in rotating ring ---------- */}
       <div className={styles.burgerWrapper}>
-        {/* ---------- rotating ring (sits behind the burger) ---------- */}
         <div className={styles.ring} />
-
-        {/* ---------- static burger ---------- */}
         <svg
           className={styles.burger}
           viewBox="0 0 200 160"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* top bun */}
           <g className={styles.topBun}>
             <path
               d="M 30 60 Q 30 20 100 20 Q 170 20 170 60 Z"
@@ -120,8 +102,6 @@ export default function LoadingScreen() {
               strokeLinejoin="round"
             />
           </g>
-
-          {/* patty */}
           <g className={styles.patty}>
             <rect
               x="30"
@@ -134,8 +114,6 @@ export default function LoadingScreen() {
               strokeWidth="5"
             />
           </g>
-
-          {/* bottom bun (top bun shape, flipped vertically) */}
           <g className={styles.bottomBun}>
             <path
               d="M 30 94 Q 30 132 100 132 Q 170 132 170 94 Z"
@@ -148,10 +126,8 @@ export default function LoadingScreen() {
         </svg>
       </div>
 
-      {/* ---------- text ---------- */}
       <p className={styles.text}>
         Heating up the grill
-        {/* dots cycle 1 -> 2 -> 3; fixed-width wrapper stops text from shifting */}
         <span className={styles.dots}>{".".repeat(dotCount)}</span>
       </p>
     </div>
