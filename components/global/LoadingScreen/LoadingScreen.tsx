@@ -22,6 +22,27 @@ export default function LoadingScreen() {
   const isPageReady = useLoadingStore((state) => state.isPageReady); // shared "is the new page ready" flag
   const isFirstRender = useRef(true); // distinguishes first mount from real navigation
 
+  // ---------- navigation: show again on every route change ----------
+  useEffect(() => {
+    if (isFirstRender.current) {
+      return;
+    }
+
+    setIsHidden(false);
+    setNavMinTimePassed(false);
+
+    const timer = setTimeout(() => setNavMinTimePassed(true), MIN_NAV_TIME);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  // ---------- navigation: hide once page is ready AND min time passed ----------
+  useEffect(() => {
+    if (isFirstRender.current) return;
+    if (isPageReady && navMinTimePassed) {
+      setIsHidden(true);
+    }
+  }, [isPageReady, navMinTimePassed]);
+
   // ---------- first-load: minimum display timer ----------
   useEffect(() => {
     const timer = setTimeout(() => setMinTimePassed(true), MIN_DISPLAY_TIME);
