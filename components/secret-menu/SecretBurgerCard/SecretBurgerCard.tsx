@@ -24,7 +24,8 @@ interface SecretBurgerCardProps {
     | "kaiju"
     | "hazmat"
     | "wrestling"
-    | "wanted";
+    | "wanted"
+    | "shattered"
   scale?: number;
 }
 
@@ -88,6 +89,8 @@ export default function SecretBurgerCard({
                         ? "MAIN EVENT"
                         : variant === "wanted"
                           ? "REWARD"
+                          : variant === "shattered"
+                            ? "Fragile"
                           : ""}
       </span>
 

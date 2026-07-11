@@ -139,6 +139,23 @@ export default function SecretMenuPage() {
             }}
             variant="kaiju"
           />
+
+          <SecretBurgerCard
+            id="the-asmr"
+            price={17.99}
+            scale={0.28}
+            name="The ASMR"
+            description="Handle with care"
+            ingredients={["Toasts", "Crispy Lettuce", "Extra Cripsy Bacon", "Homemade Chips"]}
+            burgerIngredients={{
+              bunType: "toast",
+              lettuce: 1,
+              bacon: 2,
+              potatoChips: 1,
+              sauce: "regular",
+            }}
+            variant="shattered"
+          />
         </div>
       </div>
     </main>
