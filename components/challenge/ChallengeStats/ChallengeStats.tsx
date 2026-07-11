@@ -1,7 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./ChallengeStats.module.scss";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface StatCircleProps {
   value: number;
@@ -13,11 +18,12 @@ interface StatCircleProps {
 
 const STATS = [
   { value: 2847, suffix: "+", label: "Failed Attempts" },
-  { value: 10000,   suffix: "kg", label: "Total Weight Eaten" },
+  { value: 10000, suffix: "kg", label: "Total Weight Eaten" },
   { value: 20000, suffix: "", label: "Calories Per Burger" },
 ];
 
-function useCountUp(target: number, duration = 2200, started = false) {
+// ─── Count-up hook — eases from 0 to target over duration ────────────────────
+function useCountUp(target: number, duration = 3500, started = false) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -40,9 +46,9 @@ function useCountUp(target: number, duration = 2200, started = false) {
   return count;
 }
 
+// ─── Individual stat circle ──────────────────────────────────────────────────
 function StatCircle({ value, suffix, label, started, colorClass }: StatCircleProps) {
-  const count = useCountUp(value, 2200, started);
-
+  const count = useCountUp(value, 3500, started);
   const display = count.toLocaleString();
 
   return (
@@ -53,20 +59,53 @@ function StatCircle({ value, suffix, label, started, colorClass }: StatCirclePro
   );
 }
 
+// ─── Stats row ───────────────────────────────────────────────────────────────
 const ChallengeStats = () => {
   const statsRef = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
+  const isPageReady = useLoadingStore((s) => s.isPageReady);
 
+  // ─── Count-up trigger — waits for page ready + in view ─────────────────────
   useEffect(() => {
+    if (!isPageReady) return;
+
     const el = statsRef.current;
     if (!el) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setStarted(true); },
       { threshold: 0.3 }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isPageReady]);
+
+  // ─── GSAP slide-up — only on mobile/tablet (≤1000px) ──────────────────────
+  useEffect(() => {
+    if (!isPageReady) return;
+    if (window.innerWidth > 1000) return;
+
+    const el = statsRef.current;
+    if (!el) return;
+
+    gsap.set(el, { y: 60, opacity: 0 });
+
+    const trigger = ScrollTrigger.create({
+      trigger: el,
+      start: "top 85%",
+      once: true,
+      onEnter: () => {
+        gsap.to(el, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        });
+      },
+    });
+
+    return () => trigger.kill();
+  }, [isPageReady]);
 
   return (
     <div className={styles.stats} ref={statsRef}>

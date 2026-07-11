@@ -94,6 +94,40 @@
         flex-direction: column;
         gap: 1.25rem;
       }
+
+      // ─── CTA wrapper with sticker badge ───────────────────────────────────
+      .ctaWrapper {
+        position: relative;
+        align-self: flex-start;
+
+        .clickBadge {
+          position: absolute;
+          top: -14px;
+          right: -18px;
+          background: var(--pink);
+          color: var(--white);
+          font-family: var(--pixel-font);
+          font-size: 0.5rem;
+          padding: 4px 8px;
+          border: 2px solid var(--black);
+          box-shadow: 2px 2px 0 var(--black);
+          transform: rotate(8deg);
+          z-index: 2;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          animation: badgeWobble 2s ease-in-out infinite;
+        }
+      }
+
+      @keyframes badgeWobble {
+        0%,
+        100% {
+          transform: rotate(8deg);
+        }
+        50% {
+          transform: rotate(-4deg) scale(1.05);
+        }
+      }
     }
 
     // ─── Right column — 3D scene ─────────────────────────────────────────────
@@ -142,6 +176,10 @@
 
     .storyGroup {
       align-items: center;
+
+      .ctaWrapper {
+        align-self: center;
+      }
     }
 
     .dataGroup {

@@ -25,14 +25,19 @@ const ChallengePage = () => {
               <br />
               <span className={styles.headingAccent}>The Challenge?</span>
             </h1>
+            
             <p className={styles.subheading}>
               20 patties. Fries & a milkshake. One hour.
             </p>
-            <Cta
-              label="I'm Ready. Let's Talk."
-              variant="yellow"
-              href="/?from=challenge#contact"
-            />
+
+            <div className={styles.ctaWrapper}>
+              <span className={styles.clickBadge}>CLICK ME</span>
+              <Cta
+                label="I'm Ready. Let's Talk."
+                variant="yellow"
+                href="/?from=challenge#contact"
+              />
+            </div>
           </div>
 
           {/* Right group — data */}
