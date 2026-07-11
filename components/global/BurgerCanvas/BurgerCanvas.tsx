@@ -25,23 +25,61 @@ interface SideItemProps {
   model: string;
   position: [number, number, number];
   scale: number;
+  showShadow: boolean;
 }
 
 // Inner component — loads and renders a single side item (fries, milkshake etc)
 // Must live inside <Canvas> to access the Three.js context
-function SideItem({ model, position, scale }: SideItemProps) {
+function SideItem({ model, position, scale, showShadow }: SideItemProps) {
   const { scene } = useGLTF(model) as any;
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
-  return <primitive object={clonedScene} position={position} scale={scale} />;
+  const shadowTexture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gradient.addColorStop(0, "rgba(0,0,0,0.7)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }, [model]);
+
+  return (
+    <group position={position}>
+      <primitive object={clonedScene} scale={scale} />
+      {showShadow && (
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[-8.3, -2.7, 0]}
+          scale={[5, 5, 2]}
+        >
+          <circleGeometry args={[1, 32]} />
+          <meshBasicMaterial
+            map={shadowTexture}
+            transparent
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+    </group>
+  );
 }
 
 // positioning the side items
 const SIDE_ITEM_CONFIG: {
-  [key: string]: { position: [number, number, number]; scale: number };
+  [key: string]: {
+    position: [number, number, number];
+    scale: number;
+    showShadow: boolean;
+  };
 } = {
-  french_fries: { position: [-2, 6, -10], scale: 0.1 },
-  milkshake: { position: [-9, 6, -10], scale: 0.13 },
+  french_fries: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
+  milkshake: { position: [-9, 6, -10], scale: 0.13, showShadow: false },
 };
 
 // Inner component — must live inside <Canvas> to access the Three.js context.
@@ -55,6 +93,7 @@ function BurgerScene({
   // Ref to the Three.js group that holds the stacked burger layers
   const groupRef = useRef<THREE.Group>(null);
   const spinRef = useRef<THREE.Group>(null);
+  const shadowRef = useRef<THREE.Mesh>(null);
 
   // Ref to store extracted meshes by name — e.g. meshes.current["patty"]
   // useRef is used instead of useState because we don't need a re-render when meshes populate
@@ -67,7 +106,6 @@ function BurgerScene({
   useEffect(() => {
     // Walk through every object in the GLB scene and extract the meshes by name
     scene.traverse((obj: THREE.Object3D) => {
-
       if ((obj as THREE.Mesh).isMesh) {
         // bacon is exported as multiple strips (bacon_1, bacon_2 etc)
         // store each strip individually and also map bacon_1 as "bacon"
@@ -129,6 +167,11 @@ function BurgerScene({
     camera.position.set(0, stackBottom + cameraOffset, 120); // at the bottom
     (camera as THREE.PerspectiveCamera).fov = 15;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+
+    // ── Position shadow disc under the burger ──
+    if (shadowRef.current) {
+      shadowRef.current.position.set(0, totalBox.min.y - 0.5, 0);
+    }
   }, [scene, ingredients]);
 
   // ── Slow spin when enabled ──
@@ -141,6 +184,27 @@ function BurgerScene({
   return (
     <group ref={spinRef}>
       <group ref={groupRef} scale={scale} rotation={[0.1, 0, 0]} />
+      {/* Shadow disc under burger */}
+      <mesh ref={shadowRef} rotation={[-Math.PI / 2, 0, 0]} scale={[7, 7, 10]}>
+        <circleGeometry args={[1, 32]} />
+        <meshBasicMaterial transparent depthWrite={false}>
+          <canvasTexture
+            attach="map"
+            image={(() => {
+              const canvas = document.createElement("canvas");
+              canvas.width = 128;
+              canvas.height = 128;
+              const ctx = canvas.getContext("2d")!;
+              const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+              gradient.addColorStop(0, "rgba(0,0,0,0.7)");
+              gradient.addColorStop(1, "rgba(0,0,0,0)");
+              ctx.fillStyle = gradient;
+              ctx.fillRect(0, 0, 128, 128);
+              return canvas;
+            })()}
+          />
+        </meshBasicMaterial>
+      </mesh>
     </group>
   );
 }
@@ -180,6 +244,7 @@ export default function BurgerCanvas({
               model={`/3d-models/${item}.glb`}
               position={config.position}
               scale={config.scale}
+              showShadow={config.showShadow}
             />
           );
         })}

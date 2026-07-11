@@ -1,139 +1,232 @@
 .featuredItems {
-    width: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 74px;
+
+  .container {
     position: relative;
-    z-index: 1;
-    text-align: center;
-    margin-bottom: 10vh;
-    
-    .container {
-        position: relative;
-        background-color: var(--pink);
-        border: var(--border);
-        box-shadow: var(--box-shadow);
-        width: 80%;
-        margin: 0 auto;
-        padding: 80px 40px;
+    background-color: var(--pink);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    width: 80%;
+    margin: 0 auto;
+    padding: 40px 30px;
 
-        // ─── Heading ─────────────────────────────────────
-        .heading {
-            display: block;
-            margin-bottom: 40px;
-            user-select: none;
+    // ─── Heading ─────────────────────────────────────
+    .heading {
+      display: block;
+      margin-bottom: 20px;
+      user-select: none;
 
-            .headingText {
-                fill: var(--yellow);
-                stroke: var(--black);
-                stroke-width: 2;
-                stroke-dasharray: 3 5;
-                animation: flicker 4s infinite;
-            }
-        }
-
-        // ─── Cards Grid ───────────────────────────────────
-        .cardsGrid {
-            display: grid;
-            grid-template-columns: 1fr 1.4fr;
-            grid-template-rows: 220px 220px;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-
-            // ─── Card ─────────────────────────────────────
-            .card {
-                box-shadow: 0px 12px 32px rgba(26, 26, 26, 0.4);
-                position: relative;
-                overflow: hidden;
-                background-color: var(--blue);
-                border: var(--border);
-                cursor: pointer;
-                transition: box-shadow 200ms ease, transform 200ms ease;
-
-                &:hover {
-                    box-shadow: 7px 7px 0px var(--black);
-                    transform: translate(-2px, -2px);
-                }
-
-                &:nth-child(1) { grid-column: 1; }
-                &:nth-child(2) { grid-column: 1; }
-                &:last-child   { grid-column: 2; grid-row: 1 / 3; }
-
-                // ─── Card Name ────────────────────────────
-                .cardName {
-                    position: absolute;
-                    left: 16px;
-                    top: 16px;
-                    font-family: var(--header-font);
-                    font-size: clamp(1.5rem, 3vw, 2.5rem);
-                    text-transform: uppercase;
-                    line-height: 1;
-                    color: var(--black);
-                }
-
-                // ─── Card Price ───────────────────────────
-                .cardPrice {
-                    position: absolute;
-                    right: 16px;
-                    top: 16px;
-                    font-family: var(--header-font);
-                    font-size: 1rem;
-                    color: var(--black);
-                    background: var(--yellow);
-                    border: var(--border);
-                    padding: 4px 10px;
-                    transform: rotate(5deg);
-                }
-            }
-        }
-
-        // ─── CTA ──────────────────────────────────────────
-        .cta {
-            display: flex;
-            justify-content: center;
-            margin-top: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        // ─── Corner Elements ──────────────────────────────────────────
-        &::before {
-            content: "";
-            position: absolute;
-            top: -16px;
-            left: -16px;
-            width: 50px;
-            height: 50px;
-            border-top: 20px solid var(--black);
-            border-left: 20px solid var(--black);
-            background: transparent;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        &::after {
-            content: "";
-            position: absolute;
-            bottom: -16px;
-            right: -16px;
-            width: 50px;
-            height: 50px;
-            border-bottom: 20px solid var(--black);
-            border-right: 20px solid var(--black);
-            background: transparent;
-            pointer-events: none;
-            z-index: 2;
-        }
+      .headingText {
+        fill: var(--yellow);
+        stroke: var(--black);
+        stroke-width: 2;
+        stroke-dasharray: 3 5;
+        animation: flicker 4s infinite;
+      }
     }
+
+    // ─── Cards Grid ───────────────────────────────────
+    .cardsGrid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      grid-template-rows: 170px 170px;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+
+      // ─── Card ─────────────────────────────────────
+      .card {
+        box-shadow: 0px 12px 32px rgba(26, 26, 26, 0.4);
+        position: relative;
+        background-color: var(--blue);
+        border: var(--border);
+        cursor: pointer;
+        transition:
+          box-shadow 200ms ease,
+          transform 200ms ease;
+
+        // ─── Canvas clip — contains the 3D overflow ─────
+        .canvasClip {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+
+        &:hover {
+          box-shadow: 7px 7px 0px var(--black);
+          transform: translate(-2px, -2px);
+        }
+
+        &:nth-child(1) {
+          grid-column: 1;
+        }
+        &:nth-child(2) {
+          grid-column: 1;
+        }
+        &:last-child {
+          grid-column: 2;
+          grid-row: 1 / 3;
+        }
+
+        // ─── Card Name ────────────────────────────
+        .cardName {
+          position: absolute;
+          left: 16px;
+          top: 16px;
+          font-family: var(--header-font);
+          font-size: clamp(1.5rem, 3vw, 2.5rem);
+          text-transform: uppercase;
+          line-height: 1;
+          color: var(--black);
+        }
+
+        // ─── Card Price ───────────────────────────
+        .cardPrice {
+          position: absolute;
+          right: -8px;
+          top: -8px;
+          font-family: var(--header-font);
+          font-size: 1rem;
+          color: var(--black);
+          background: var(--yellow);
+          border: var(--border);
+          padding: 4px 10px;
+          transform: rotate(5deg);
+          transform-origin: top right;
+          z-index: 3;
+        }
+      }
+    }
+
+    // ─── CTA ──────────────────────────────────────────
+    .cta {
+      display: flex;
+      justify-content: center;
+      margin-top: 34px;
+      position: relative;
+      z-index: 1;
+
+      // ─── CTA wrapper with sticker badge ─────────────────
+      .ctaWrapper {
+        position: relative;
+        display: inline-block;
+
+        .clickBadge {
+          position: absolute;
+          top: -14px;
+          right: -18px;
+          background: var(--blue);
+          color: var(--black);
+          font-family: var(--pixel-font);
+          font-size: 0.5rem;
+          padding: 4px 8px;
+          border: 2px solid var(--black);
+          box-shadow: 2px 2px 0 var(--black);
+          transform: rotate(8deg);
+          z-index: 2;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          animation: badgeWobble 2s ease-in-out infinite;
+        }
+      }
+
+      @keyframes badgeWobble {
+        0%,
+        100% {
+          transform: rotate(8deg);
+        }
+        50% {
+          transform: rotate(-4deg) scale(1.05);
+        }
+      }
+    }
+
+    // ─── Corner Elements ──────────────────────────────────────────
+    &::before {
+      content: "";
+      position: absolute;
+      top: -16px;
+      left: -16px;
+      width: 50px;
+      height: 50px;
+      border-top: 20px solid var(--black);
+      border-left: 20px solid var(--black);
+      background: transparent;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      width: 50px;
+      height: 50px;
+      border-bottom: 20px solid var(--black);
+      border-right: 20px solid var(--black);
+      background: transparent;
+      pointer-events: none;
+      z-index: 2;
+    }
+  }
+
+  // ─── 800px — stacked cards, hide middle ────────────────────────────────
+  @media (max-width: 800px) {
+    .container {
+      width: 90%;
+      padding: 30px 20px;
+
+      .cardsGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 16px;
+
+        .card {
+          height: 180px;
+          grid-column: 1 !important;
+          grid-row: auto !important;
+
+          &:nth-child(2) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }
 
 // ─── Animations ────────────────────────────────────────────
 @keyframes flicker {
-    0%   { fill: var(--yellow); }
-    5%   { fill: transparent; }
-    6%   { fill: var(--yellow); }
-    51%  { fill: transparent; }
-    52%  { fill: var(--yellow); }
-    53%  { fill: transparent; }
-    54%  { fill: var(--yellow); }
-    91%  { fill: rgba(247,229,88,0.3); }
-    92%  { fill: var(--yellow); }
+  0% {
+    fill: var(--yellow);
+  }
+  5% {
+    fill: transparent;
+  }
+  6% {
+    fill: var(--yellow);
+  }
+  51% {
+    fill: transparent;
+  }
+  52% {
+    fill: var(--yellow);
+  }
+  53% {
+    fill: transparent;
+  }
+  54% {
+    fill: var(--yellow);
+  }
+  91% {
+    fill: rgba(247, 229, 88, 0.3);
+  }
+  92% {
+    fill: var(--yellow);
+  }
 }
