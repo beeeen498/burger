@@ -12,13 +12,12 @@ import styles from "./FeaturedItems.module.scss";
 // 404 is last so nth-child CSS makes it the tall hero card on the right
 const FEATURED_ITEMS = [
   {
-    id: "nuggets",
-    name: "nuggets",
+    id: "nuggets-burger-meal",
+    name: "nuggets meal",
     price: "$16.99",
-    href: "/menu/nuggets",
+    href: "/menu/nuggets-burger",
     sideItems: ["french_fries", "milkshake"],
     ingredients: {
-      cheeseCount: 1,
       nuggets: 2,
       lettuce: 1,
       tomato: 1,
@@ -44,8 +43,8 @@ const FEATURED_ITEMS = [
     },
   },
   {
-    id: "404",
-    name: "404",
+    id: "404-meal",
+    name: "404 meal",
     price: "$19.99",
     href: "/menu/404",
     sideItems: ["french_fries", "milkshake"],

@@ -154,12 +154,13 @@ const ItemDetailPage = ({ slug }: Props) => {
         <div className={styles.burgerPanel}>
           <BurgerCanvas
             ingredients={ingredients}
-            cameraOffset={14}
+            sideItems={item.side_items ?? undefined}
+            cameraOffset={13}
             scale={0.11}
           />
 
           {/* ── Ingredient summary ── */}
-          <IngredientSummary ingredients={ingredients} direction="row"/>
+          <IngredientSummary ingredients={ingredients} direction="row" />
         </div>
 
         {/* ── Right panel — item info + toppings ── */}

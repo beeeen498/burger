@@ -67,7 +67,7 @@ export default function MenuCard({ item }: MenuCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     // ── Haptic feedback ──
     navigator.vibrate?.(50);
-    
+
     e.stopPropagation();
 
     // ── Capture button position for flying animation ──
@@ -132,9 +132,9 @@ export default function MenuCard({ item }: MenuCardProps) {
         {isVisible && item.ingredients && (
           <BurgerCanvas
             ingredients={item.ingredients}
-            cameraOffset={14}
-            scale={0.2}
-            
+            sideItems={item.side_items ?? undefined}
+            cameraOffset={item.side_items ? 13 : 13}
+            scale={item.side_items ? 0.15 : 0.2}
           />
         )}
       </div>

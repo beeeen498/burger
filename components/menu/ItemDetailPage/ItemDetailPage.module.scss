@@ -19,7 +19,7 @@
   .layout {
     display: flex;
     gap: 40px;
-    padding: 0 40px;
+    padding: 0 40px 0 0;
     height: calc(100vh - 103px);
     max-width: 1400px;
     margin: 0 auto;
@@ -115,7 +115,7 @@
 }
 
 // ── Mobile ──────────────────────────────────────────────
-@media (max-width: 840px) {
+@media (max-width: 920px) {
   .page {
     .layout {
       flex-direction: column;

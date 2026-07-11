@@ -59,7 +59,7 @@ const HEADROOM_CORRECTION: { [key: string]: number } = {
   pickles: -1,
   onions: -2.5,
   bacon: 0,
-  fried_egg: 0,
+  fried_egg: 2,
   onion_rings: 0,
   fried_fish: -3,
   potato_chips: 0,
