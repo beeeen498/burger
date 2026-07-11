@@ -18,34 +18,32 @@
   }
 
   // ─── Layout — two columns ───────────────────────────────────────────────────
-
   .layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.9fr 1.1fr;
     height: calc(100vh - 103px);
     width: 100%;
     overflow: hidden;
 
     // ─── Left column — content ────────────────────────────────────────────────
-
     .contentCol {
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 2.5rem 3rem 2rem 2.5rem;
       gap: 1.25rem;
-      overflow: hidden;
+      min-width: 0;
 
       // force CTA to not stretch full width
-      a, button {
+      a,
+      button {
         align-self: flex-start;
       }
 
       // ─── Heading ────────────────────────────────────────────────────────────
-
       .heading {
         font-family: var(--header-font);
-        font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+        font-size: clamp(2.6rem, 4.3vw, 4.2rem);
         line-height: 0.95;
         color: #efefef;
         text-transform: uppercase;
@@ -62,7 +60,6 @@
       }
 
       // ─── Subheading ─────────────────────────────────────────────────────────
-
       .subheading {
         font-family: var(--header-font);
         font-size: 1rem;
@@ -74,7 +71,6 @@
       }
 
       // ─── Fine print ─────────────────────────────────────────────────────────
-
       .finePrint {
         font-family: var(--body-font);
         font-size: 0.75rem;
@@ -82,13 +78,113 @@
         opacity: 0.45;
         line-height: 1.6;
         margin: 0;
+        width: 80%;
+      }
+
+      // ─── Story group (heading, sub, CTA, fine print) ───────────────────────
+      .storyGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      // ─── Data group (record card, stats) ───────────────────────────────────
+      .dataGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
       }
     }
 
     // ─── Right column — 3D scene ─────────────────────────────────────────────
-
     .sceneCol {
       height: 100%;
+      position: relative;
+    }
+  }
+}
+
+// ─── 1000px — stack: scene on top, content below ─────────────────────────
+@media (max-width: 1000px) {
+  .page .layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+
+    .sceneCol {
+      order: -1;
+      height: 350px;
+      border-bottom: 3px dashed var(--pink);
+    }
+
+    .contentCol {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2rem 1.5rem;
+      align-items: start;
+    }
+  }
+}
+
+// ─── 800px — single column, centered ────────────────────────────────────
+@media (max-width: 800px) {
+  .page .layout .contentCol {
+    grid-template-columns: 1fr;
+    text-align: center;
+    align-items: center;
+
+    // center the CTA button
+    a,
+    button {
+      align-self: center;
+    }
+
+    .storyGroup {
+      align-items: center;
+    }
+
+    .dataGroup {
+      flex-direction: row;
+      align-items: start;
+      width: 100%;
+    }
+
+    // fine print spans full width at bottom
+    .finePrint {
+      width: 100%;
+      text-align: left;
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// ─── 700px — single column, everything stacked ──────────────────────────
+@media (max-width: 700px) {
+  .page .layout .contentCol .dataGroup {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+// ─── 480px — tighten spacing and type ────────────────────────────────────
+@media (max-width: 480px) {
+  .page .layout {
+    .sceneCol {
+      height: 280px;
+    }
+
+    .contentCol {
+      padding: 1.5rem 1rem;
+      gap: 1rem;
+
+      .heading {
+        font-size: clamp(1.8rem, 8vw, 2.4rem);
+      }
+
+      .subheading {
+        font-size: 0.85rem;
+      }
     }
   }
 }
