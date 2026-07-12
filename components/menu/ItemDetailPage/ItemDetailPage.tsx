@@ -39,6 +39,9 @@ const ItemDetailPage = ({ slug }: Props) => {
   // ── Sound and vibration feedback ───────────────────
   const { playAdd, playRemove } = useIngredientFeedback();
 
+  // ── Selected side item — only for meals with side_items ──
+  const [selectedSide, setSelectedSide] = useState<string | null>(null);
+
   // ── Fetch the matching item from Supabase by slug ──────
   useEffect(() => {
     async function fetchItem() {
@@ -54,6 +57,14 @@ const ItemDetailPage = ({ slug }: Props) => {
         setItem(data);
         setDefaults(data.ingredients);
         setIngredients(data.ingredients);
+
+        // ── Default the side to the first food side (not milkshake) ──
+        if (data.side_items) {
+          const firstFoodSide = data.side_items.find(
+            (s: string) => s !== "milkshake",
+          );
+          setSelectedSide(firstFoodSide ?? null);
+        }
       }
       setLoading(false);
     }
@@ -139,6 +150,11 @@ const ItemDetailPage = ({ slug }: Props) => {
     );
   }
 
+  // ── Build side_items with the user's chosen side ──
+  const activeSideItems = item.side_items
+    ? item.side_items.map((s) => (s === "milkshake" ? s : (selectedSide ?? s)))
+    : undefined;
+
   const nutrition = calculateNutrition(ingredients);
   const price = calculateItemPrice();
 
@@ -154,7 +170,7 @@ const ItemDetailPage = ({ slug }: Props) => {
         <div className={styles.burgerPanel}>
           <BurgerCanvas
             ingredients={ingredients}
-            sideItems={item.side_items ?? undefined}
+            sideItems={activeSideItems}
             cameraOffset={13}
             scale={0.11}
           />
@@ -170,6 +186,28 @@ const ItemDetailPage = ({ slug }: Props) => {
             {/* ── Item name + description ── */}
             <h1 className={styles.itemName}>{item.name}</h1>
             <p className={styles.itemDescription}>{item.description}</p>
+
+            {/* ── Side selector — meals only ── */}
+            {item.side_items && selectedSide && (
+              <div className={styles.sideSelector}>
+                <h3 className={styles.sideSelectorLabel}>Choose Your Side</h3>
+                <div className={styles.sideSelectorBtns}>
+                  {[
+                    { key: "french_fries", label: "Fries" },
+                    { key: "onion_rings_extra", label: "Onion Rings" },
+                    { key: "nuggets_extra", label: "Nuggets" },
+                  ].map((side) => (
+                    <button
+                      key={side.key}
+                      className={`${styles.sideBtn} ${selectedSide === side.key ? styles.active : ""}`}
+                      onClick={() => setSelectedSide(side.key)}
+                    >
+                      {side.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* ── Flat list of toppings — no tabs, toppings only ── */}
             <div className={styles.ingredientList}>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { MenuItem } from "../MenuPage/MenuPage";
+import { FaWeightScale } from "react-icons/fa6";
 import styles from "./CalorieFilter.module.scss";
 
 // ── Props ──────────────────────────────────────────
@@ -103,19 +104,7 @@ export default function CalorieFilter({
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Calorie filter"
       >
-        {/* ── Flame icon ── */}
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2C12 2 6 8.5 6 14a6 6 0 0 0 12 0c0-5.5-6-12-6-12Zm0 17a3 3 0 0 1-3-3c0-2 3-5.5 3-5.5s3 3.5 3 5.5a3 3 0 0 1-3 3Z"
-            fill="currentColor"
-          />
-        </svg>
+        <FaWeightScale size={25}/>
 
         {/* ── Active badge ── */}
         {isFilterActive && <span className={styles.badge} />}
