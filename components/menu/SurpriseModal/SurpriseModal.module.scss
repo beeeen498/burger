@@ -1,0 +1,249 @@
+// ── Backdrop — full screen overlay ──────────────────
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(26, 26, 26, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+// ── Modal container ─────────────────────────────────
+.modal {
+  position: relative;
+  background: #efefef;
+  border: var(--border);
+  border-radius: 14px;
+  box-shadow: 6px 6px 0 var(--black);
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+
+  // ── Close button ──
+  .closeBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  // ── Title ──
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--black);
+    margin: 0 0 20px;
+  }
+}
+
+// ── Wheel wrapper — holds wheel + arrow + spin btn ──
+.wheelWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  // ── Arrow pointer at the top ──
+  .arrow {
+    position: relative;
+    z-index: 2;
+    font-size: 1.8rem;
+    color: var(--black);
+    line-height: 1;
+    margin-bottom: -10px;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.2));
+  }
+
+  // ── The SVG wheel ──
+  .wheel {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 1;
+  }
+
+  // ── Spin button — below the wheel ──
+  .spinBtn {
+    margin-top: 20px;
+    padding: 12px 40px;
+    background: var(--yellow);
+    color: var(--black);
+    border: var(--border);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+  }
+}
+
+// ── Result view ─────────────────────────────────────
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 0;
+
+  // ── 3D model container ──
+  .modelWrapper {
+    width: 100%;
+    height: 220px;
+    border: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--blue);
+  }
+
+  // ── Item name ──
+  .resultName {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--black);
+    margin: 0;
+  }
+
+  // ── Description ──
+  .resultDescription {
+    font-size: 0.85rem;
+    color: var(--black);
+    opacity: 0.7;
+    margin: 0;
+    max-width: 300px;
+  }
+
+  // ── Price ──
+  .resultPrice {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--pink);
+    margin: 4px 0 12px;
+  }
+
+  // ── Action buttons row ──
+  .resultActions {
+    display: flex;
+    gap: 12px;
+
+    // ── View Item button ──
+    .viewBtn {
+      padding: 10px 24px;
+      background: var(--pink);
+      color: var(--white);
+      border: var(--border);
+      border-radius: 8px;
+      box-shadow: var(--box-shadow);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 1px 1px 0 var(--black);
+      }
+    }
+
+    // ── Spin Again button ──
+    .spinAgainBtn {
+      padding: 10px 24px;
+      background: var(--yellow);
+      color: var(--black);
+      border: var(--border);
+      border-radius: 8px;
+      box-shadow: var(--box-shadow);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 1px 1px 0 var(--black);
+      }
+    }
+  }
+}
+
+// ── Mobile adjustments ──────────────────────────────
+@media (max-width: 768px) {
+  .backdrop {
+    padding: 16px;
+  }
+
+  .modal {
+    padding: 24px 18px;
+
+    .title {
+      font-size: 1.2rem;
+    }
+  }
+
+  .wheelWrapper {
+    .wheel {
+      max-width: 280px;
+    }
+  }
+
+  .result {
+    .resultName {
+      font-size: 1.3rem;
+    }
+
+    .resultActions {
+      flex-direction: column;
+      width: 100%;
+
+      .viewBtn,
+      .spinAgainBtn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}

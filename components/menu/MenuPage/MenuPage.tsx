@@ -14,7 +14,8 @@ import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay";
 import MenuCard from "../MenuCard/MenuCard";
 import SmallCard from "../SmallCard/SmallCard";
 import SecretLock from "../SecretLock/SecretLock";
-import CalorieFilter from "./CalorieFilter/CalorieFilter";
+import CalorieFilter from "../CalorieFilter/CalorieFilter";
+import SurpriseModal from "../SurpriseModal/SurpriseModal";
 
 import styles from "./MenuPage.module.scss";
 
@@ -87,6 +88,9 @@ export default function MenuPage() {
   const [calorieRange, setCalorieRange] = useState<[number, number] | null>(
     null,
   );
+
+  // ── Surprise modal ──
+  const [showSurprise, setShowSurprise] = useState(false);
 
   // ── Categories that actually have items (respects calorie filter) ──
   const availableCategories = CATEGORIES.filter((cat) =>
@@ -217,6 +221,7 @@ export default function MenuPage() {
           categories={availableCategories}
           activeCategory={activeCategory}
           onSelect={handleFilterSelect}
+          onSurpriseClick={() => setShowSurprise(true)}
         />
 
         {/* ── Cards ── */}
@@ -279,6 +284,18 @@ export default function MenuPage() {
         calorieRange={calorieRange}
         setCalorieRange={setCalorieRange}
       />
+
+      {/* ── Surprise Me modal ── */}
+      {showSurprise && (
+        <SurpriseModal
+          items={items.filter(
+            (item) =>
+              (item.category === "single" || item.category === "meal") &&
+              !item.is_sold_out,
+          )}
+          onClose={() => setShowSurprise(false)}
+        />
+      )}
     </main>
   );
 }

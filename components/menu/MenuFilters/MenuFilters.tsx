@@ -14,12 +14,13 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 interface MenuFiltersProps {
-  categories: string[]        // list of categories that actually have items
-  activeCategory: string      // currently active/visible category
-  onSelect: (category: string) => void  // called when user clicks a filter
+  categories: string[]
+  activeCategory: string
+  onSelect: (category: string) => void
+  onSurpriseClick: () => void
 }
 
-export default function MenuFilters({ categories, activeCategory, onSelect }: MenuFiltersProps) {
+export default function MenuFilters({ categories, activeCategory, onSelect, onSurpriseClick }: MenuFiltersProps) {
   return (
     <nav className={styles.filters}>
       {categories.map(category => (
@@ -31,6 +32,11 @@ export default function MenuFilters({ categories, activeCategory, onSelect }: Me
           {CATEGORY_LABELS[category] ?? category}
         </button>
       ))}
+
+      {/* ── Surprise Me button ── */}
+      <button className={styles.surpriseBtn} onClick={onSurpriseClick}>
+        Surprise Me 🎲 
+      </button>
     </nav>
   )
 }

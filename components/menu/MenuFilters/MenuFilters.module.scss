@@ -68,4 +68,66 @@
       flex: 0 0 auto;
     }
   }
+  // ── Surprise Me button ──
+  .surpriseBtn {
+    background: var(--green);
+    color: var(--black);
+    border: var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    margin-top: 10px;
+    white-space: nowrap;
+    animation: wobble 2.5s ease-in-out infinite;
+
+    &:hover {
+      transform: translateY(-1px);
+      animation: none;
+    }
+
+    @media (max-width: 768px) {
+      text-align: center;
+      width: auto;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      margin-top: 0;
+      animation: tilt 2s ease-in-out infinite;
+
+      &:hover {
+        animation: none;
+      }
+    }
+  }
+}
+
+// ── Wobble animation — desktop ──
+@keyframes wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+// ── Tilt animation — mobile ──
+@keyframes tilt {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
 }
