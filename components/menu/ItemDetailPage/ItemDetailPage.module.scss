@@ -78,6 +78,51 @@
           color: var(--black);
           margin-top: 8px;
         }
+
+        // ── Side selector — choose fries/onion rings/nuggets ──
+        .sideSelector {
+          margin-top: 20px;
+          padding-bottom: 16px;
+          border-bottom: 2px dashed var(--black);
+
+          .sideSelectorLabel {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--black);
+            margin: 0 0 10px;
+          }
+
+          .sideSelectorBtns {
+            display: flex;
+            gap: 8px;
+
+            .sideBtn {
+              flex: 1;
+              padding: 10px 12px;
+              background: var(--white);
+              color: var(--black);
+              border: var(--border);
+              border-radius: 6px;
+              font-size: 0.8rem;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              cursor: pointer;
+              transition: transform 0.1s ease;
+
+              &:hover {
+                transform: translateY(-1px);
+              }
+
+              &.active {
+                background: var(--yellow);
+                box-shadow: var(--box-shadow);
+              }
+            }
+          }
+        }
       }
 
       // ── Topping list ──────────────────────────────────
@@ -163,6 +208,12 @@
 
           .itemDescription {
             text-align: center;
+          }
+
+          .sideSelector {
+            .sideSelectorLabel {
+              text-align: center;
+            }
           }
         }
       }
