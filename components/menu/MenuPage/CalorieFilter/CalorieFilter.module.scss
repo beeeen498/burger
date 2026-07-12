@@ -1,0 +1,202 @@
+// ── Floating button — fixed bottom-left ─────────────
+.floatingBtn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 100;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--yellow);
+  color: var(--black);
+  border: var(--border);
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  // ── Active state — filter is on ──
+  &.active {
+    background: var(--pink);
+    color: var(--white);
+  }
+
+  // ── Badge dot — shows when filter is active ──
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    background: var(--off-white);
+    border: 2px solid var(--black);
+    border-radius: 50%;
+  }
+}
+
+// ── Panel — pops up above the button ────────────────
+.panel {
+  position: fixed;
+  bottom: 86px;
+  left: 24px;
+  z-index: 100;
+  width: 260px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  padding: 18px;
+
+  // ── Header row — title + reset ──
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    .panelTitle {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--black);
+      margin: 0;
+    }
+
+    // ── Reset button ──
+    .resetBtn {
+      background: var(--pink);
+      color: var(--white);
+      border: 2px solid var(--black);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // ── Range label — "200 — 800 cal" ──
+  .rangeLabel {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--black);
+    text-align: center;
+    margin: 0 0 14px;
+  }
+
+  // ── Dual range slider container ──
+  .sliderContainer {
+    position: relative;
+    height: 36px;
+
+    // ── Track background ──
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 6px;
+      transform: translateY(-50%);
+      background: var(--black);
+      border-radius: 3px;
+      opacity: 0.15;
+    }
+
+    // ── Fill bar between handles ──
+    .sliderFill {
+      position: absolute;
+      top: 50%;
+      height: 6px;
+      transform: translateY(-50%);
+      background: var(--pink);
+      border-radius: 3px;
+      pointer-events: none;
+    }
+
+    // ── Range inputs — stacked on top of each other ──
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      pointer-events: none;
+      outline: none;
+
+      // ── Thumb — WebKit ──
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--yellow);
+        border: 3px solid var(--black);
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: auto;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.1s ease;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+
+      // ── Thumb — Firefox ──
+      &::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: var(--yellow);
+        border: 3px solid var(--black);
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      // ── Hide default track — Firefox ──
+      &::-moz-range-track {
+        background: transparent;
+        border: none;
+      }
+    }
+  }
+}
+
+// ── Mobile adjustments ──────────────────────────────
+@media (max-width: 768px) {
+  .floatingBtn {
+    bottom: 16px;
+    left: 16px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .panel {
+    bottom: 74px;
+    left: 16px;
+    width: 240px;
+    padding: 14px;
+  }
+}

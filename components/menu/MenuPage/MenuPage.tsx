@@ -14,6 +14,7 @@ import BurgerOfTheDay from "../BurgerOfTheDay/BurgerOfTheDay";
 import MenuCard from "../MenuCard/MenuCard";
 import SmallCard from "../SmallCard/SmallCard";
 import SecretLock from "../SecretLock/SecretLock";
+import CalorieFilter from "./CalorieFilter/CalorieFilter";
 
 import styles from "./MenuPage.module.scss";
 
@@ -82,9 +83,21 @@ export default function MenuPage() {
   // ── Active category for the filter ──
   const [activeCategory, setActiveCategory] = useState("single");
 
-  // ── Categories that actually have items ──
+  // ── Calorie filter range — null means no filter active ──
+  const [calorieRange, setCalorieRange] = useState<[number, number] | null>(
+    null,
+  );
+
+  // ── Categories that actually have items (respects calorie filter) ──
   const availableCategories = CATEGORIES.filter((cat) =>
-    items.some((item) => item.category === cat),
+    items.some((item) => {
+      if (item.category !== cat) return false;
+      if (!calorieRange) return true;
+      if (item.calories === null) return true;
+      return (
+        item.calories >= calorieRange[0] && item.calories <= calorieRange[1]
+      );
+    }),
   );
 
   // ── Fetch menu items from Supabase ──────────────────
@@ -213,9 +226,17 @@ export default function MenuPage() {
 
           {/* ── Mapping over the categories ── */}
           {CATEGORIES.map((category) => {
-            const categoryItems = items.filter(
-              (item) => item.category === category,
-            );
+            // ── Filter by category + calorie range ──
+            const categoryItems = items
+              .filter((item) => item.category === category)
+              .filter((item) => {
+                if (!calorieRange) return true;
+                if (item.calories === null) return true; // show items with no calorie data
+                return (
+                  item.calories >= calorieRange[0] &&
+                  item.calories <= calorieRange[1]
+                );
+              });
             if (categoryItems.length === 0) return null;
 
             return (
@@ -251,6 +272,13 @@ export default function MenuPage() {
 
       {/* ── Secret menu lock icon ── */}
       <SecretLock />
+
+      {/* ── Calorie filter — floating button ── */}
+      <CalorieFilter
+        items={items}
+        calorieRange={calorieRange}
+        setCalorieRange={setCalorieRange}
+      />
     </main>
   );
 }
