@@ -2,7 +2,7 @@
 
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import {
   stackBurgerLayers,
@@ -18,6 +18,11 @@ interface BurgerCanvasProps {
   cameraOffset?: number;
   scale?: number;
   spin?: boolean;
+}
+
+// ── Props for BurgerScene — extends BurgerCanvasProps with onReady callback ──
+interface BurgerSceneProps extends BurgerCanvasProps {
+  onReady: () => void;
 }
 
 // Props for SideItem
@@ -89,7 +94,8 @@ function BurgerScene({
   cameraOffset = 14.5,
   scale = 0.13,
   spin = false,
-}: BurgerCanvasProps) {
+  onReady,
+}: BurgerSceneProps) {
   // Ref to the Three.js group that holds the stacked burger layers
   const groupRef = useRef<THREE.Group>(null);
   const spinRef = useRef<THREE.Group>(null);
@@ -131,8 +137,6 @@ function BurgerScene({
           }
 
           // all other meshes are single objects — store directly by name
-
-          // all other meshes are single objects — store directly by name
         } else {
           meshes.current[obj.name] = obj as THREE.Mesh;
         }
@@ -156,15 +160,11 @@ function BurgerScene({
     }
 
     // Point the camera at the bottom third of the burger stack
-    // so the burger appears to rise from the bottom of the card
     const stackBottom = totalBox.min.y;
     const stackTop = totalBox.max.y;
 
-    const focusY = stackBottom + (stackTop - stackBottom) * 0.3;
-    const lookAtY = stackBottom;
-
     // moving burgers on y axis
-    camera.position.set(0, stackBottom + cameraOffset, 120); // at the bottom
+    camera.position.set(0, stackBottom + cameraOffset, 120);
     (camera as THREE.PerspectiveCamera).fov = 15;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
 
@@ -172,6 +172,9 @@ function BurgerScene({
     if (shadowRef.current) {
       shadowRef.current.position.set(0, totalBox.min.y - 0.5, 0);
     }
+
+    // ── Signal that the scene is ready ──
+    onReady();
   }, [scene, ingredients]);
 
   // ── Slow spin when enabled ──
@@ -221,8 +224,10 @@ export default function BurgerCanvas({
   scale,
   spin,
 }: BurgerCanvasProps) {
+  const [ready, setReady] = useState(false);
+
   return (
-    <div className={styles.canvasWrapper}>
+    <div className={styles.canvasWrapper} style={{ opacity: ready ? 1 : 0 }}>
       <Canvas
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
@@ -234,6 +239,7 @@ export default function BurgerCanvas({
           cameraOffset={cameraOffset}
           scale={scale}
           spin={spin}
+          onReady={() => setReady(true)}
         />
         {sideItems?.map((item) => {
           const config = SIDE_ITEM_CONFIG[item];
