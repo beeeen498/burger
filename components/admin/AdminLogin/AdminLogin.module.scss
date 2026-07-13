@@ -1,0 +1,115 @@
+// ----- Admin Login Page -----
+.loginPage {
+  background-color: var(--white);
+
+  .headerWrap {
+    background: var(--pink);
+    padding: 18px 0;
+    border-bottom: var(--border);
+    isolation: isolate;
+
+    & > * {
+      border-bottom: none;
+    }
+  }
+
+  .adminContent {
+    height: calc(100vh - var(--header-height));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // ----- Login Card -----
+    .card {
+      width: 100%;
+      max-width: 440px;
+      padding: 40px;
+      background-color: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--box-shadow);
+      z-index: 1;
+
+      // -- Header --
+      .title {
+        font-family: var(--header-font);
+        font-size: clamp(1.8rem, 4vw, 2.4rem);
+        color: var(--black);
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-family: var(--body-font);
+        font-size: 1rem;
+        color: var(--black);
+        margin-bottom: 32px;
+      }
+    }
+
+    // ----- Form -----
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      // -- Label + Input Pair --
+
+      .label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-family: var(--header-font);
+        font-size: 0.95rem;
+        color: var(--black);
+      }
+
+      .input {
+        padding: 12px 14px;
+        font-family: var(--body-font);
+        font-size: 1rem;
+        color: var(--black);
+        background-color: var(--white);
+        border: var(--border);
+        outline: none;
+
+        &:focus {
+          box-shadow: var(--box-shadow);
+        }
+      }
+
+      // -- Error Message --
+      .error {
+        font-family: var(--body-font);
+        font-size: 0.9rem;
+        color: var(--pink);
+        font-weight: 600;
+      }
+
+      // -- Submit Button --
+      .button {
+        padding: 14px;
+        font-family: var(--header-font);
+        font-size: 1.1rem;
+        color: var(--black);
+        background-color: var(--pink);
+        border: var(--border);
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+
+        // -- Press effect --
+        &:active {
+          transform: translate(4px, 4px);
+          box-shadow: none;
+        }
+
+        // -- Disabled state while loading --
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

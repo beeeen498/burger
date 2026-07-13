@@ -28,6 +28,7 @@
     overflow: hidden;
     box-shadow: var(--box-shadow);
     border: var(--border);
+    margin-bottom: 0;
 
     // ─── Warning tape ─────────────────────────────────────────────────
     .warningTape {
@@ -99,7 +100,7 @@
         left: 0;
         right: 0;
         height: 320px;
-        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.549) 60%);
+        // background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.218) 60%);
         z-index: -1;
         pointer-events: none;
       }

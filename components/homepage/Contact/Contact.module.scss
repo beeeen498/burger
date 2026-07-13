@@ -4,8 +4,7 @@
   display: flex;
   justify-content: center;
   padding: 64px 0;
-  scroll-margin-top: var(--header-height);
-
+  scroll-margin-top: 70px;
 
   // --- container ---
   .contactContainer {
@@ -304,7 +303,7 @@
     padding: 40px 0;
 
     .contactContainer {
-      width: 90%;
+      width: 80%;
 
       .inner {
         min-height: auto;
@@ -321,7 +320,7 @@
     padding: 24px 0;
 
     .contactContainer {
-      width: 95%;
+      width: 80%;
 
       .inner {
         gap: 14px;
