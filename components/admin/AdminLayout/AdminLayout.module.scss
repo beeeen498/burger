@@ -1,0 +1,119 @@
+// ----- Admin Layout -----
+
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--white);
+}
+
+// ----- Sidebar -----
+
+.sidebar {
+  width: 240px;
+  padding: 24px 16px;
+  background-color: var(--black);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  // -- Brand --
+
+  .brand {
+    font-family: var(--header-font);
+    font-size: 1.5rem;
+    color: var(--yellow);
+    margin-bottom: 2px;
+  }
+
+  .brandSub {
+    font-family: var(--body-font);
+    font-size: 0.8rem;
+    color: var(--white);
+    opacity: 0.5;
+    margin-bottom: 40px;
+  }
+
+  // -- Nav Links --
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+
+    .navItem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      font-family: var(--header-font);
+      font-size: 0.95rem;
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.15s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      // -- Active link --
+      &.active {
+        background-color: var(--pink);
+        color: var(--white);
+      }
+
+      .navIcon {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  // -- Logout Button --
+
+  .logoutBtn {
+    padding: 12px 14px;
+    font-family: var(--header-font);
+    font-size: 0.95rem;
+    color: var(--white);
+    background: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// ----- Main Content Area -----
+
+.main {
+  flex: 1;
+  margin-left: 240px;
+
+  // -- Top Bar --
+
+  .topBar {
+    padding: 24px 32px;
+    border-bottom: var(--border);
+    background-color: var(--white);
+
+    .greeting {
+      font-family: var(--header-font);
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      color: var(--black);
+    }
+  }
+
+  // -- Page Content --
+
+  .content {
+    padding: 32px;
+  }
+}

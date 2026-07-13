@@ -32,6 +32,9 @@ const StickyHeader = () => {
     setMounted(true);
   }, []);
 
+  // -- Hide on admin pages (admin has its own layout) --
+  if (pathname.startsWith("/admin")) return null;
+
   // ── Scroll visibility logic ──
   useEffect(() => {
     setVisible(false);
@@ -114,7 +117,6 @@ const StickyHeader = () => {
 
         {/* ── Icons ── */}
         <div className={styles.icons}>
-
           {/* ── Bag icon — opens the cart drawer ── */}
           <button
             className={`${styles.bagBtn} ${wobble ? styles.wobble : ""}`}
