@@ -42,6 +42,9 @@ const ItemDetailPage = ({ slug }: Props) => {
   // ── Selected side item — only for meals with side_items ──
   const [selectedSide, setSelectedSide] = useState<string | null>(null);
 
+  // ── Selected milkshake flavor — only for meals ──
+  const [selectedShake, setSelectedShake] = useState<string | null>(null);
+
   // ── Fetch the matching item from Supabase by slug ──────
   useEffect(() => {
     async function fetchItem() {
@@ -61,9 +64,14 @@ const ItemDetailPage = ({ slug }: Props) => {
         // ── Default the side to the first food side (not milkshake) ──
         if (data.side_items) {
           const firstFoodSide = data.side_items.find(
-            (s: string) => s !== "milkshake",
+            (s: string) => s !== "vanilla_milkshake",
           );
           setSelectedSide(firstFoodSide ?? null);
+        }
+
+        // ── Default the milkshake to vanilla ──
+        if (data.side_items?.includes("vanilla_milkshake")) {
+          setSelectedShake("vanilla_milkshake");
         }
       }
       setLoading(false);
@@ -152,7 +160,10 @@ const ItemDetailPage = ({ slug }: Props) => {
 
   // ── Build side_items with the user's chosen side ──
   const activeSideItems = item.side_items
-    ? item.side_items.map((s) => (s === "milkshake" ? s : (selectedSide ?? s)))
+    ? item.side_items.map((s) => {
+        if (s === "vanilla_milkshake") return selectedShake ?? s;
+        return selectedSide ?? s;
+      })
     : undefined;
 
   const nutrition = calculateNutrition(ingredients);
@@ -208,6 +219,31 @@ const ItemDetailPage = ({ slug }: Props) => {
                 </div>
               </div>
             )}
+
+            {/* ── Milkshake selector — meals only ── */}
+            {item.side_items?.includes("vanilla_milkshake") &&
+              selectedShake && (
+                <div className={styles.sideSelector}>
+                  <h3 className={styles.sideSelectorLabel}>
+                    Choose Your Shake
+                  </h3>
+                  <div className={styles.sideSelectorBtns}>
+                    {[
+                      { key: "vanilla_milkshake", label: "Vanilla" },
+                      { key: "chocolate_milkshake", label: "Chocolate" },
+                      { key: "strawberry_milkshake", label: "Strawberry" },
+                    ].map((shake) => (
+                      <button
+                        key={shake.key}
+                        className={`${styles.sideBtn} ${selectedShake === shake.key ? styles.active : ""}`}
+                        onClick={() => setSelectedShake(shake.key)}
+                      >
+                        {shake.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
             {/* ── Flat list of toppings — no tabs, toppings only ── */}
             <div className={styles.ingredientList}>

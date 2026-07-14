@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/lib/supabase";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import useOrderStore from "@/lib/useOrderStore";
@@ -581,7 +582,7 @@ const CheckoutPage = () => {
                     {/* ── Place Order button ── */}
                     <button
                       className={styles.placeOrderBtn}
-                      onClick={() => {
+                      onClick={async () => {
                         if (validateCard()) {
                           // ── Generate a random order number ──
                           const orderNumber = `SMSHD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -604,6 +605,24 @@ const CheckoutPage = () => {
                                 : undefined,
                             checkoutStartedAt: checkoutStartedAt.current,
                             placedAt: Date.now(),
+                          });
+
+                          // ── Save order to Supabase for admin dashboard ──
+                          await supabase.from("orders").insert({
+                            order_number: orderNumber,
+                            items: JSON.stringify(items),
+                            subtotal,
+                            delivery_fee: deliveryFee,
+                            tip: tipAmount,
+                            discount: discountAmount,
+                            total,
+                            method: orderType,
+                            customer_name: name || "Pickup Guest",
+                            customer_email: email,
+                            address:
+                              orderType === "delivery"
+                                ? `${street}, ${city}`
+                                : null,
                           });
 
                           // ── Navigate to confirmation page ──

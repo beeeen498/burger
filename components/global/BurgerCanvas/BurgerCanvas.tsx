@@ -84,7 +84,9 @@ const SIDE_ITEM_CONFIG: {
   };
 } = {
   french_fries: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
-  milkshake: { position: [-9, 6, -10], scale: 0.13, showShadow: false },
+  vanilla_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
+  chocolate_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
+  strawberry_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
   onion_rings_extra: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
   nuggets_extra: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
 };
@@ -266,4 +268,6 @@ useGLTF.preload("/3d-models/burger.glb");
 useGLTF.preload("/3d-models/french_fries.glb");
 useGLTF.preload("/3d-models/onion_rings_extra.glb");
 useGLTF.preload("/3d-models/nuggets_extra.glb");
-useGLTF.preload("/3d-models/milkshake.glb");
+useGLTF.preload("/3d-models/vanilla_milkshake.glb");
+useGLTF.preload("/3d-models/strawberry_milkshake.glb");
+useGLTF.preload("/3d-models/chocolate_milkshake.glb");

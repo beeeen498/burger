@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import useCartStore from "@/lib/useCartStore";
+import SimpleModelCanvas from "@/components/global/SimpleModelCanvas/SimpleModelCanvas";
 import { MenuItem } from "../MenuPage/MenuPage";
 import styles from "./MenuCard.module.scss";
 
@@ -133,9 +134,12 @@ export default function MenuCard({ item }: MenuCardProps) {
           <BurgerCanvas
             ingredients={item.ingredients}
             sideItems={item.side_items ?? undefined}
-            cameraOffset={item.side_items ? 13 : 13}
-            scale={item.side_items ? 0.15 : 0.2}
+            cameraOffset={14}
+            scale={0.165}
           />
+        )}
+        {isVisible && !item.ingredients && item.model_path && (
+          <SimpleModelCanvas modelPath={item.model_path} scale={1.17} rotation={[0.4, 0.8, 0]} />
         )}
       </div>
 

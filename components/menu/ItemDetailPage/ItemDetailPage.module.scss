@@ -99,6 +99,7 @@
             gap: 8px;
 
             .sideBtn {
+              z-index: 1;
               flex: 1;
               padding: 10px 12px;
               background: var(--white);
@@ -197,19 +198,19 @@
         flex: 1;
         overflow: hidden;
         border-top: var(--border);
-
+        
         .scrollArea {
           border-bottom: var(--border);
-
+          
           .itemName {
             font-size: 24px;
             text-align: center;
           }
-
+          
           .itemDescription {
             text-align: center;
           }
-
+          
           .sideSelector {
             .sideSelectorLabel {
               text-align: center;

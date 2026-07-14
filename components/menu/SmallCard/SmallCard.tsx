@@ -63,7 +63,7 @@ export default function SmallCard({ item }: SmallCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     // ── Haptic feedback ──
     navigator.vibrate?.(50);
-    
+
     e.stopPropagation();
 
     // ── Capture button position for flying animation ──
@@ -88,7 +88,11 @@ export default function SmallCard({ item }: SmallCardProps) {
       {/* ── 3D model — only renders when card is in viewport ── */}
       <div className={styles.canvas}>
         {isVisible && item.model_path && (
-          <SimpleModelCanvas modelPath={item.model_path} scale={1} rotation={item.category === "sauces" ? [0.5, 0, 0] : undefined}/>
+          <SimpleModelCanvas
+            modelPath={item.model_path}
+            scale={1}
+            rotation={item.category === "sauces" || "dessets" ? [0.5, 0, 0] : [0.3, 0.3, 0]}
+          />
         )}
       </div>
 

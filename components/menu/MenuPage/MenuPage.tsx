@@ -55,7 +55,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   breakfast: "Breakfast",
   extras: "Extras",
   sauces: "Sauces",
-  drinks: "Drinks",
   desserts: "Desserts",
 };
 
@@ -66,12 +65,11 @@ const CATEGORIES = [
   "breakfast",
   "extras",
   "sauces",
-  "drinks",
   "desserts",
 ];
 
 // ── Categories that use the small card layout ──
-const SMALL_CARD_CATEGORIES = ["extras", "sauces", "drinks", "desserts"];
+const SMALL_CARD_CATEGORIES = ["extras", "sauces", "desserts"];
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItem[]>([]);
