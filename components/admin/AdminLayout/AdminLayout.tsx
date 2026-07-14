@@ -18,12 +18,17 @@ const NAV_ITEMS = [
   { label: "Settings", href: "/admin/settings", icon: "⚙️" },
 ];
 
-// -- Time-of-day greeting --
-function getGreeting(): string {
+// -- Time-of-day greeting with order count --
+function getGreeting(orderCount: number): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning Chef 🌅";
-  if (hour < 17) return "Good afternoon Chef ☀️";
-  return "Good evening Chef 🌙";
+  let greeting = "";
+  if (hour < 12) greeting = "Good morning Chef 🌅";
+  else if (hour < 17) greeting = "Good afternoon Chef ☀️";
+  else greeting = "Good evening Chef 🌙";
+
+  if (orderCount === 0) return `${greeting} — all clear!`;
+  if (orderCount === 1) return `${greeting} — you have 1 new order`;
+  return `${greeting} — you have ${orderCount} new orders`;
 }
 
 export default function AdminLayout({
@@ -55,7 +60,7 @@ export default function AdminLayout({
         { event: "*", schema: "public", table: "orders" },
         () => {
           fetchCount();
-        }
+        },
       )
       .subscribe();
 
@@ -109,7 +114,7 @@ export default function AdminLayout({
       <main className={styles.main}>
         {/* -- Top Bar -- */}
         <div className={styles.topBar}>
-          <h1 className={styles.greeting}>{getGreeting()}</h1>
+          <h1 className={styles.greeting}>{getGreeting(newOrderCount)}</h1>
         </div>
 
         {/* -- Page Content -- */}

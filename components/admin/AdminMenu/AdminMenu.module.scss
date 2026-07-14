@@ -12,6 +12,34 @@
   }
 }
 
+// ----- Title Row -----
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .addBtn {
+    padding: 10px 20px;
+    font-family: var(--header-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    background-color: var(--green);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    z-index: 1;
+    transition:
+      transform 0.1s,
+      box-shadow 0.1s;
+
+    &:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+  }
+}
+
 // ----- Section Title -----
 
 .sectionTitle {

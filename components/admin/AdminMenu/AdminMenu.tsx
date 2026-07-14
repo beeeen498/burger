@@ -3,10 +3,12 @@
 // ----- Admin Menu Management -----
 // Table of all menu items with toggles and inline price editing.
 // Burger of the Day picker at the top.
+// Slide-in drawer for adding/editing items.
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import MenuDrawer, { MenuItemData } from "../MenuDrawer/MenuDrawer";
 import styles from "./AdminMenu.module.scss";
 
 // -- Menu item type --
@@ -42,45 +44,72 @@ export default function AdminMenu() {
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [editingPriceValue, setEditingPriceValue] = useState("");
 
-  // -- Fetch menu items + BOTD settings on mount --
+  // -- Drawer state --
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editItem, setEditItem] = useState<MenuItemData | null>(null);
+
+  // -- Fetch menu items + BOTD settings --
+  const fetchData = async () => {
+    const { data: menuData } = await supabase
+      .from("menu_items")
+      .select(
+        "id, name, category, price, is_sold_out, is_chef_pick, is_new, is_trending",
+      )
+      .order("category")
+      .order("name");
+
+    if (menuData) setItems(menuData);
+
+    const { data: settings } = await supabase
+      .from("restaurant_settings")
+      .select(
+        "burger_of_the_day_type, burger_of_the_day_item_id, burger_of_the_day_has_discount, burger_of_the_day_discount_price",
+      )
+      .single();
+
+    if (settings) {
+      setBotdItemId(settings.burger_of_the_day_item_id);
+      setBotdHasDiscount(settings.burger_of_the_day_has_discount ?? false);
+      setBotdDiscountPrice(
+        settings.burger_of_the_day_discount_price?.toString() ?? "",
+      );
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      // -- Fetch menu items --
-      const { data: menuData } = await supabase
-        .from("menu_items")
-        .select("id, name, category, price, is_sold_out, is_chef_pick, is_new, is_trending")
-        .order("category")
-        .order("name");
-
-      if (menuData) setItems(menuData);
-
-      // -- Fetch BOTD settings --
-      const { data: settings } = await supabase
-        .from("restaurant_settings")
-        .select("burger_of_the_day_type, burger_of_the_day_item_id, burger_of_the_day_has_discount, burger_of_the_day_discount_price")
-        .single();
-
-      if (settings) {
-        setBotdItemId(settings.burger_of_the_day_item_id);
-        setBotdHasDiscount(settings.burger_of_the_day_has_discount ?? false);
-        setBotdDiscountPrice(
-          settings.burger_of_the_day_discount_price?.toString() ?? ""
-        );
-      }
-
-      setLoading(false);
-    };
-
     fetchData();
   }, []);
+
+  // -- Open drawer for adding a new item --
+  const handleAddItem = () => {
+    setEditItem(null);
+    setDrawerOpen(true);
+  };
+
+  // -- Open drawer for editing an existing item --
+  const handleEditItem = async (itemId: string) => {
+    const { data } = await supabase
+      .from("menu_items")
+      .select(
+        "id, name, slug, description, category, price, meal_price, calories, side_items, is_available, is_sold_out, is_new, is_trending, is_spicy, is_vegan, is_vegetarian, is_gluten_free",
+      )
+      .eq("id", itemId)
+      .single();
+
+    if (data) {
+      setEditItem(data);
+      setDrawerOpen(true);
+    }
+  };
 
   // -- Toggle a boolean field on a menu item --
   const toggleField = async (
     itemId: string,
     field: keyof MenuItem,
-    currentValue: boolean
+    currentValue: boolean,
   ) => {
-    // -- If toggling chef_pick ON, turn off the current one first --
     if (field === "is_chef_pick" && !currentValue) {
       const currentPick = items.find((i) => i.is_chef_pick);
       if (currentPick) {
@@ -91,22 +120,19 @@ export default function AdminMenu() {
 
         setItems((prev) =>
           prev.map((i) =>
-            i.id === currentPick.id ? { ...i, is_chef_pick: false } : i
-          )
+            i.id === currentPick.id ? { ...i, is_chef_pick: false } : i,
+          ),
         );
       }
     }
 
-    // -- Update the item --
     await supabase
       .from("menu_items")
       .update({ [field]: !currentValue })
       .eq("id", itemId);
 
     setItems((prev) =>
-      prev.map((i) =>
-        i.id === itemId ? { ...i, [field]: !currentValue } : i
-      )
+      prev.map((i) => (i.id === itemId ? { ...i, [field]: !currentValue } : i)),
     );
 
     toast.success("Updated!");
@@ -126,9 +152,7 @@ export default function AdminMenu() {
       .eq("id", itemId);
 
     setItems((prev) =>
-      prev.map((i) =>
-        i.id === itemId ? { ...i, price: newPrice } : i
-      )
+      prev.map((i) => (i.id === itemId ? { ...i, price: newPrice } : i)),
     );
 
     setEditingPriceId(null);
@@ -148,7 +172,11 @@ export default function AdminMenu() {
         burger_of_the_day_discount_price:
           botdHasDiscount && !isNaN(discountPrice) ? discountPrice : null,
       })
-      .eq("id", (await supabase.from("restaurant_settings").select("id").single()).data?.id);
+      .eq(
+        "id",
+        (await supabase.from("restaurant_settings").select("id").single()).data
+          ?.id,
+      );
 
     toast.success("Burger of the Day updated! 🍔");
   };
@@ -157,14 +185,19 @@ export default function AdminMenu() {
 
   return (
     <div className={styles.menuPage}>
-      <h2 className={styles.pageTitle}>Menu Management</h2>
+      {/* -- Title row with Add button -- */}
+      <div className={styles.titleRow}>
+        <h2 className={styles.pageTitle}>Menu Management</h2>
+        <button className={styles.addBtn} onClick={handleAddItem}>
+          + Add Item
+        </button>
+      </div>
 
       {/* ----- Burger of the Day Picker ----- */}
       <div className={styles.botdSection}>
         <h3 className={styles.sectionTitle}>Burger of the Day 🌟</h3>
 
         <div className={styles.botdControls}>
-          {/* -- Item selector -- */}
           <select
             className={styles.botdSelect}
             value={botdItemId ?? ""}
@@ -178,7 +211,6 @@ export default function AdminMenu() {
             ))}
           </select>
 
-          {/* -- Discount toggle -- */}
           <label className={styles.discountToggle}>
             <input
               type="checkbox"
@@ -188,7 +220,6 @@ export default function AdminMenu() {
             Discount price
           </label>
 
-          {/* -- Discount price input -- */}
           {botdHasDiscount && (
             <input
               className={styles.discountInput}
@@ -199,7 +230,6 @@ export default function AdminMenu() {
             />
           )}
 
-          {/* -- Save button -- */}
           <button className={styles.botdSaveBtn} onClick={saveBotd}>
             Save BOTD
           </button>
@@ -226,18 +256,19 @@ export default function AdminMenu() {
                 key={item.id}
                 className={item.is_sold_out ? styles.soldOut : ""}
               >
-                {/* -- Name -- */}
-                <td className={styles.nameCell}>
+                {/* -- Name (clickable to edit) -- */}
+                <td
+                  className={styles.nameCell}
+                  onClick={() => handleEditItem(item.id)}
+                >
                   {item.name}
                   {botdItemId === item.id && (
                     <span className={styles.botdBadge}>⭐ BOTD</span>
                   )}
                 </td>
 
-                {/* -- Category -- */}
                 <td className={styles.categoryCell}>{item.category}</td>
 
-                {/* -- Price (click to edit) -- */}
                 <td className={styles.priceCell}>
                   {editingPriceId === item.id ? (
                     <input
@@ -265,11 +296,12 @@ export default function AdminMenu() {
                   )}
                 </td>
 
-                {/* -- Toggle columns -- */}
                 <td>
                   <button
                     className={`${styles.toggle} ${item.is_sold_out ? styles.on : ""}`}
-                    onClick={() => toggleField(item.id, "is_sold_out", item.is_sold_out)}
+                    onClick={() =>
+                      toggleField(item.id, "is_sold_out", item.is_sold_out)
+                    }
                   >
                     {item.is_sold_out ? "●" : "○"}
                   </button>
@@ -277,7 +309,9 @@ export default function AdminMenu() {
                 <td>
                   <button
                     className={`${styles.toggle} ${item.is_chef_pick ? styles.on : ""}`}
-                    onClick={() => toggleField(item.id, "is_chef_pick", item.is_chef_pick)}
+                    onClick={() =>
+                      toggleField(item.id, "is_chef_pick", item.is_chef_pick)
+                    }
                   >
                     {item.is_chef_pick ? "●" : "○"}
                   </button>
@@ -293,7 +327,9 @@ export default function AdminMenu() {
                 <td>
                   <button
                     className={`${styles.toggle} ${item.is_trending ? styles.on : ""}`}
-                    onClick={() => toggleField(item.id, "is_trending", item.is_trending)}
+                    onClick={() =>
+                      toggleField(item.id, "is_trending", item.is_trending)
+                    }
                   >
                     {item.is_trending ? "●" : "○"}
                   </button>
@@ -303,6 +339,14 @@ export default function AdminMenu() {
           </tbody>
         </table>
       </div>
+
+      {/* ----- Menu Drawer ----- */}
+      <MenuDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        editItem={editItem}
+        onSaved={fetchData}
+      />
     </div>
   );
 }
