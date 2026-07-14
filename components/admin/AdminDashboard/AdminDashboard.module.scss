@@ -61,6 +61,20 @@
   }
 }
 
+// ----- Orders Per Hour Chart -----
+
+.chartSection {
+  padding: 24px;
+  background-color: var(--white);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  z-index: 1;
+
+  .chartWrapper {
+    margin-top: 8px;
+  }
+}
+
 // ----- Section Title -----
 
 .sectionTitle {
@@ -73,13 +87,12 @@
 // ----- Quick Actions -----
 
 .quickActions {
-
   .actionLinks {
-      display: flex;
-      gap: 12px;
-      
-      .actionLink {
-        z-index: 1;
+    display: flex;
+    gap: 12px;
+
+    .actionLink {
+      z-index: 1;
       padding: 14px 20px;
       font-family: var(--header-font);
       font-size: 0.95rem;
@@ -89,7 +102,9 @@
       box-shadow: var(--box-shadow);
       text-decoration: none;
       cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s;
+      transition:
+        transform 0.1s,
+        box-shadow 0.1s;
 
       &:active {
         transform: translate(4px, 4px);
@@ -102,7 +117,6 @@
 // ----- Recent Orders -----
 
 .recentOrders {
-
   .empty {
     font-family: var(--body-font);
     font-size: 0.9rem;
