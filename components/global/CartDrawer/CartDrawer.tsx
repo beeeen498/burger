@@ -174,12 +174,11 @@ const CartDrawer = () => {
 
                     {/* ── Side items if present ── */}
                     {item.sideItems && item.sideItems.length > 0 && (
-                      <span className={styles.itemSides}>
-                        +{" "}
-                        {item.sideItems
-                          .map((s) => s.replace(/_/g, " "))
-                          .join(", ")}
-                      </span>
+                      <div className={styles.itemSides}>
+                        {item.sideItems.map((s, i) => (
+                          <span key={i}>+ {s.replace(/_/g, " ")}</span>
+                        ))}
+                      </div>
                     )}
                   </div>
                   <span className={styles.itemPrice}>

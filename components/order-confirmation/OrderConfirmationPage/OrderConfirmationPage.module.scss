@@ -193,6 +193,16 @@
           margin-top: 6px;
           border-top: 3px solid var(--black);
         }
+
+        .receiptSides {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          font-size: 0.75rem;
+          opacity: 0.6;
+          text-transform: capitalize;
+          margin: 3px 0;
+        }
       }
 
       // ── Totals section ──

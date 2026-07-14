@@ -124,9 +124,18 @@ const OrderConfirmationPage = () => {
           <div className={styles.receiptItems}>
             {orderData.items.map((item) => (
               <div key={item.id} className={styles.receiptRow}>
-                <span>
-                  {item.name} x{item.quantity}
-                </span>
+                <div>
+                  <span>
+                    {item.name} x{item.quantity}
+                  </span>
+                  {item.sideItems && item.sideItems.length > 0 && (
+                    <div className={styles.receiptSides}>
+                      {item.sideItems.map((s, i) => (
+                        <span key={i}>+ {s.replace(/_/g, " ")}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <span>${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
@@ -174,9 +183,7 @@ const OrderConfirmationPage = () => {
           <div className={styles.receiptFooter}>
             <p>
               <strong>
-                {orderData.method === "delivery"
-                  ? "🚗 Delivery"
-                  : "🏃 Pickup"}
+                {orderData.method === "delivery" ? "🚗 Delivery" : "🏃 Pickup"}
               </strong>
             </p>
             <p>

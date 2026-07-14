@@ -81,6 +81,7 @@ export default function MenuCard({ item }: MenuCardProps) {
       price: item.price,
       quantity,
       ingredients: item.ingredients ?? null,
+      sideItems: item.side_items ?? undefined,
     });
     toast(`Added ${item.name} to bag! 🍔`);
     setQuantity(1);
@@ -88,10 +89,13 @@ export default function MenuCard({ item }: MenuCardProps) {
 
   // ── Clicking the card navigates to the item detail page ──
   const handleCardClick = () => {
-  if (!item.is_sold_out && (item.category === "single" || item.category === "meal")) {
-    router.push(`/menu/${item.slug}`);
-  }
-};
+    if (
+      !item.is_sold_out &&
+      (item.category === "single" || item.category === "meal")
+    ) {
+      router.push(`/menu/${item.slug}`);
+    }
+  };
 
   return (
     <article
@@ -139,7 +143,11 @@ export default function MenuCard({ item }: MenuCardProps) {
           />
         )}
         {isVisible && !item.ingredients && item.model_path && (
-          <SimpleModelCanvas modelPath={item.model_path} scale={1.17} rotation={[0.4, 0.8, 0]} />
+          <SimpleModelCanvas
+            modelPath={item.model_path}
+            scale={1.17}
+            rotation={[0.4, 0.8, 0]}
+          />
         )}
       </div>
 

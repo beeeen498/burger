@@ -128,6 +128,10 @@
           color: var(--black);
           opacity: 0.6;
           text-transform: capitalize;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          margin: 5px 0;
         }
       }
 
