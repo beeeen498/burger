@@ -396,7 +396,9 @@ const CheckoutPage = () => {
 
                   {/* ── Feedback message ── */}
                   {promoStatus === "valid" && (
-                    <p className={styles.promoValid}>50% off applied! 🎉</p>
+                    <p className={styles.promoValid}>
+                      {discount}% off applied! 🎉
+                    </p>
                   )}
                   {promoStatus === "invalid" && (
                     <p className={styles.promoInvalid}>Invalid code 😢</p>

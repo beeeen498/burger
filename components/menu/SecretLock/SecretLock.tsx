@@ -121,7 +121,7 @@ export default function SecretLock() {
             onChange={(e) => setCode(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Enter code..."
-            maxLength={10}
+            maxLength={20}
           />
           <button className={styles.submitBtn} onClick={handleSubmit}>
             →

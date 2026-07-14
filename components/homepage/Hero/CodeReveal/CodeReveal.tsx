@@ -1,8 +1,8 @@
-"use client"
-
-import { useMemo, useState } from "react"
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { FaRegClipboard } from "react-icons/fa";
-import styles from "./CodeReveal.module.scss"
+import styles from "./CodeReveal.module.scss";
 
 // ── Ransom note fonts — loaded via @import in SCSS ────
 const RANSOM_FONTS = [
@@ -11,47 +11,66 @@ const RANSOM_FONTS = [
   "'Playfair Display', serif",
   "'Bangers', cursive",
   "'Caveat', cursive",
-]
+];
 
 // ── Ransom note background colors ─────────────────────
-const RANSOM_COLORS = ["var(--yellow)", "var(--pink)", "var(--blue)", "var(--white)", "var(--green)"]
-
-// ── Hardcoded for now — will come from Supabase later ──
-const SECRET_CODE = "SMASH"
+const RANSOM_COLORS = [
+  "var(--yellow)",
+  "var(--pink)",
+  "var(--blue)",
+  "var(--white)",
+  "var(--green)",
+];
 
 interface CodeRevealProps {
-  show: boolean
+  show: boolean;
 }
 
 export default function CodeReveal({ show }: CodeRevealProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
+  const [secretCode, setSecretCode] = useState<string | null>(null);
+
+  // -- Fetch secret password from Supabase --
+  useEffect(() => {
+    async function fetchCode() {
+      const { data } = await supabase
+        .from("restaurant_settings")
+        .select("secret_menu_password")
+        .single();
+
+      setSecretCode(data?.secret_menu_password ?? null);
+    }
+    fetchCode();
+  }, []);
 
   // ── Generate random styles once per letter ──────────
   const letterStyles = useMemo(() => {
-    return SECRET_CODE.split("").map(() => ({
+    if (!secretCode) return [];
+    return secretCode.split("").map(() => ({
       fontFamily: RANSOM_FONTS[Math.floor(Math.random() * RANSOM_FONTS.length)],
-      fontSize: `${Math.random() * 12 + 20}px`,                   // 20–32px
-      transform: `rotate(${Math.random() * 16 - 8}deg)`,          // -8 to +8 degrees
-      backgroundColor: RANSOM_COLORS[Math.floor(Math.random() * RANSOM_COLORS.length)],
-    }))
-  }, [])
+      fontSize: `${Math.random() * 12 + 20}px`,
+      transform: `rotate(${Math.random() * 16 - 8}deg)`,
+      backgroundColor:
+        RANSOM_COLORS[Math.floor(Math.random() * RANSOM_COLORS.length)],
+    }));
+  }, [secretCode]);
 
   // ── Copy to clipboard ──────────────────────────────
   const handleCopy = () => {
-    navigator.clipboard.writeText(SECRET_CODE)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    if (!secretCode) return;
+    navigator.clipboard.writeText(secretCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  if (!show) return null
+  if (!show || !secretCode) return null;
 
   return (
     <div className={styles.card}>
-
       {/* ── Ransom note code ── */}
       <div className={styles.codeRow}>
         <div className={styles.ransomCode}>
-          {SECRET_CODE.split("").map((letter, i) => (
+          {secretCode.split("").map((letter, i) => (
             <span key={i} style={letterStyles[i]}>
               {letter}
             </span>
@@ -68,7 +87,6 @@ export default function CodeReveal({ show }: CodeRevealProps) {
       <p className={styles.hint}>
         I&apos;ll see you at the 🔒 — keep an eye on the menu 😉
       </p>
-
     </div>
-  )
+  );
 }
