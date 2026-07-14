@@ -268,13 +268,13 @@ export default function BurgerChallengeTeaser() {
 
             <SideItem
               model="/3d-models/french_fries.glb"
-              position={[-3, -1, -10]}
+              position={[-2, -1, -10]}
               scale={0.1}
               rotation={[0.4, 0, 0]}
             />
             <SideItem
               model="/3d-models/vanilla_milkshake.glb"
-              position={[12, -1, -10]}
+              position={[-4, -1, -10]}
               scale={0.1}
               rotation={[0.4, 0, 0]}
             />

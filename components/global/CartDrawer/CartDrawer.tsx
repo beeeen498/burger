@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import useCartStore from "@/lib/useCartStore";
 import { useEffect, useState } from "react";
 import styles from "./CartDrawer.module.scss";
+import Link from "next/link";
 
 // ── Free delivery threshold ──
 const FREE_DELIVERY_MIN = 30;
@@ -238,7 +239,9 @@ const CartDrawer = () => {
             </div>
 
             {/* ── Checkout button — primary action ── */}
-            <button className={styles.checkoutBtn}>Proceed to Checkout</button>
+            <Link href="/checkout" className={styles.checkoutBtn}>
+              Proceed to Checkout
+            </Link>
 
             {/* ── Clear cart — text link with confirmation ── */}
             {!confirmClear ? (

@@ -284,6 +284,8 @@
       box-shadow: 4px 4px 0 var(--black);
       cursor: pointer;
       transition: all 0.15s ease;
+      text-align: center;
+      text-decoration: none;
 
       // ── Press-down effect ──
       &:active {
