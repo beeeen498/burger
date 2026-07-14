@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: "📊" },
   { label: "Orders", href: "/admin/orders", icon: "🧾" },
   { label: "Menu", href: "/admin/menu", icon: "🍔" },
+  { label: "Challenge", href: "/admin/challenge", icon: "🏆" },
   { label: "Settings", href: "/admin/settings", icon: "⚙️" },
 ];
 

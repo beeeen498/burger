@@ -1,0 +1,174 @@
+// ----- Admin Challenge Management -----
+
+.challengePage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .pageTitle {
+    font-family: var(--header-font);
+    font-size: 1.6rem;
+    color: var(--black);
+  }
+}
+
+// ----- Card -----
+
+.card {
+  padding: 24px;
+  background-color: var(--white);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  z-index: 1;
+
+  .cardTitle {
+    font-family: var(--header-font);
+    font-size: 1.1rem;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .empty {
+    font-family: var(--body-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+}
+
+// ----- Field Grid -----
+
+.fieldGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--header-font);
+    font-size: 0.85rem;
+    color: var(--black);
+    min-width: 160px;
+  }
+}
+
+// ----- Input (shared) -----
+
+.input {
+  padding: 10px 14px;
+  font-family: var(--body-font);
+  font-size: 0.9rem;
+  color: var(--black);
+  background-color: var(--white);
+  border: var(--border);
+  outline: none;
+
+  &:focus {
+    box-shadow: var(--box-shadow);
+  }
+}
+
+// ----- Save Button -----
+
+.saveBtn {
+  padding: 12px 24px;
+  font-family: var(--header-font);
+  font-size: 0.95rem;
+  color: var(--black);
+  background-color: var(--green);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+
+  &:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
+}
+
+// ----- Hall of Fame List -----
+
+.hallList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  .hallEntry {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    background-color: var(--yellow);
+    border: var(--border);
+
+    .hallName {
+      font-family: var(--header-font);
+      font-size: 0.9rem;
+      color: var(--black);
+      flex: 1;
+    }
+
+    .hallTime {
+      font-family: var(--body-font);
+      font-size: 0.85rem;
+      color: var(--black);
+    }
+
+    .hallDate {
+      font-family: var(--body-font);
+      font-size: 0.8rem;
+      color: var(--black);
+      opacity: 0.5;
+    }
+
+    .removeBtn {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      color: var(--black);
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.1s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// ----- Add Row -----
+
+.addRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .addBtn {
+    padding: 10px 20px;
+    font-family: var(--header-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    background-color: var(--blue);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition:
+      transform 0.1s,
+      box-shadow 0.1s;
+
+    &:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+  }
+}
