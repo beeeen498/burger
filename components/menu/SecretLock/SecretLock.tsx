@@ -1,15 +1,13 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { supabase } from "@/lib/supabase";
 import styles from "./SecretLock.module.scss";
 
 // ── localStorage keys ─────────────────────────────────
 const LS_BURGER_CLICKED = "secretMenu_burgerClicked";
 const LS_SECRET_UNLOCKED = "secretMenu_unlocked";
 const LS_UNLOCK_TIME = "secretMenu_unlockedAt";
-
-// ── Hardcoded for now — will come from Supabase later ──
-const SECRET_CODE = "SMASH";
 
 export default function SecretLock() {
   const [show, setShow] = useState(false);
@@ -18,6 +16,22 @@ export default function SecretLock() {
   const [code, setCode] = useState("");
   const [shake, setShake] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // -- Secret code from Supabase --
+  const [secretCode, setSecretCode] = useState<string | null>(null);
+
+  // -- Fetch secret password from Supabase --
+  useEffect(() => {
+    async function fetchCode() {
+      const { data } = await supabase
+        .from("restaurant_settings")
+        .select("secret_menu_password")
+        .single();
+
+      setSecretCode(data?.secret_menu_password ?? null);
+    }
+    fetchCode();
+  }, []);
 
   // ── Only show if burger interaction is complete and not already unlocked ──
   useEffect(() => {
@@ -47,7 +61,10 @@ export default function SecretLock() {
 
   // ── Submit the code ──
   const handleSubmit = () => {
-    if (code.toUpperCase().trim() === SECRET_CODE) {
+    if (
+      secretCode &&
+      code.toUpperCase().trim() === secretCode.toUpperCase().trim()
+    ) {
       localStorage.setItem(LS_SECRET_UNLOCKED, "yes");
       localStorage.setItem(LS_UNLOCK_TIME, new Date().toISOString());
       setUnlocked(true);
@@ -72,7 +89,7 @@ export default function SecretLock() {
     if (e.key === "Enter") handleSubmit();
   };
 
-  if (!show) return null;
+  if (!show || !secretCode) return null;
 
   return (
     <div
