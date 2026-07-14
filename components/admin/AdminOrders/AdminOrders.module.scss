@@ -1,0 +1,163 @@
+// ----- Admin Orders Page -----
+.ordersPage {
+  .pageTitle {
+    font-family: var(--header-font);
+    font-size: 1.6rem;
+    color: var(--black);
+    margin-bottom: 24px;
+  }
+
+  .empty {
+    font-family: var(--body-font);
+    font-size: 1rem;
+    color: var(--black);
+    opacity: 0.6;
+  }
+}
+
+// ----- Orders List -----
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ----- Order Card -----
+.orderCard {
+  padding: 20px;
+  background-color: var(--white);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  z-index: 1;
+
+  // -- Status colors on left border --
+  &.received {
+    border-left: 5px solid var(--blue);
+  }
+
+  &.preparing {
+    border-left: 5px solid var(--yellow);
+  }
+
+  &.ready {
+    border-left: 5px solid var(--green);
+  }
+
+  &.delivered {
+    border-left: 5px solid var(--black);
+    opacity: 0.6;
+  }
+
+  // -- Header row --
+  .orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .orderInfo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .orderNumber {
+        font-family: var(--header-font);
+        font-size: 1.1rem;
+        color: var(--black);
+      }
+
+      .orderTime {
+        font-family: var(--body-font);
+        font-size: 0.85rem;
+        color: var(--black);
+        opacity: 0.5;
+      }
+    }
+
+    .statusBadge {
+      font-family: var(--header-font);
+      font-size: 0.85rem;
+      color: var(--black);
+      padding: 4px 10px;
+      background-color: var(--white);
+      border: var(--border);
+    }
+  }
+
+  // -- Customer info --
+  .customerInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--body-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    margin-bottom: 12px;
+
+    .method {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+  }
+
+  // -- Items list --
+  .itemsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .item {
+      font-family: var(--body-font);
+      font-size: 0.85rem;
+      color: var(--black);
+      padding: 4px 10px;
+      background-color: var(--yellow);
+      border: var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .itemName {
+        font-weight: 600;
+      }
+
+      .itemExtras {
+        font-size: 0.75rem;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  // -- Footer row --
+  .orderFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .total {
+      font-family: var(--header-font);
+      font-size: 1.1rem;
+      color: var(--black);
+    }
+
+    .advanceBtn {
+      font-family: var(--header-font);
+      font-size: 0.85rem;
+      color: var(--black);
+      padding: 8px 16px;
+      background-color: var(--green);
+      border: var(--border);
+      box-shadow: var(--box-shadow);
+      cursor: pointer;
+      transition:
+        transform 0.1s,
+        box-shadow 0.1s;
+
+      &:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
+      }
+    }
+  }
+}

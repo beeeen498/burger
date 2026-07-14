@@ -169,7 +169,19 @@ const CartDrawer = () => {
               <div key={item.id} className={styles.cartItem}>
                 {/* ── Item name and price ── */}
                 <div className={styles.itemInfo}>
-                  <span className={styles.itemName}>{item.name}</span>
+                  <div className={styles.itemDetails}>
+                    <span className={styles.itemName}>{item.name}</span>
+
+                    {/* ── Side items if present ── */}
+                    {item.sideItems && item.sideItems.length > 0 && (
+                      <span className={styles.itemSides}>
+                        +{" "}
+                        {item.sideItems
+                          .map((s) => s.replace(/_/g, " "))
+                          .join(", ")}
+                      </span>
+                    )}
+                  </div>
                   <span className={styles.itemPrice}>
                     ${(item.price * item.quantity).toFixed(2)}
                   </span>

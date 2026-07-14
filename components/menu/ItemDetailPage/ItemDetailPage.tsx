@@ -3,6 +3,8 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import useCartStore from "@/lib/useCartStore";
 import Header from "@/components/global/Header/Header";
 import BurgerCanvas from "@/components/global/BurgerCanvas/BurgerCanvas";
 import IngredientSummary from "@/components/global/IngredientSummary/IngredientSummary";
@@ -39,11 +41,30 @@ const ItemDetailPage = ({ slug }: Props) => {
   // ── Sound and vibration feedback ───────────────────
   const { playAdd, playRemove } = useIngredientFeedback();
 
+  // ── Cart store ──────────────────────────────────
+  const addItem = useCartStore((state) => state.addItem);
+  const setFlyFrom = useCartStore((state) => state.setFlyFrom);
+
   // ── Selected side item — only for meals with side_items ──
   const [selectedSide, setSelectedSide] = useState<string | null>(null);
 
   // ── Selected milkshake flavor — only for meals ──
   const [selectedShake, setSelectedShake] = useState<string | null>(null);
+
+  // ── Add item to cart ──────────────────────────────
+  const handleAddToCart = () => {
+    navigator.vibrate?.(50);
+
+    addItem({
+      id: item!.id,
+      name: item!.name,
+      price: calculateItemPrice(),
+      quantity: 1,
+      ingredients: ingredients,
+      sideItems: activeSideItems ?? undefined,
+    });
+    toast(`Added ${item!.name} to bag! 🍔`);
+  };
 
   // ── Fetch the matching item from Supabase by slug ──────
   useEffect(() => {
@@ -268,13 +289,20 @@ const ItemDetailPage = ({ slug }: Props) => {
             {/* ── Price and Add to Cart ── */}
             <div className={styles.cartRow}>
               <span className={styles.price}>${price.toFixed(2)}</span>
-              <Cta
-                label="Add to Cart"
-                variant="yellow"
-                onClick={() =>
-                  console.log("add to cart", { item, ingredients, price })
-                }
-              />
+              <div
+                onClick={(e) => {
+                  const rect = (
+                    e.currentTarget as HTMLElement
+                  ).getBoundingClientRect();
+                  setFlyFrom({ x: rect.left + rect.width / 2, y: rect.top });
+                }}
+              >
+                <Cta
+                  label="Add to Cart"
+                  variant="yellow"
+                  onClick={handleAddToCart}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -9,7 +9,8 @@ export interface CartItem {
   price: number;
   quantity: number;
   ingredients?: BurgerIngredients | null;
-  maxQuantity?: number; // ── limits how many can be ordered (e.g. 1 for BOTD)
+  sideItems?: string[];
+  maxQuantity?: number;
 }
 
 // ── Flying animation coordinates ────────────────────────────

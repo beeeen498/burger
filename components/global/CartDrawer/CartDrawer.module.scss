@@ -114,23 +114,20 @@
       .itemInfo {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
+        align-items: flex-start;
 
-        .itemName {
-          font-weight: 700;
-          font-size: 0.95rem;
-          color: var(--black);
+        .itemDetails {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
         }
 
-        .itemPrice {
-          font-weight: 700;
-          font-size: 0.95rem;
-          background: var(--yellow);
-          border: var(--border);
-          border-radius: 4px;
-          padding: 2px 8px;
-          box-shadow: 2px 2px 0 var(--black);
+        .itemSides {
+          font-family: var(--body-font);
+          font-size: 0.75rem;
+          color: var(--black);
+          opacity: 0.6;
+          text-transform: capitalize;
         }
       }
 

@@ -3,7 +3,8 @@
 // ----- Admin Layout -----
 // Sidebar + top bar shell that wraps all admin pages.
 
-import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import styles from "./AdminLayout.module.scss";
@@ -30,7 +31,37 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
+  const [newOrderCount, setNewOrderCount] = useState(0);
+
+  // -- Fetch count of "received" orders + listen for changes --
+  useEffect(() => {
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from("orders")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "received");
+
+      setNewOrderCount(count || 0);
+    };
+
+    fetchCount();
+
+    // -- Realtime: update count when orders change --
+    const channel = supabase
+      .channel("orders-badge")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => {
+          fetchCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   // -- Handle logout --
   const handleLogout = async () => {
@@ -58,6 +89,11 @@ export default function AdminLayout({
             >
               <span className={styles.navIcon}>{item.icon}</span>
               {item.label}
+
+              {/* -- Notification badge on Orders -- */}
+              {item.label === "Orders" && newOrderCount > 0 && (
+                <span className={styles.badge}>{newOrderCount}</span>
+              )}
             </Link>
           ))}
         </nav>

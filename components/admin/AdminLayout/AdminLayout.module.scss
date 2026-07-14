@@ -56,6 +56,22 @@
       border-radius: 6px;
       transition: background-color 0.15s;
 
+      .badge {
+        margin-left: auto;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--body-font);
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--white);
+        background-color: var(--pink);
+        border-radius: 50%;
+        border: var(--border);
+      }
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
       }
