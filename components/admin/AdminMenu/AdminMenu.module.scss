@@ -1,0 +1,220 @@
+// ----- Admin Menu Management -----
+
+.menuPage {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  .pageTitle {
+    font-family: var(--header-font);
+    font-size: 1.6rem;
+    color: var(--black);
+  }
+}
+
+// ----- Section Title -----
+
+.sectionTitle {
+  font-family: var(--header-font);
+  font-size: 1.1rem;
+  color: var(--black);
+  margin-bottom: 12px;
+}
+
+// ----- Burger of the Day Section -----
+
+.botdSection {
+  padding: 24px;
+  background-color: var(--yellow);
+  border: var(--border);
+  box-shadow: var(--box-shadow);
+  z-index: 1;
+
+  .botdControls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    // -- Dropdown --
+    .botdSelect {
+      padding: 10px 14px;
+      font-family: var(--body-font);
+      font-size: 0.9rem;
+      color: var(--black);
+      background-color: var(--white);
+      border: var(--border);
+      outline: none;
+      min-width: 200px;
+    }
+
+    // -- Discount checkbox --
+    .discountToggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--body-font);
+      font-size: 0.85rem;
+      color: var(--black);
+      cursor: pointer;
+    }
+
+    // -- Discount price input --
+    .discountInput {
+      padding: 10px 14px;
+      font-family: var(--body-font);
+      font-size: 0.9rem;
+      color: var(--black);
+      background-color: var(--white);
+      border: var(--border);
+      outline: none;
+      width: 120px;
+    }
+
+    // -- Save button --
+    .botdSaveBtn {
+      padding: 10px 20px;
+      font-family: var(--header-font);
+      font-size: 0.9rem;
+      color: var(--black);
+      background-color: var(--green);
+      border: var(--border);
+      box-shadow: var(--box-shadow);
+      cursor: pointer;
+      transition:
+        transform 0.1s,
+        box-shadow 0.1s;
+
+      &:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// ----- Menu Items Table -----
+
+.tableWrapper {
+  overflow-x: auto;
+  background-color: var(--white);
+  position: relative;
+  z-index: 1;
+  border: var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--body-font);
+  font-size: 0.9rem;
+  color: var(--black);
+
+  // -- Header row --
+  thead {
+    tr {
+      background-color: var(--black);
+      z-index: 1;
+
+      th {
+        padding: 12px 16px;
+        font-family: var(--header-font);
+        font-size: 0.85rem;
+        color: var(--white);
+        text-align: left;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  // -- Body rows --
+  tbody {
+    tr {
+      border-bottom: 2px solid var(--black);
+      background-color: var(--white);
+      transition: background-color 0.1s;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      // -- Sold out row styling --
+      &.soldOut {
+        opacity: 0.5;
+      }
+    }
+
+    td {
+      padding: 12px 16px;
+      vertical-align: middle;
+    }
+  }
+
+  // -- Name cell --
+  .nameCell {
+    font-family: var(--header-font);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .botdBadge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      background-color: var(--yellow);
+      border: var(--border);
+      white-space: nowrap;
+    }
+  }
+
+  // -- Category cell --
+  .categoryCell {
+    text-transform: capitalize;
+    opacity: 0.6;
+  }
+
+  // -- Price cell --
+  .priceCell {
+    .priceValue {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background-color 0.1s;
+
+      &:hover {
+        background-color: var(--yellow);
+      }
+    }
+
+    .priceInput {
+      width: 80px;
+      padding: 6px 8px;
+      font-family: var(--body-font);
+      font-size: 0.9rem;
+      color: var(--black);
+      background-color: var(--white);
+      border: var(--border);
+      outline: none;
+    }
+  }
+
+  // -- Toggle button --
+  .toggle {
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--black);
+    opacity: 0.3;
+    transition: opacity 0.1s;
+
+    &:hover {
+      opacity: 0.6;
+    }
+
+    &.on {
+      opacity: 1;
+      color: var(--pink);
+    }
+  }
+}
