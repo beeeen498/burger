@@ -12,7 +12,6 @@ const DOT_INTERVAL = 400;
 
 export default function LoadingScreen() {
   const [visible, setVisible] = useState(true);
-  const [dotCount, setDotCount] = useState(1);
 
   const pathname = usePathname();
   const isPageReady = useLoadingStore((state) => state.isPageReady);
@@ -65,14 +64,6 @@ export default function LoadingScreen() {
       setVisible(true);
     }
   }
-
-  // ---------- dots animation ----------
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDotCount((prev) => (prev === 3 ? 1 : prev + 1));
-    }, DOT_INTERVAL);
-    return () => clearInterval(interval);
-  }, []);
 
   // ---------- block scroll while visible ----------
   useEffect(() => {
@@ -128,7 +119,7 @@ export default function LoadingScreen() {
 
       <p className={styles.text}>
         Heating up the grill
-        <span className={styles.dots}>{".".repeat(dotCount)}</span>
+        <span className={styles.dots} />
       </p>
     </div>
   );
