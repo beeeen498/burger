@@ -1,5 +1,7 @@
 "use client";
 
+import AdminDashboard from "@/components/admin/AdminDashboard/AdminDashboard";
+
 export default function Page() {
-  return <h1>Admin Dashboard</h1>;
+  return <AdminDashboard />;
 }

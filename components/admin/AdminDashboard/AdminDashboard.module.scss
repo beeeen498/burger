@@ -1,0 +1,166 @@
+// ----- Admin Dashboard -----
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+// ----- Busy Status -----
+
+.busyStatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .busyEmoji {
+    font-size: 2rem;
+  }
+
+  .busyMessage {
+    font-family: var(--header-font);
+    font-size: 1.2rem;
+    color: var(--black);
+  }
+}
+
+// ----- Stats Row -----
+
+.statsRow {
+  display: flex;
+  gap: 16px;
+
+  .statCard {
+    flex: 1;
+    padding: 24px;
+    background-color: var(--yellow);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1;
+
+    // -- Pending card highlight --
+    &.pending {
+      background-color: var(--pink);
+    }
+
+    .statNumber {
+      font-family: var(--header-font);
+      font-size: 2rem;
+      color: var(--black);
+    }
+
+    .statLabel {
+      font-family: var(--body-font);
+      font-size: 0.85rem;
+      color: var(--black);
+      opacity: 0.7;
+    }
+  }
+}
+
+// ----- Section Title -----
+
+.sectionTitle {
+  font-family: var(--header-font);
+  font-size: 1.1rem;
+  color: var(--black);
+  margin-bottom: 12px;
+}
+
+// ----- Quick Actions -----
+
+.quickActions {
+
+  .actionLinks {
+      display: flex;
+      gap: 12px;
+      
+      .actionLink {
+        z-index: 1;
+      padding: 14px 20px;
+      font-family: var(--header-font);
+      font-size: 0.95rem;
+      color: var(--black);
+      background-color: var(--white);
+      border: var(--border);
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+
+      &:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// ----- Recent Orders -----
+
+.recentOrders {
+
+  .empty {
+    font-family: var(--body-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    opacity: 0.5;
+  }
+
+  .recentList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .recentItem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background-color: var(--white);
+      border: var(--border);
+      z-index: 1;
+
+      .recentLeft {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .recentNumber {
+          font-family: var(--header-font);
+          font-size: 0.9rem;
+          color: var(--black);
+        }
+
+        .recentName {
+          font-family: var(--body-font);
+          font-size: 0.85rem;
+          color: var(--black);
+          opacity: 0.6;
+        }
+      }
+
+      .recentRight {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .recentTotal {
+          font-family: var(--header-font);
+          font-size: 0.9rem;
+          color: var(--black);
+        }
+
+        .recentTime {
+          font-family: var(--body-font);
+          font-size: 0.8rem;
+          color: var(--black);
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
