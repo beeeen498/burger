@@ -88,10 +88,10 @@ export default function MenuCard({ item }: MenuCardProps) {
 
   // ── Clicking the card navigates to the item detail page ──
   const handleCardClick = () => {
-    if (!item.is_sold_out) {
-      router.push(`/menu/${item.slug}`);
-    }
-  };
+  if (!item.is_sold_out && (item.category === "single" || item.category === "meal")) {
+    router.push(`/menu/${item.slug}`);
+  }
+};
 
   return (
     <article

@@ -234,12 +234,13 @@ export default function MenuPage() {
               .filter((item) => item.category === category)
               .filter((item) => {
                 if (!calorieRange) return true;
-                if (item.calories === null) return true; // show items with no calorie data
+                if (item.calories === null) return true;
                 return (
                   item.calories >= calorieRange[0] &&
                   item.calories <= calorieRange[1]
                 );
-              });
+              })
+              .sort((a, b) => a.name.localeCompare(b.name));
             if (categoryItems.length === 0) return null;
 
             return (

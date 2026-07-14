@@ -268,13 +268,13 @@ export default function BurgerChallengeTeaser() {
 
             <SideItem
               model="/3d-models/french_fries.glb"
-              position={[-2, -1, -10]}
+              position={[-3, -1, -10]}
               scale={0.1}
               rotation={[0.4, 0, 0]}
             />
             <SideItem
-              model="/3d-models/milkshake.glb"
-              position={[-4, -1, -10]}
+              model="/3d-models/vanilla_milkshake.glb"
+              position={[12, -1, -10]}
               scale={0.1}
               rotation={[0.4, 0, 0]}
             />
@@ -307,4 +307,4 @@ export default function BurgerChallengeTeaser() {
 
 useGLTF.preload("/3d-models/burger.glb");
 useGLTF.preload("/3d-models/french_fries.glb");
-useGLTF.preload("/3d-models/milkshake.glb");
+useGLTF.preload("/3d-models/vanilla_milkshake.glb");

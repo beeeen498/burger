@@ -7,11 +7,11 @@ import { useGLTF } from "@react-three/drei";
 import { stackBurgerLayers, buildChallengeSequence } from "@/lib/burgerUtils";
 import styles from "./ChallengeBurgerScene.module.scss";
 
-const PATTY_COUNT    = 20;
+const PATTY_COUNT = 20;
 const LAYER_SEQUENCE = buildChallengeSequence(PATTY_COUNT);
-const GROUP_SCALE    = 0.13;
-const CAM_Z          = 30;
-const CAM_FOV        = 40;
+const GROUP_SCALE = 0.13;
+const CAM_Z = 30;
+const CAM_FOV = 40;
 
 // Change this one line to swap material style across all clouds
 const CLOUD_MATERIAL_TYPE = "toon"; // "toon" | "lambert"
@@ -27,11 +27,20 @@ interface CloudProps {
 // creating the clouds
 function Cloud({ position, scale, speed, opacity, drift }: CloudProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const offset   = useRef(Math.random() * 100);
+  const offset = useRef(Math.random() * 100);
 
-  const material = CLOUD_MATERIAL_TYPE === "toon"
-    ? new THREE.MeshToonMaterial({ color: 0xefefef, transparent: true, opacity })
-    : new THREE.MeshLambertMaterial({ color: 0xefefef, transparent: true, opacity });
+  const material =
+    CLOUD_MATERIAL_TYPE === "toon"
+      ? new THREE.MeshToonMaterial({
+          color: 0xefefef,
+          transparent: true,
+          opacity,
+        })
+      : new THREE.MeshLambertMaterial({
+          color: 0xefefef,
+          transparent: true,
+          opacity,
+        });
 
   const geometry = new THREE.SphereGeometry(1, 5, 4);
 
@@ -40,8 +49,8 @@ function Cloud({ position, scale, speed, opacity, drift }: CloudProps) {
     offset.current += delta * speed;
 
     // subtle horizontal bob on all clouds
-    groupRef.current.position.x = position[0] + Math.sin(offset.current * 0.3) * 2;
-    
+    groupRef.current.position.x =
+      position[0] + Math.sin(offset.current * 0.3) * 2;
 
     if (drift) {
       // slowly move upward, wrap back to start when off screen
@@ -51,28 +60,44 @@ function Cloud({ position, scale, speed, opacity, drift }: CloudProps) {
       }
     } else {
       // just bob in place
-      groupRef.current.position.y = position[1] + Math.sin(offset.current * 0.5) * 0.3;
+      groupRef.current.position.y =
+        position[1] + Math.sin(offset.current * 0.5) * 0.3;
     }
   });
 
   return (
     <group ref={groupRef} position={position} scale={scale}>
       <mesh geometry={geometry} material={material} position={[0, 0, 0]} />
-      <mesh geometry={geometry} material={material} position={[1.4, 0.3, 0]} scale={0.8} />
-      <mesh geometry={geometry} material={material} position={[-1.3, 0.2, 0]} scale={0.75} />
-      <mesh geometry={geometry} material={material} position={[0.6, 0.9, 0]} scale={0.6} />
+      <mesh
+        geometry={geometry}
+        material={material}
+        position={[1.4, 0.3, 0]}
+        scale={0.8}
+      />
+      <mesh
+        geometry={geometry}
+        material={material}
+        position={[-1.3, 0.2, 0]}
+        scale={0.75}
+      />
+      <mesh
+        geometry={geometry}
+        material={material}
+        position={[0.6, 0.9, 0]}
+        scale={0.6}
+      />
     </group>
   );
 }
 
 // challenge burger model
 function ChallengeBurger() {
-  const { scene }  = useGLTF("/3d-models/burger.glb") as any;
+  const { scene } = useGLTF("/3d-models/burger.glb") as any;
   const { camera } = useThree();
 
   const groupRef = useRef<THREE.Group>(null);
-  const meshes   = useRef<{ [key: string]: THREE.Mesh }>({});
-  const clock    = useRef(0);
+  const meshes = useRef<{ [key: string]: THREE.Mesh }>({});
+  const clock = useRef(0);
 
   // extract meshes from the GLB
   useEffect(() => {
@@ -87,11 +112,7 @@ function ChallengeBurger() {
   useEffect(() => {
     if (!groupRef.current) return;
 
-    stackBurgerLayers(
-      groupRef.current,
-      meshes.current,
-      LAYER_SEQUENCE
-    );
+    stackBurgerLayers(groupRef.current, meshes.current, LAYER_SEQUENCE);
 
     // log world space bounds after scale is applied
     const box = new THREE.Box3().setFromObject(groupRef.current);
@@ -100,8 +121,6 @@ function ChallengeBurger() {
     (camera as THREE.PerspectiveCamera).fov = 40;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
     camera.lookAt(0, 45, 0);
-    console.log("camera position:", camera.position);
-console.log("camera fov:", (camera as THREE.PerspectiveCamera).fov);
   }, [scene, camera]);
 
   // wobble the whole burger like a tower in wind
@@ -112,9 +131,7 @@ console.log("camera fov:", (camera as THREE.PerspectiveCamera).fov);
     groupRef.current.rotation.x = Math.sin(clock.current * 0.5) * 0.02 + 0.15;
   });
 
-  return (
-    <group ref={groupRef} scale={GROUP_SCALE} />
-  );
+  return <group ref={groupRef} scale={GROUP_SCALE} />;
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
@@ -130,17 +147,43 @@ export default function ChallengeBurgerScene() {
       >
         {/* split warm/cool lighting */}
         <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 10, 5]}  intensity={1.6} color="#ff6b00" /> {/* warm orange, right */}
-        <directionalLight position={[-5, 5, 5]}  intensity={1.0} color="#6bbbe8" /> {/* cool blue, left */}
-        <pointLight       position={[0, -5, 8]}  intensity={0.6} color="#df2c8b" /> {/* pink under-glow */}
-
+        <directionalLight
+          position={[5, 10, 5]}
+          intensity={1.6}
+          color="#ff6b00"
+        />{" "}
+        {/* warm orange, right */}
+        <directionalLight
+          position={[-5, 5, 5]}
+          intensity={1.0}
+          color="#6bbbe8"
+        />{" "}
+        {/* cool blue, left */}
+        <pointLight
+          position={[0, -5, 8]}
+          intensity={0.6}
+          color="#df2c8b"
+        />{" "}
+        {/* pink under-glow */}
         <ChallengeBurger />
-
         {/* clouds — mix of drifting and bobbing at different heights */}
-        <Cloud position={[ 5, 42, 20]}  scale={2.5} speed={0.3} opacity={0.9} drift={false} /> {/* in front */}
-        <Cloud position={[-12, 50, -5]}  scale={2.0} speed={0.4} opacity={0.9} drift={false} /> {/* behind */}
+        <Cloud
+          position={[5, 42, 20]}
+          scale={2.5}
+          speed={0.3}
+          opacity={0.9}
+          drift={false}
+        />{" "}
+        {/* in front */}
+        <Cloud
+          position={[-12, 50, -5]}
+          scale={2.0}
+          speed={0.4}
+          opacity={0.9}
+          drift={false}
+        />{" "}
+        {/* behind */}
       </Canvas>
-      
     </div>
   );
 }
