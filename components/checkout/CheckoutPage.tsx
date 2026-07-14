@@ -374,10 +374,16 @@ const CheckoutPage = () => {
                     />
                     <button
                       className={styles.applyBtn}
-                      onClick={() => {
-                        if (promoCode === "BURGERLORD50") {
+                      onClick={async () => {
+                        // -- Check promo code against Supabase --
+                        const { data } = await supabase
+                          .from("restaurant_settings")
+                          .select("promo_code, promo_discount")
+                          .single();
+
+                        if (data?.promo_code && promoCode === data.promo_code) {
                           setPromoStatus("valid");
-                          setDiscount(50);
+                          setDiscount(data.promo_discount);
                         } else {
                           setPromoStatus("invalid");
                           setDiscount(0);
