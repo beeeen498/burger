@@ -88,6 +88,7 @@ export default function SecretMenuPage() {
             description="The ultimate surf and turf situation."
             ingredients={["Beef Patty", "nuggets", "Shrimps"]}
             burgerIngredients={{
+              bunType: "regular",
               sauce: "regular",
               pattyCount: 1,
               shrimps: 1,
@@ -133,6 +134,7 @@ export default function SecretMenuPage() {
             description="A giant nugget. Nothing more to say."
             ingredients={["Giant Nugget", "Cheese", "Sauce"]}
             burgerIngredients={{
+              bunType: "regular",
               giantNugget: 1,
               cheeseCount: 1,
               sauce: "regular",

@@ -99,6 +99,12 @@ export default function AdminOrders() {
       .eq("id", orderId);
   };
 
+  // -- Delete an order --
+  const deleteOrder = async (orderId: string) => {
+    await supabase.from("orders").delete().eq("id", orderId);
+    setOrders((prev) => prev.filter((order) => order.id !== orderId));
+  };
+
   // -- Parse items JSON --
   const parseItems = (items: string) => {
     try {
@@ -183,9 +189,11 @@ export default function AdminOrders() {
                               const label = key
                                 .replace(/([A-Z])/g, " $1")
                                 .toLowerCase();
-                              return typeof val === "number" && val > 1
-                                ? `${label} x${val}`
-                                : label;
+                              if (typeof val === "string")
+                                return `${label}: ${val}`;
+                              if (typeof val === "number" && val > 1)
+                                return `${label} x${val}`;
+                              return label;
                             })
                             .join(", ")}
                         </span>
@@ -211,21 +219,31 @@ export default function AdminOrders() {
                   ${Number(order.total).toFixed(2)}
                 </span>
 
-                {/* -- Advance status button -- */}
-                {order.status !== "delivered" && (
+                <div className={styles.footerActions}>
+                  {/* -- Delete button -- */}
                   <button
-                    className={styles.advanceBtn}
-                    onClick={() => advanceStatus(order.id, order.status)}
+                    className={styles.deleteBtn}
+                    onClick={() => deleteOrder(order.id)}
                   >
-                    Move to{" "}
-                    {
-                      STATUS_INFO[
-                        STATUS_FLOW[STATUS_FLOW.indexOf(order.status) + 1]
-                      ]?.label
-                    }{" "}
-                    →
+                    {order.status === "delivered" ? "Remove" : "Cancel"}
                   </button>
-                )}
+
+                  {/* -- Advance status button -- */}
+                  {order.status !== "delivered" && (
+                    <button
+                      className={styles.advanceBtn}
+                      onClick={() => advanceStatus(order.id, order.status)}
+                    >
+                      Move to{" "}
+                      {
+                        STATUS_INFO[
+                          STATUS_FLOW[STATUS_FLOW.indexOf(order.status) + 1]
+                        ]?.label
+                      }{" "}
+                      →
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}

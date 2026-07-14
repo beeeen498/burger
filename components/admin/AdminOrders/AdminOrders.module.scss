@@ -141,22 +141,42 @@
       color: var(--black);
     }
 
-    .advanceBtn {
-      font-family: var(--header-font);
-      font-size: 0.85rem;
-      color: var(--black);
-      padding: 8px 16px;
-      background-color: var(--green);
-      border: var(--border);
-      box-shadow: var(--box-shadow);
-      cursor: pointer;
-      transition:
-        transform 0.1s,
-        box-shadow 0.1s;
+    .footerActions {
+      display: flex;
+      gap: 8px;
 
-      &:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
+      .deleteBtn {
+        font-family: var(--header-font);
+        font-size: 0.85rem;
+        color: var(--black);
+        padding: 8px 16px;
+        background-color: var(--white);
+        border: var(--border);
+        
+        &:hover {
+          opacity: 1;
+          background-color: var(--black);
+          color: var(--white);
+        }
+      }
+
+      .advanceBtn {
+        font-family: var(--header-font);
+        font-size: 0.85rem;
+        color: var(--black);
+        padding: 8px 16px;
+        background-color: var(--green);
+        border: var(--border);
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+
+        &:active {
+          transform: translate(4px, 4px);
+          box-shadow: none;
+        }
       }
     }
   }
