@@ -7,6 +7,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { BurgerIngredients } from "@/lib/burgerUtils";
 import styles from "./MenuDrawer.module.scss";
 
 // -- Menu item shape for the drawer --
@@ -28,6 +29,7 @@ export interface MenuItemData {
   is_vegan: boolean;
   is_vegetarian: boolean;
   is_gluten_free: boolean;
+  ingredients: BurgerIngredients | null;
 }
 
 // -- Empty item template --
@@ -48,6 +50,7 @@ const EMPTY_ITEM: MenuItemData = {
   is_vegan: false,
   is_vegetarian: false,
   is_gluten_free: false,
+  ingredients: null,
 };
 
 // -- Category options --
@@ -270,6 +273,130 @@ export default function MenuDrawer({
               />
             </label>
           </div>
+
+          {/* ----- Ingredients (burgers/specials only) ----- */}
+          {(item.category === "burgers" || item.category === "specials") && (
+            <div className={styles.ingredientsSection}>
+              <h3 className={styles.badgeTitle}>Ingredients</h3>
+
+              {/* -- Bun type -- */}
+              <label className={styles.field}>
+                Bun Type
+                <select
+                  className={styles.select}
+                  value={item.ingredients?.bunType ?? "regular"}
+                  onChange={(e) =>
+                    setItem((prev) => ({
+                      ...prev,
+                      ingredients: {
+                        ...prev.ingredients,
+                        bunType: e.target.value as BurgerIngredients["bunType"],
+                      },
+                    }))
+                  }
+                >
+                  {["regular", "poppy", "waffle", "toast", "donut"].map((b) => (
+                    <option key={b} value={b}>
+                      {b.charAt(0).toUpperCase() + b.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {/* -- Sauce -- */}
+              <label className={styles.field}>
+                Sauce
+                <select
+                  className={styles.select}
+                  value={item.ingredients?.sauce ?? "regular"}
+                  onChange={(e) =>
+                    setItem((prev) => ({
+                      ...prev,
+                      ingredients: {
+                        ...prev.ingredients,
+                        sauce: e.target.value as BurgerIngredients["sauce"],
+                      },
+                    }))
+                  }
+                >
+                  {["none", "regular", "extra"].map((s) => (
+                    <option key={s} value={s}>
+                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {/* -- Counter ingredients -- */}
+              <div className={styles.ingredientGrid}>
+                {[
+                  { key: "pattyCount", label: "Patties", max: 5 },
+                  { key: "cheeseCount", label: "Cheese", max: 5 },
+                  { key: "lettuce", label: "Lettuce", max: 1 },
+                  { key: "tomato", label: "Tomato", max: 2 },
+                  { key: "pickles", label: "Pickles", max: 2 },
+                  { key: "onions", label: "Onions", max: 2 },
+                  { key: "bacon", label: "Bacon", max: 2 },
+                  { key: "nuggets", label: "Nuggets", max: 2 },
+                  { key: "friedEgg", label: "Fried Egg", max: 1 },
+                  { key: "friedFish", label: "Fried Fish", max: 3 },
+                  { key: "onionRings", label: "Onion Rings", max: 1 },
+                  { key: "potatoChips", label: "Potato Chips", max: 1 },
+                  { key: "shrimps", label: "Shrimps", max: 1 },
+                  { key: "giantNugget", label: "Giant Nugget", max: 1 },
+                ].map((ing) => (
+                  <div key={ing.key} className={styles.ingredientRow}>
+                    <span className={styles.ingredientLabel}>{ing.label}</span>
+                    <div className={styles.counterControls}>
+                      <button
+                        className={styles.counterBtn}
+                        onClick={() =>
+                          setItem((prev) => ({
+                            ...prev,
+                            ingredients: {
+                              ...prev.ingredients,
+                              [ing.key]: Math.max(
+                                0,
+                                ((prev.ingredients?.[
+                                  ing.key as keyof BurgerIngredients
+                                ] as number) ?? 0) - 1,
+                              ),
+                            },
+                          }))
+                        }
+                      >
+                        −
+                      </button>
+                      <span className={styles.counterValue}>
+                        {(item.ingredients?.[
+                          ing.key as keyof BurgerIngredients
+                        ] as number) ?? 0}
+                      </span>
+                      <button
+                        className={styles.counterBtn}
+                        onClick={() =>
+                          setItem((prev) => ({
+                            ...prev,
+                            ingredients: {
+                              ...prev.ingredients,
+                              [ing.key]: Math.min(
+                                ing.max,
+                                ((prev.ingredients?.[
+                                  ing.key as keyof BurgerIngredients
+                                ] as number) ?? 0) + 1,
+                              ),
+                            },
+                          }))
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* ----- Meal Toggle ----- */}
           <div className={styles.mealSection}>

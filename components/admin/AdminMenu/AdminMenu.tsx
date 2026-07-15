@@ -93,7 +93,7 @@ export default function AdminMenu() {
     const { data } = await supabase
       .from("menu_items")
       .select(
-        "id, name, slug, description, category, price, meal_price, calories, side_items, is_available, is_sold_out, is_new, is_trending, is_spicy, is_vegan, is_vegetarian, is_gluten_free",
+        "id, name, slug, description, category, price, meal_price, calories, ingredients, side_items, is_available, is_sold_out, is_new, is_trending, is_spicy, is_vegan, is_vegetarian, is_gluten_free",
       )
       .eq("id", itemId)
       .single();
