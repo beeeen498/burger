@@ -23,7 +23,8 @@
     "sass": "^1.99.0",
     "sonner": "^2.0.7",
     "three": "^0.184.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
