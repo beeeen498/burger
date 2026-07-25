@@ -15,6 +15,12 @@
   .headerIcons {
     display: flex;
     align-items: center;
+    
+    a {
+      color: var(--black);
+      display: flex;
+      align-items: center;
+    }
   }
 
   // logo
@@ -132,6 +138,12 @@
 
     .headerIcons .menuToggle {
       display: flex;
+
+      a {
+        color: var(--black);
+        display: flex;
+        align-items: center;
+      }
     }
   }
 }

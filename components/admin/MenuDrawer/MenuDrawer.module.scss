@@ -49,7 +49,6 @@
 }
 
 // ----- Form -----
-
 .form {
   flex: 1;
   padding: 24px;
@@ -182,68 +181,9 @@
         }
       }
     }
-
-    // ----- Ingredients Section -----
-    .ingredientsSection {
-      .ingredientGrid {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-top: 12px;
-
-        .ingredientRow {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 8px 12px;
-          background-color: var(--white);
-          border: var(--border);
-
-          .ingredientLabel {
-            font-family: var(--body-font);
-            font-size: 0.85rem;
-            color: var(--black);
-          }
-
-          .counterControls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            .counterBtn {
-              width: 28px;
-              height: 28px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-family: var(--header-font);
-              font-size: 1rem;
-              color: var(--black);
-              background-color: var(--yellow);
-              border: var(--border);
-              cursor: pointer;
-              transition: background-color 0.1s;
-
-              &:active {
-                background-color: var(--pink);
-              }
-            }
-
-            .counterValue {
-              font-family: var(--header-font);
-              font-size: 0.9rem;
-              color: var(--black);
-              min-width: 20px;
-              text-align: center;
-            }
-          }
-        }
-      }
-    }
   }
 
   // ----- Ingredients Section -----
-
   .ingredientsSection {
     .ingredientGrid {
       display: flex;
@@ -303,7 +243,6 @@
 }
 
 // ----- Badges -----
-
 .badgeSection {
   .badgeTitle {
     font-family: var(--header-font);
@@ -342,7 +281,6 @@
 }
 
 // ----- Footer -----
-
 .footer {
   padding: 20px 24px;
   border-top: var(--border);

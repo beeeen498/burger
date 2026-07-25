@@ -1,0 +1,185 @@
+// ----- Customer Account Page -----
+
+.accountPage {
+  min-height: 100vh;
+  background-color: var(--white);
+}
+
+.headerWrap {
+  background: var(--blue);
+  padding: 18px 0;
+  border-bottom: var(--border);
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+// ----- User Section -----
+.userSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+
+  .greeting {
+    font-family: var(--header-font);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--black);
+  }
+
+  .logoutBtn {
+    padding: 10px 20px;
+    font-family: var(--header-font);
+    font-size: 0.9rem;
+    color: var(--black);
+    border: var(--border);
+    cursor: pointer;
+    background-color: var(--white);
+    opacity: 0.6;
+    transition: opacity 0.15s;
+    position: relative;
+    z-index: 1;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ----- Orders Section -----
+.ordersSection {
+  .sectionTitle {
+    font-family: var(--header-font);
+    font-size: 1.2rem;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 40px;
+    background-color: var(--yellow);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+
+    p {
+      font-family: var(--body-font);
+      font-size: 1rem;
+      color: var(--black);
+      margin-bottom: 16px;
+    }
+
+    .menuLink {
+      display: inline-block;
+      padding: 12px 24px;
+      font-family: var(--header-font);
+      font-size: 1rem;
+      color: var(--black);
+      background-color: var(--pink);
+      border: var(--border);
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      transition:
+        transform 0.1s,
+        box-shadow 0.1s;
+
+      &:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// ----- Orders List -----
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .orderCard {
+    padding: 20px;
+    background-color: var(--white);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+
+    // -- Header --
+    .orderHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .orderInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .orderNumber {
+          font-family: var(--header-font);
+          font-size: 1rem;
+          color: var(--black);
+        }
+
+        .orderDate {
+          font-family: var(--body-font);
+          font-size: 0.8rem;
+          color: var(--black);
+          opacity: 0.5;
+        }
+      }
+
+      .statusBadge {
+        font-family: var(--header-font);
+        font-size: 0.8rem;
+        color: var(--black);
+        padding: 4px 10px;
+        background-color: var(--yellow);
+        border: var(--border);
+      }
+    }
+
+    // -- Items --
+    .itemsList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+
+      .item {
+        font-family: var(--body-font);
+        font-size: 0.8rem;
+        color: var(--black);
+        padding: 4px 8px;
+        background-color: var(--yellow);
+        border: var(--border);
+      }
+    }
+
+    // -- Footer --
+    .orderFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .method {
+        font-family: var(--body-font);
+        font-size: 0.85rem;
+        color: var(--black);
+        opacity: 0.6;
+      }
+
+      .total {
+        font-family: var(--header-font);
+        font-size: 1.1rem;
+        color: var(--black);
+      }
+    }
+  }
+}

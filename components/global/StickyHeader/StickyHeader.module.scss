@@ -21,6 +21,12 @@
     .icons {
       display: flex;
       align-items: center;
+
+      a {
+        color: var(--black);
+        display: flex;
+        align-items: center;
+      }
     }
 
     .navWrapper {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
@@ -30,6 +31,18 @@ const StickyHeader = () => {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    };
+    checkAuth();
   }, []);
 
   // -- Hide on admin pages (admin has its own layout) --
@@ -131,7 +144,9 @@ const StickyHeader = () => {
             {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
           </button>
 
-          <FaUser size={20} />
+          <Link href={isLoggedIn ? "/account" : "/account/login"}>
+            <FaUser size={20} />
+          </Link>
 
           {/* ── Burger toggle — mobile only via CSS ── */}
           <button

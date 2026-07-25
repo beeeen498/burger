@@ -616,6 +616,10 @@ const CheckoutPage = () => {
                           });
 
                           // ── Save order to Supabase for admin dashboard ──
+                          const {
+                            data: { user },
+                          } = await supabase.auth.getUser();
+
                           await supabase.from("orders").insert({
                             order_number: orderNumber,
                             items: JSON.stringify(items),
@@ -631,6 +635,7 @@ const CheckoutPage = () => {
                               orderType === "delivery"
                                 ? `${street}, ${city}`
                                 : null,
+                            user_id: user?.id ?? null,
                           });
 
                           // ── Navigate to confirmation page ──
