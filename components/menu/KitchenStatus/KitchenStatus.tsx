@@ -55,7 +55,7 @@ export default function KitchenStatus() {
   const config = {
     open:        { label: "Kitchen is open",         className: styles.open },
     closingSoon: { label: "Kitchen is closing soon", className: styles.closingSoon },
-    closed:      { label: "Kitchen is closed",       className: styles.closed },
+    closed:      { label: "Kitchen is closed. Orders placed now will be delivered tomorrow",       className: styles.closed },
   }
 
   const { label, className } = config[status]

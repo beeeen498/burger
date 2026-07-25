@@ -23,6 +23,7 @@ export interface Order {
   customer_email: string;
   address: string | null;
   placed_at: string;
+  phone: string | null;
 }
 
 // -- Status flow --
@@ -159,6 +160,19 @@ export default function AdminOrders() {
                 <span className={styles.method}>
                   {order.method === "delivery" ? "🚗 Delivery" : "🏃 Pickup"}
                 </span>
+                <span className={styles.customerDetail}>
+                  {order.customer_email}
+                </span>
+                {order.address && (
+                  <span className={styles.customerDetail}>
+                    📍 {order.address}
+                  </span>
+                )}
+                {(order as any).phone && (
+                  <span className={styles.customerDetail}>
+                    📞 {(order as any).phone}
+                  </span>
+                )}
               </div>
 
               {/* -- Items list -- */}

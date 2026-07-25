@@ -5,16 +5,20 @@ import { supabase } from "@/lib/supabase";
 import styles from "./OrderStepper.module.scss";
 
 // ── Step definitions ────────────────────────────────
-const STEPS = ["received", "preparing", "ready"] as const;
+const STEPS = ["received", "preparing", "ready", "delivered"] as const;
+
 const STEP_LABELS: Record<string, string> = {
   received: "Order Received",
   preparing: "Preparing",
   ready: "Ready for Pickup",
+  delivered: "Delivered",
 };
+
 const STEP_ICONS: Record<string, string> = {
   received: "📋",
   preparing: "🍳",
   ready: "✅",
+  delivered: "📦",
 };
 
 interface OrderStepperProps {
@@ -26,37 +30,37 @@ const OrderStepper = ({ supabaseOrderId }: OrderStepperProps) => {
 
   // ── Fetch current status + subscribe to realtime changes ──
   useEffect(() => {
-    // ── Initial fetch ──
     const fetchStatus = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("orders")
         .select("status")
         .eq("id", supabaseOrderId)
         .maybeSingle();
-
       if (data?.status) setStatus(data.status);
     };
 
     fetchStatus();
 
-    // ── Realtime subscription ──
     const channel = supabase
-      .channel(`order-${supabaseOrderId}`)
+      .channel(`order-${supabaseOrderId}-${Date.now()}`)
       .on(
         "postgres_changes",
         {
           event: "UPDATE",
           schema: "public",
           table: "orders",
-          filter: `id=eq.${supabaseOrderId}`,
         },
         (payload) => {
-          if (payload.new?.status) {
+          if (
+            (payload.new as any).id === supabaseOrderId &&
+            payload.new?.status
+          ) {
             setStatus(payload.new.status as string);
           }
-        }
+        },
       )
-      .subscribe();
+      .subscribe((status) => {
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -104,9 +108,9 @@ const OrderStepper = ({ supabaseOrderId }: OrderStepperProps) => {
       </div>
 
       {/* ── Ready message ── */}
-      {status === "ready" && (
+      {status === "delivered" && (
         <p className={styles.readyMessage}>
-          Your order is ready! Come grab it 🎉
+          Your order has been delivered! Enjoy 🎉
         </p>
       )}
     </div>

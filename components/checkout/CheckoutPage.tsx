@@ -613,6 +613,7 @@ const CheckoutPage = () => {
                               method: orderType,
                               customer_name: name || "Pickup Guest",
                               customer_email: email,
+                              phone: phone || null,
                               address:
                                 orderType === "delivery"
                                   ? `${street}, ${city}`
