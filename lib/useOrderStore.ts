@@ -4,6 +4,7 @@ import { CartItem } from "./useCartStore"
 
 // ── Completed order shape ───────────────────────────────────
 export interface OrderData {
+  supabaseOrderId: string | null
   orderNumber: string
   items: CartItem[]
   subtotal: number

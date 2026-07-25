@@ -595,8 +595,39 @@ const CheckoutPage = () => {
                           // ── Generate a random order number ──
                           const orderNumber = `SMSHD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
+                          // ── Save order to Supabase for admin dashboard ──
+                          const {
+                            data: { user },
+                          } = await supabase.auth.getUser();
+
+                          const { data: orderRow, error } = await supabase
+                            .from("orders")
+                            .insert({
+                              order_number: orderNumber,
+                              items: JSON.stringify(items),
+                              subtotal,
+                              delivery_fee: deliveryFee,
+                              tip: tipAmount,
+                              discount: discountAmount,
+                              total,
+                              method: orderType,
+                              customer_name: name || "Pickup Guest",
+                              customer_email: email,
+                              address:
+                                orderType === "delivery"
+                                  ? `${street}, ${city}`
+                                  : null,
+                              user_id: user?.id ?? null,
+                            })
+                            .select("id")
+                            .single();
+
+                          if (error)
+                            console.error("Order insert error:", error);
+
                           // ── Save order data for the confirmation page ──
                           setOrderData({
+                            supabaseOrderId: orderRow?.id ?? null,
                             orderNumber,
                             items,
                             subtotal,
@@ -613,29 +644,6 @@ const CheckoutPage = () => {
                                 : undefined,
                             checkoutStartedAt: checkoutStartedAt.current,
                             placedAt: Date.now(),
-                          });
-
-                          // ── Save order to Supabase for admin dashboard ──
-                          const {
-                            data: { user },
-                          } = await supabase.auth.getUser();
-
-                          await supabase.from("orders").insert({
-                            order_number: orderNumber,
-                            items: JSON.stringify(items),
-                            subtotal,
-                            delivery_fee: deliveryFee,
-                            tip: tipAmount,
-                            discount: discountAmount,
-                            total,
-                            method: orderType,
-                            customer_name: name || "Pickup Guest",
-                            customer_email: email,
-                            address:
-                              orderType === "delivery"
-                                ? `${street}, ${city}`
-                                : null,
-                            user_id: user?.id ?? null,
                           });
 
                           // ── Navigate to confirmation page ──

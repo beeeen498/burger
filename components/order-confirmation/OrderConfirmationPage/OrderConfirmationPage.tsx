@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import OrderStepper from "@/components/order/OrderStepper/OrderStepper";
 import Link from "next/link";
 import Header from "../../global/Header/Header";
 import BackgroundCanvas from "../../global/BackgroundCanvas/BackgroundCanvas";
@@ -196,6 +197,11 @@ const OrderConfirmationPage = () => {
             </p>
           </div>
         </div>
+
+        {/* ── Order status stepper ── */}
+        {orderData.supabaseOrderId && (
+          <OrderStepper supabaseOrderId={orderData.supabaseOrderId} />
+        )}
 
         {/* ── Action buttons ── */}
         <div className={styles.actions}>
