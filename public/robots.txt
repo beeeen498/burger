@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://smashd-beta.vercel.app/sitemap.xml
