@@ -32,6 +32,7 @@ interface BurgerOfTheDayProps {
 
 // ---------- component ----------
 export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
+  const items = useCartStore((state) => state.items);
   const [data, setData] = useState<BurgerOfTheDayData | null>(null);
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
@@ -179,7 +180,12 @@ export default function BurgerOfTheDay({ onReady }: BurgerOfTheDayProps) {
   // Also grabs the button's position so the flying 🍔 knows
   // where to start its arc from.
   const handleAddToCart = (e: React.MouseEvent) => {
-    // ── Haptic feedback ──
+    // ── Only one BOTD per order ──
+    if (items.some((i) => i.id === `botd-${data.id}`)) {
+      toast("Burger of the Day is already in your bag! 🍔");
+      return;
+    }
+
     navigator.vibrate?.(50);
 
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();

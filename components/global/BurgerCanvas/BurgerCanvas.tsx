@@ -37,7 +37,13 @@ interface SideItemProps {
 // Must live inside <Canvas> to access the Three.js context
 function SideItem({ model, position, scale, showShadow }: SideItemProps) {
   const { scene } = useGLTF(model) as any;
-  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone();
+    clone.position.set(0, 0, 0);
+    clone.rotation.set(0, 0, 0);
+    clone.scale.set(1, 1, 1);
+    return clone;
+  }, [scene]);
 
   const shadowTexture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -85,8 +91,16 @@ const SIDE_ITEM_CONFIG: {
 } = {
   french_fries: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
   vanilla_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
-  chocolate_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
-  strawberry_milkshake: { position: [9, 6, -10], scale: 0.13, showShadow: false },
+  chocolate_milkshake: {
+    position: [9, 6, -10],
+    scale: 0.13,
+    showShadow: false,
+  },
+  strawberry_milkshake: {
+    position: [9, 6, -10],
+    scale: 0.13,
+    showShadow: false,
+  },
   onion_rings_extra: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
   nuggets_extra: { position: [-2, 6, -10], scale: 0.1, showShadow: true },
 };
