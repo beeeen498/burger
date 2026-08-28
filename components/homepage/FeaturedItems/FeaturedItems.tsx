@@ -15,8 +15,8 @@ const FEATURED_ITEMS = [
     id: "nuggets-burger-meal",
     name: "nuggets meal",
     price: "$16.99",
-    href: "/menu/nuggets-burger",
-    sideItems: ["french_fries", "milkshake"],
+    href: "/menu/nuggets-burger-meal",
+    sideItems: ["french_fries", "vanilla_milkshake"],
     ingredients: {
       nuggets: 2,
       lettuce: 1,
@@ -46,8 +46,8 @@ const FEATURED_ITEMS = [
     id: "404-meal",
     name: "404 meal",
     price: "$19.99",
-    href: "/menu/404",
-    sideItems: ["french_fries", "milkshake"],
+    href: "/menu/404-meal",
+    sideItems: ["french_fries", "vanilla_milkshake"],
     ingredients: {
       bunType: "regular" as const,
       lettuce: 1,
